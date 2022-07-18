@@ -129,6 +129,54 @@ public:
         arr[idx] = value;
         size++;
     }
+    void right_rotate()
+    {
+        int back = get_back();
+        for(int i=size-2; i>=0;i--)
+            arr[i+1] = arr[i];
+
+        arr[0] = back;
+    }
+    void left_rotate()
+    {
+        int front = get_back();
+        for(int i=1; i<size-2;i++)
+            arr[i-1] = arr[i];
+
+        arr[size-1] = front;
+    }
+    void right_rotate(int times)
+    {
+        int times_ = times%size;
+        while (times--)
+        {
+            right_rotate();
+        }
+        
+            
+    }
+    int pop(int idx)
+    {
+        int pop_value = arr[idx];
+
+        
+        for(int i=idx; i<size-1;i++)
+            arr[i] = arr[i+1];
+
+        size --;
+        return pop_value;
+    }
+    int find_transpostion(int value)
+    {
+        for(int i=0; i <size;i++)
+            if(arr[i] == value)
+                {
+                    left_rotate();
+                    return i;
+                }
+
+        return -1;
+    }
 
 };
 
@@ -146,6 +194,15 @@ int main(int argc, const char ** argv)
     v.print();
     v.insert(2,777);
     v.print();
+    v.right_rotate();
+    v.print();
+    cout<<"-------------------"<<endl;
+    v.right_rotate(20000);
+    v.print();
+    cout<<"-------------------"<<endl;
+    int p = v.pop(1);
+    v.print();
+    cout<<"Pop value is: "<<p<<endl;
     cout<<v.find(5)<<" "<<v.find(11)<<endl;
     cout<<v.find(777)<<" "<<v.find(11)<<endl;
     return 0;
