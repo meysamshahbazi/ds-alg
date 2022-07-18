@@ -8,13 +8,15 @@ class Vector
 private: 
     int * arr = nullptr;
     int size{0};
+    int capacity;
 public:
     Vector(int size):size(size)
     {
         if (size < 0) 
             size = 1;
-        
-        arr = new int[size] {};
+        capacity = 1024;
+        // arr = new int[size] {};
+        arr = new int[capacity] {};
     }
 
     ~Vector()
@@ -62,7 +64,7 @@ public:
     }
     void push_back1(int value)
     {
-
+        // my strange way! this is NOT efficent!
         int * old_arr = new int[size] {};
         for(int i=0; i<size; i++)
             old_arr[i] = arr[i];
@@ -77,7 +79,7 @@ public:
         delete[] old_arr;
         size +=1;
     }
-    void push_back(int value)
+    void push_back2(int value)
     {
         int * new_arr = new int [size+1];
 
@@ -92,6 +94,26 @@ public:
         arr = temp_ptr;
         delete[] new_arr;
     }
+    void push_back(int value)
+    {
+        if(size+1 >= capacity) // recreate new arr
+        {
+            capacity *= 2;
+            int * new_arr = new int [capacity];
+            for(int i=0; i<size;i++)
+                new_arr[i] = arr[i];
+
+
+            // code for swaping ponters
+            int * temp_ptr = new_arr;
+            new_arr = arr;
+            arr = temp_ptr;
+            delete[] new_arr;
+        }
+        arr[size++] = value;
+
+        
+    }
 
 };
 
@@ -101,6 +123,9 @@ int main(int argc, const char ** argv)
     for (int i=0;i<10;i++)
         v.set(i,i);
     v.print();
+    for(int i=0; i < 2000; i++)
+        v.push_back(i);
+
     v.push_back(111);
     v.print();
     cout<<v.find(5)<<" "<<v.find(11)<<endl;
