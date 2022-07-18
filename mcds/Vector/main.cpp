@@ -94,25 +94,40 @@ public:
         arr = temp_ptr;
         delete[] new_arr;
     }
+    void expand_capacity()
+    {
+        capacity *= 2;
+        int * new_arr = new int [capacity];
+        for(int i=0; i<size;i++)
+            new_arr[i] = arr[i];
+
+
+        // code for swaping ponters
+        int * temp_ptr = new_arr;
+        new_arr = arr;
+        arr = temp_ptr;
+        delete[] new_arr;
+    }
     void push_back(int value)
     {
-        if(size+1 >= capacity) // recreate new arr
+        if(size+1 == capacity) // recreate new arr
         {
-            capacity *= 2;
-            int * new_arr = new int [capacity];
-            for(int i=0; i<size;i++)
-                new_arr[i] = arr[i];
-
-
-            // code for swaping ponters
-            int * temp_ptr = new_arr;
-            new_arr = arr;
-            arr = temp_ptr;
-            delete[] new_arr;
+           expand_capacity(); 
         }
-        arr[size++] = value;
+        arr[size++] = value;    
+    }
+    void insert(int idx, int value)
+    {
+        assert(0 <= idx  && idx < size);
+        if(size+1 == capacity) // recreate new arr
+        {
+           expand_capacity(); 
+        }
 
-        
+        for(int i=size-1; i>=idx;i--)
+            arr[i+1] = arr[i];
+        arr[idx] = value;
+        size++;
     }
 
 };
@@ -123,11 +138,15 @@ int main(int argc, const char ** argv)
     for (int i=0;i<10;i++)
         v.set(i,i);
     v.print();
-    for(int i=0; i < 2000; i++)
-        v.push_back(i);
+
+    // for(int i=0; i < 2000; i++)
+    //     v.push_back(i);
 
     v.push_back(111);
     v.print();
+    v.insert(2,777);
+    v.print();
     cout<<v.find(5)<<" "<<v.find(11)<<endl;
+    cout<<v.find(777)<<" "<<v.find(11)<<endl;
     return 0;
 }
