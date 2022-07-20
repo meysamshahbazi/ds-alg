@@ -10,7 +10,7 @@ struct Node{
 
 };
 
-void print1(Node * head)
+void print1(Node *head)
 {
     while (head != nullptr)
     {
@@ -19,7 +19,7 @@ void print1(Node * head)
     }
     cout<<endl; 
 }
-void print2(Node * head)
+void print2(Node *head)
 {
     if(head != nullptr)
     {
@@ -32,7 +32,18 @@ void print2(Node * head)
         return;
     }
 }
+void print_reversed(Node *head)
+{
+    if(head != nullptr)
+    {
+        
+        print_reversed(head->next);
+        cout<<head->data<<" ";
 
+    }
+    
+    return;
+}
 int main()
 {
     Node * node1 = new Node(5);
@@ -48,6 +59,8 @@ int main()
 
     print1(node1);
     print2(node1);
+    print_reversed(node1);
+    cout<<"\n";
 
     return 0;
 }
