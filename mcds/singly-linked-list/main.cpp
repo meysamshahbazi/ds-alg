@@ -17,8 +17,20 @@ void print1(Node * head)
         cout<<head->data<<" ";
         head = head->next;
     }
-    cout<<endl;
-    
+    cout<<endl; 
+}
+void print2(Node * head)
+{
+    if(head != nullptr)
+    {
+        cout<<head->data<<" ";
+        print2(head->next);
+    }
+    else
+    {
+        cout<<endl;
+        return;
+    }
 }
 
 int main()
@@ -35,6 +47,7 @@ int main()
 
 
     print1(node1);
+    print2(node1);
 
     return 0;
 }
