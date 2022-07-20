@@ -10,6 +10,17 @@ struct Node{
 
 };
 
+void print1(Node * head)
+{
+    while (head != nullptr)
+    {
+        cout<<head->data<<" ";
+        head = head->next;
+    }
+    cout<<endl;
+    
+}
+
 int main()
 {
     Node * node1 = new Node(5);
@@ -21,6 +32,9 @@ int main()
     node2->next = node3;
     node3->next = node4;
     node4->next = nullptr;
-    
+
+
+    print1(node1);
+
     return 0;
 }
