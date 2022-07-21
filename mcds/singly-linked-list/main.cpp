@@ -60,6 +60,14 @@ public:
         }
         cout<<endl;   
     }
+    void print_for()
+    {
+        for(Node * cur = head;cur; cur= cur->next)
+        {
+            cout<<cur->data<<" ";
+        }
+        cout<<endl;
+    }
     void insert_end(int value)
     {
         Node * node = new Node(value);
@@ -74,8 +82,95 @@ public:
             tail->next = node;
             tail = node;
         }
+    }
+    Node * get_nth(int n)
+    {
+        int cnt = 0;
+        for(Node * cur = head;cur; cur= cur->next)
+            if(cnt++ == n)
+                return cur;
         
+        return nullptr;
+    }
+    int search(int value)
+    {
+        int cnt {0};
+        for(Node * cur = head;cur; cur= cur->next,cnt++)
+            if(cur->data == value)
+                return cnt;
+        return -1;
+    }
+    int improved_search(int value)
+    {
+        int cnt {0};
+        Node * cur = head;
+        Node * perv = head;
+        Node * perv2 = nullptr;
+        while (cur)
+        {
+            
+            if(cur->data == value)
+            {
+                if(cnt > 1)
+                {
+                    perv2->next = cur;
+                    perv->next = cur->next;
+                    cur->next= perv;
+                }
+                else if(cnt ==1 )
+                {
+                    perv->next = cur->next;
+                    head = cur;
+                    head->next = perv;
+                }
+                return cnt;
+            }
+            cnt++;
+            perv2 = perv;
+            perv = cur;
+            cur = cur->next;
+            
+        }
+        return -1;
+    }
+    int improved_search1(int value)
+    {
+        int cnt {0};
+        Node * perv = nullptr;
+        for(Node * cur = head;cur; cur= cur->next,cnt++)
+        {
+            if(cur->data == value)
+            {
+                if(!perv)
+                {
+                    return cnt;
+                }
+                int temp = cur->data;
+                cur->data = perv->data;
+                perv->data = temp;
+                return cnt-1;
+            }
+            perv = cur;
 
+        }
+    }
+
+    int improved_search2(int value)
+    {
+        int cnt {0};
+        for(Node * cur = head,*perv = nullptr;cur;perv=cur,cur=cur->next,cnt++)
+            if(cur->data == value)
+            {
+                if(!perv)
+                {
+                    return cnt;
+                }
+                int temp = cur->data;
+                cur->data = perv->data;
+                perv->data = temp;
+                return cnt-1;
+            }
+        return -1;
     }
 };
 int main()
@@ -100,6 +195,23 @@ int main()
     list.insert_end(3);
     list.insert_end(2);
     list.insert_end(1);
+    list.print();
+    list.print_for();
+    cout<<list.get_nth(1)->data<<endl;
+    cout<<list.search(1)<<endl;
+    cout<<list.search(5)<<endl;
+    cout<<list.search(4)<<endl;
+    cout<<list.improved_search(1)<<endl;
+    list.print();
+    cout<<list.improved_search(1)<<endl;
+    list.print();
+    cout<<list.improved_search1(4)<<endl;
+    list.print();
+    cout<<list.improved_search1(2)<<endl;
+    list.print();
+    cout<<list.improved_search2(4)<<endl;
+    list.print();
+    cout<<list.improved_search2(1)<<endl;
     list.print();
 
     return 0;
