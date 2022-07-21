@@ -1,5 +1,5 @@
 # ds-alg
 Data Structures and Algorithms in C/C++ 
 
-this repo for saving my practice in ds algs in c++ 
+this repo contains my practice for data structures and algorithms in God programming languege(c++) and human programming langueage(python) 
 
