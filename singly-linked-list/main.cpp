@@ -1,4 +1,9 @@
 #include <iostream>
+#include <cassert>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -49,7 +54,60 @@ class LinkedList
 private:
     Node *head {nullptr};
     Node *tail {nullptr};
+    int length {0};
+
+    vector<Node*> debug_data;	// add/remove nodes you use
+
+    void debug_add_node(Node* node) {
+		debug_data.push_back(node);
+	}
+	void debug_remove_node(Node* node) {
+		auto it = std::find(debug_data.begin(), debug_data.end(), node);
+		if (it == debug_data.end())
+			cout << "Node does not exist\n";
+		else
+			debug_data.erase(it);
+	}
 public:
+    LinkedList() {}
+    LinkedList(const LinkedList&) = delete;
+    LinkedList &operator=(const LinkedList& another) = delete;
+
+    void debug_print_address() {
+		for (Node* cur = head; cur; cur = cur->next)
+			cout << cur << "," << cur->data << "\t";
+		cout << "\n";
+	}
+
+	void debug_print_node(Node* node, bool is_seperate = false) {
+		if (is_seperate)
+			cout << "Sep: ";
+		if (node == nullptr) {
+			cout << "nullptr\n";
+			return;
+		}
+		cout << node->data << " ";
+		if (node->next == nullptr)
+			cout << "X ";
+		else
+			cout << node->next->data << " ";
+
+		if (node == head)
+			cout << "head\n";
+		else if (node == tail)
+			cout << "tail\n";
+		else
+			cout << "\n";
+	}
+	void debug_print_list(string msg = "") {
+		if (msg != "")
+			cout << msg << "\n";
+		for (int i = 0; i < (int) debug_data.size(); ++i)
+			debug_print_node(debug_data[i]);
+		cout << "************\n"<<flush;
+	}
+
+    
     void print()
     {
         Node * temp_head = head;
@@ -102,6 +160,9 @@ public:
     }
     int improved_search(int value)
     {
+        //the idea of this function is swapping nodes by changing the next attr
+        // it goes pretty long so best practice is doing by changing data
+        // but for huge data it may be usefull 
         int cnt {0};
         Node * cur = head;
         Node * perv = head;
@@ -172,6 +233,44 @@ public:
             }
         return -1;
     }
+    void debug_verify_data_integrity()
+    {
+		if (length == 0) 
+        {
+			assert(head == nullptr);
+			assert(tail == nullptr);
+		} 
+        else 
+        {
+			assert(head != nullptr);
+			assert(tail != nullptr);
+			if (length == 1)
+				assert(head == tail);
+			else
+				assert(head != tail);
+			assert(!tail->next);
+		}
+		int len = 0;
+		for (Node* cur = head; cur; cur = cur->next, len++)
+			assert(len < 10000);	// Consider infinite cycle?
+		assert(length == len);
+		assert(length == (int)debug_data.size());   
+
+    }
+    string debug_to_string()
+    {
+        // if(length == 0)
+        //     return " ";
+        ostringstream oss;
+        for(Node * cur =head; cur; cur=cur->next)
+        {
+            oss<<cur->data;
+            if(cur->next)
+                oss<<" ";
+        }
+        return oss.str();
+    }
+
 };
 int main()
 {
@@ -213,6 +312,7 @@ int main()
     list.print();
     cout<<list.improved_search2(1)<<endl;
     list.print();
+    cout<<list.debug_to_string()<<endl;
 
     return 0;
 }
