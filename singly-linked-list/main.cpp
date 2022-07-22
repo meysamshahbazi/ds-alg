@@ -201,6 +201,55 @@ public:
         }
             
     }
+    void delete_first()
+    {
+        if(head)
+        {
+            Node * cur = head;
+            head = head->next;
+            delete cur;
+            if(!head) 
+            {
+                tail = nullptr;
+            }
+        }
+    }
+    void delete_last()
+    {
+        if(tail)
+        {
+            int len = get_lenght();
+            if (len > 1)
+            {
+                // in case we have at least 2 Nodes
+                Node * befor_last = get_nth_back(1);
+                // delete befor_last->next;
+                delete tail;
+                befor_last->next = nullptr;
+                tail = befor_last;
+                return;
+            }
+            // where we have just one Node 
+            delete tail;
+            tail = nullptr;        
+        }
+    }
+    void delete_nth(int n)
+    {
+        int len = get_lenght();
+        if (len == 1 || n == len-1)
+        {
+            delete_last();
+            return;
+        }
+        
+        // this function we assume nth node is not head and tail 
+        Node * perv = get_nth(n-1); // perv node befor we delete
+        Node * nth = perv->next;
+        perv->next = perv->next->next;
+        delete nth;
+    }
+
     Node * get_nth(int n)
     {
         int cnt = 0;
@@ -435,8 +484,21 @@ int main()
     LinkedList l2;
     l2.insert_end(1);
     l2.insert_end(2);
-    l2.insert_end(3);
+    l2.insert_end(33);
     cout<<l1.is_same(l2)<<endl;
+    l2.insert_end(3);
+    l2.insert_end(4);
+    l2.insert_end(5);
+    
+    cout<<"----------------------\n";
+    l2.print();
+    l2.delete_nth(2);
+    cout<<"----------------------\n";
+    l2.print();
+    l2.delete_first();
+    l2.print();
+    l2.delete_last();
+    l2.print();
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
