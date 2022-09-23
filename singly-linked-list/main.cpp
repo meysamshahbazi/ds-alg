@@ -357,8 +357,8 @@ public:
                 return cnt-1;
             }
             perv = cur;
-
         }
+        return -1;
     }
 
     int improved_search2(int value)
@@ -378,6 +378,14 @@ public:
             }
         return -1;
     }
+
+    void delete_with_key(int value)
+    {
+        int k = improved_search2(value);
+        if( k != -1)
+            delete_nth(k);
+    }
+
 #ifdef DEBUG
     void debug_verify_data_integrity()
     {
@@ -504,6 +512,19 @@ int main()
     l2.delete_first();
     l2.print();
     l2.delete_last();
+    l2.print();
+    cout<<"----------------------\n";
+    cout<<"test for delete with key\n\n";
+    l2.insert_end(31);
+    l2.insert_end(41);
+    l2.insert_end(51);
+    l2.insert_end(31);
+    l2.print();
+    l2.delete_with_key(2);
+    l2.print();
+    l2.delete_with_key(31);
+    l2.print();
+    l2.delete_with_key(31);
     l2.print();
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
