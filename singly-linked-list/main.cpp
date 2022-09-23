@@ -201,7 +201,7 @@ public:
         }
             
     }
-    void delete_first()
+    void  delete_first()
     {
         if(head)
         {
@@ -243,7 +243,12 @@ public:
             return;
         }
         
-        // this function we assume nth node is not head and tail 
+        if ( n==0 )
+        {
+            delete_first();
+            return;
+        }
+
         Node * perv = get_nth(n-1); // perv node befor we delete
         Node * nth = perv->next;
         perv->next = perv->next->next;
@@ -491,8 +496,9 @@ int main()
     l2.insert_end(5);
     
     cout<<"----------------------\n";
+    cout<<"test for delete nodes\n\n";
     l2.print();
-    l2.delete_nth(2);
+    l2.delete_nth(4);
     cout<<"----------------------\n";
     l2.print();
     l2.delete_first();
