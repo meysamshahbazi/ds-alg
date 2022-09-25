@@ -386,6 +386,16 @@ public:
             delete_nth(k);
     }
 
+    void swap_pairs()
+    {
+        for(Node* cur=head;cur && cur->next ;cur=cur->next->next)
+        {
+            std::swap(cur->data,cur->next->data);
+        }
+        
+    }
+
+
 #ifdef DEBUG
     void debug_verify_data_integrity()
     {
@@ -426,6 +436,7 @@ public:
     }
 #endif
 };
+
 int main()
 {
     Node * node1 = new Node(5);
@@ -525,6 +536,17 @@ int main()
     l2.delete_with_key(31);
     l2.print();
     l2.delete_with_key(31);
+    l2.print();
+    cout<<"----------------------\n";
+    cout<<"test for swap pairs\n\n";
+     
+    l2.insert_end(31);
+    l2.insert_end(41);
+    l2.insert_end(51);
+    l2.insert_end(31);
+    l2.insert_end(311);
+    l2.print();
+    l2.swap_pairs();
     l2.print();
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
