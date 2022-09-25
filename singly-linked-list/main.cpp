@@ -394,6 +394,20 @@ public:
         }
         
     }
+    void reverse()
+    {
+        int len = get_lenght();
+        for (int i=len-1;i>1;i--)
+        {
+            cout<<"i "<<endl;
+            Node *cur = get_nth(i);
+            Node *perv = get_nth(i-1);
+            cur->next = perv;
+        }
+        head->next = nullptr;
+
+        std:swap(head,tail);
+    }
 
 
 #ifdef DEBUG
@@ -548,6 +562,10 @@ int main()
     l2.print();
     l2.swap_pairs();
     l2.print();
+    cout<<"test for swap pairs\n\n";
+    l2.print();
+    l2.reverse();
+    // l2.print();
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
