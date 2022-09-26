@@ -480,6 +480,72 @@ public:
         head->next = nullptr;
         std::swap(head,tail);
     }
+    
+    void rotate_left_once()
+    {
+        tail->next = head;
+        Node * after_head = head->next;
+        head->next = nullptr;
+        tail = head;
+        head = after_head;
+    }
+
+    void rotate_left(int k)
+    {
+        int len = get_lenght();
+        k = k%len;
+        for(int i=0;i<k;i++)
+            rotate_left_once();
+
+    }
+
+    void remove_duplicates()
+    {
+        Node * perv;
+        for(Node *cur=head;cur;cur=cur->next)
+        {
+            int value = cur->data;
+            perv = cur;
+            while (perv)
+            {
+                Node *nth = perv->next; 
+                if(nth && nth->data == value)
+                {
+                    if (nth->next == nullptr)
+                    {
+                        delete_last();
+                    }
+                    else 
+                    {
+                        perv->next = perv->next->next;
+                        delete nth;
+                    }
+                }
+                else // this is very important that we MUST go to next node just when we dont have duplicate value
+                    perv = perv->next;
+                
+            }
+        }
+    }
+    void remove_last_occurance(int key)
+    {
+        int n = -1;
+        int i =0;
+        for(Node *cur=head;cur;cur=cur->next)
+        {
+            // we will find and record last occurance index of given key
+            if(key == cur->data)
+                n = i;
+            i++;
+        }
+        if(n != -1)
+            delete_nth(n);
+    }
+    void move_to_back(int key)
+    {
+        
+    }
+
 
 #ifdef DEBUG
     void debug_verify_data_integrity()
@@ -661,11 +727,63 @@ int main()
     ls.insert_sorted(9);
     ls.insert_sorted(5);
     ls.insert_sorted(7);
+    ls.insert_sorted(20);
+    ls.insert_sorted(10);
+    ls.insert_sorted(9);
+    ls.insert_sorted(5);
+    ls.insert_sorted(7);
+    ls.insert_sorted(7);
+    ls.insert_sorted(7);
+    ls.insert_sorted(7);
+    ls.insert_sorted(20);
+    ls.insert_sorted(10);
+    ls.insert_sorted(9);
+    ls.insert_sorted(5);
     ls.print();
     cout<<"----------------------\n";
     ls.print();
     ls.swap_head_tail();
     ls.print();
+    cout<<" rotate_left ----------------------\n";
+    ls.print();
+    ls.rotate_left(5);
+    ls.print();
+    cout<<" remove_duplicates ----------------------\n";
+    ls.print();
+    cout<<ls.get_lenght()<<endl;
+    ls.remove_duplicates();
+    // ls.delete_last();
+    ls.print();
+    // cout<<ls.get_lenght()<<endl;
+    cout<<" remove_last_occurance ----------------------------------\n";
+    LinkedList l4;
+    l4.insert_end(1);
+    l4.insert_end(2);
+    l4.insert_end(1);
+    l4.insert_end(1);
+    l4.insert_end(2);
+    l4.insert_end(3);
+    l4.insert_end(3);
+    l4.insert_end(1);
+    l4.insert_end(2);
+    
+    l4.print();
+    l4.remove_last_occurance(3);
+    l4.print();
+    cout<<" move_to_back ----------------------------------\n";
+    LinkedList l5;
+    l5.insert_end(1);
+    l5.insert_end(2);
+    l5.insert_end(1);
+    l5.insert_end(1);
+    l5.insert_end(2);
+    l5.insert_end(3);
+    l5.insert_end(3);
+    l5.insert_end(1);
+    l5.insert_end(2);
+    l5.print();
+    l5.move_to_back(1);
+    l5.print();
 
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
