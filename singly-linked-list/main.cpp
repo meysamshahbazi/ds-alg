@@ -469,11 +469,14 @@ public:
         Node *perv_tail;
         // this one line FOR loop is intersting for me! I did some trick for that :P
         // also readble logic for doing so is the next commented FOR loop with an IF :))
-        for(perv_tail=head;perv_tail->next!=tail;perv_tail=perv_tail->next)
+        // for(perv_tail=head;perv_tail->next!=tail;perv_tail=perv_tail->next)
 
         // for(Node * cur=head;cur;cur=cur->next)
         //     if(cur->next==tail)
         //         perv_tail = cur;
+
+        // and better way or in other words use modules .. 
+        perv_tail = get_nth_back(1);
         
         tail->next = head->next;
         perv_tail->next = head;
@@ -492,11 +495,24 @@ public:
 
     void rotate_left(int k)
     {
+        // this is my own solution
         int len = get_lenght();
         k = k%len;
         for(int i=0;i<k;i++)
             rotate_left_once();
 
+    }
+
+    void rotate_left2(int k)
+    {
+        // this is idea from video!
+        int len = get_lenght();
+        k = k%len;
+        tail->next = head;
+        Node * nth = get_nth(k);
+        tail = get_nth(k-1);
+        tail->next = nullptr;
+        head = nth;
     }
 
     void remove_duplicates()
@@ -544,18 +560,17 @@ public:
     void move_to_back(int key)
     {
         int nb_occ = 0;
-        for(Node *cur;cur;cur=cur->next)
-        {
+        // at first we count all of key in list
+        for(Node *cur=head;cur;cur=cur->next)
             if(cur->data == key)
-            {
-                delete_with_key(key);
                 nb_occ++;
-            }
-                
-        }
-        for(int i =0;i<nb_occ;i++)
-            insert_end(key);
 
+        // remove all of them and insert them in back 
+        for(int i =0;i<nb_occ;i++)
+        {
+            delete_with_key(key);
+            insert_end(key);
+        }    
     }
 
 
@@ -752,13 +767,13 @@ int main()
     ls.insert_sorted(9);
     ls.insert_sorted(5);
     ls.print();
-    cout<<"----------------------\n";
+    cout<<"swap_head_tail ----------------------\n";
     ls.print();
     ls.swap_head_tail();
     ls.print();
     cout<<" rotate_left ----------------------\n";
     ls.print();
-    ls.rotate_left(5);
+    ls.rotate_left(2);
     ls.print();
     cout<<" remove_duplicates ----------------------\n";
     ls.print();
@@ -793,8 +808,15 @@ int main()
     l5.insert_end(3);
     l5.insert_end(1);
     l5.insert_end(2);
+    l5.insert_end(4);
+    l5.insert_end(5);
     l5.print();
     l5.move_to_back(1);
+    l5.print();
+    cout<<" rotate_left ----------------------\n";
+    l5.remove_duplicates();
+    l5.print();
+    l5.rotate_left2(4);
     l5.print();
 
 #ifdef DEBUG    
