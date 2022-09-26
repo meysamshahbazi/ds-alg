@@ -543,7 +543,19 @@ public:
     }
     void move_to_back(int key)
     {
-        
+        int nb_occ = 0;
+        for(Node *cur;cur;cur=cur->next)
+        {
+            if(cur->data == key)
+            {
+                delete_with_key(key);
+                nb_occ++;
+            }
+                
+        }
+        for(int i =0;i<nb_occ;i++)
+            insert_end(key);
+
     }
 
 
