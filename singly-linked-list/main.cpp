@@ -463,6 +463,23 @@ public:
 
         return;
     }
+    void swap_head_tail()
+    {
+        // Node *head_next = head->next;
+        Node *perv_tail;
+        // this one line FOR loop is intersting for me! I did some trick for that :P
+        // also readble logic for doing so is the next commented FOR loop with an IF :))
+        for(perv_tail=head;perv_tail->next!=tail;perv_tail=perv_tail->next)
+
+        // for(Node * cur=head;cur;cur=cur->next)
+        //     if(cur->next==tail)
+        //         perv_tail = cur;
+        
+        tail->next = head->next;
+        perv_tail->next = head;
+        head->next = nullptr;
+        std::swap(head,tail);
+    }
 
 #ifdef DEBUG
     void debug_verify_data_integrity()
@@ -644,6 +661,10 @@ int main()
     ls.insert_sorted(9);
     ls.insert_sorted(5);
     ls.insert_sorted(7);
+    ls.print();
+    cout<<"----------------------\n";
+    ls.print();
+    ls.swap_head_tail();
     ls.print();
 
 #ifdef DEBUG    
