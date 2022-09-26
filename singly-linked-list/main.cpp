@@ -397,18 +397,66 @@ public:
     void reverse()
     {
         int len = get_lenght();
-        for (int i=len-1;i>1;i--)
+        for (int i=len-1; i>0; i--)
         {
-            cout<<"i "<<endl;
             Node *cur = get_nth(i);
-            Node *perv = get_nth(i-1);
+            Node *perv = get_nth(i-1); 
             cur->next = perv;
         }
-        head->next = nullptr;
 
-        std:swap(head,tail);
+        head->next = nullptr;
+        std::swap(head,tail);
+    }
+    
+    void delete_even_positions()
+    {
+        Node *perv = head;
+        Node *cur = head->next;
+        // take care of tail!!
+        while (cur)
+        {
+            perv->next = cur->next;
+            delete cur;
+            if(perv->next)
+            {
+                cur = perv->next->next;
+                perv = perv->next;
+            }
+            else 
+                return;            
+        }
     }
 
+    void insert_sorted(int value)
+    {
+        int len = get_lenght();
+        if (len == 0)
+        { 
+            insert_front(value);
+            return;
+        }
+        // otherwise we are here and we assume the list is already sorted
+        Node * perv;
+        for(Node * cur=head;cur && cur->next;cur=cur->next)
+        {
+            if(value >= cur->data && value <cur->next->data)
+            {
+                Node * n_ptr = new Node(value);
+                n_ptr->next = cur->next;
+                cur->next = n_ptr;
+                return;
+            }
+        }
+        // if the above condition if FOR dosnt met 
+        // it means that the given value is larger than all of the list 
+        // elements so we should put it on the back of list:
+        if (value <= head->data)
+            insert_front(value);
+        else
+            insert_end(value);
+
+        return;
+    }
 
 #ifdef DEBUG
     void debug_verify_data_integrity()
@@ -565,7 +613,33 @@ int main()
     cout<<"test for swap pairs\n\n";
     l2.print();
     l2.reverse();
-    // l2.print();
+    l2.print();
+    cout<<"----------------------\n";
+    l2.delete_even_positions();
+    l2.print();
+    LinkedList l3;
+    l3.insert_end(1);
+    l3.insert_end(2);
+    l3.insert_end(3);
+    l3.insert_end(4);
+    l3.insert_end(5);
+    l3.insert_end(6);
+    l3.insert_end(7);
+    l3.insert_end(8);
+    cout<<"----------------------\n";
+    l3.print();
+    l3.delete_even_positions();
+    l3.print();
+    cout<<"----------------------\n";
+    cout<<"test for insert sorted :\n";
+    LinkedList ls;
+    ls.insert_sorted(20);
+    ls.insert_sorted(10);
+    ls.insert_sorted(9);
+    ls.insert_sorted(5);
+    ls.insert_sorted(7);
+    ls.print();
+
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
