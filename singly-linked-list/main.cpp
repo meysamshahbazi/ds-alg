@@ -416,7 +416,13 @@ public:
         while (cur)
         {
             perv->next = cur->next;
+            if(cur==tail)
+            {
+                tail = perv;
+                tail->next = nullptr;
+            }
             delete cur;
+            
             if(perv->next)
             {
                 cur = perv->next->next;
