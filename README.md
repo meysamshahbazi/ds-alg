@@ -5,4 +5,4 @@ This repo contains my practices for data structures and algorithms in God progra
 
 ## Remider: 
 
-- [ ] 18. SLL Homework 4 - 5 Medium to Hard Challenges problem 4 and 5
+- [ ] 18. SLL Homework 4 - 5 Medium to Hard Challenges problem 5
