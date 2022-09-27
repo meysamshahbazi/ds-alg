@@ -573,6 +573,40 @@ public:
         }    
     }
 
+    void push_node_to_back(Node * prv)
+    {
+        // this function aims to delete node after from chain and
+        // put that node to the end of chain!
+        if(!prv->next || !prv->next->next) // the node is tail so it is already at the end of chain
+            return;
+
+        Node *cur = prv->next;
+        prv->next = prv->next->next;
+        tail->next = cur;
+        cur->next = nullptr;
+        tail = cur;
+        return;
+    }
+
+    void arrange_odd_even()
+    {
+        int len = this->get_lenght();
+
+        int nb_pushed = 0;
+
+        Node * prv=head;
+        while (nb_pushed < len/2)
+        {
+            push_node_to_back(prv);
+            prv = prv->next;
+            nb_pushed++;
+        }
+    }
+
+    void insert_alternate(LinkedList & another)
+    {
+        
+    }
 
 #ifdef DEBUG
     void debug_verify_data_integrity()
@@ -617,6 +651,7 @@ public:
 
 int main()
 {
+    /*
     Node * node1 = new Node(5);
     Node * node2 = new Node(8);
     Node * node3 = new Node(4);
@@ -818,6 +853,19 @@ int main()
     l5.print();
     l5.rotate_left2(4);
     l5.print();
+    */
+
+    LinkedList l6;
+    l6.insert_end(1);
+    l6.insert_end(2);
+    l6.insert_end(3);
+    l6.insert_end(4);
+    l6.insert_end(5);
+    l6.insert_end(6);
+    l6.print();
+    //    l6.push_node_to_back(l6.get_nth(3));
+    l6.arrange_odd_even();
+    l6.print();
 
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
