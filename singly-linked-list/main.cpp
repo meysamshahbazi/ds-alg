@@ -672,8 +672,32 @@ public:
     void remove_all_repeated()
     {
         // assume given list is sorted!
-        // TODO:
-        return;
+    
+        Node * cur=head;
+        while (cur->next)
+        {
+            if(cur->next->data > cur->data)
+                cur = cur->next;
+            else 
+            {
+                // find next non equal value to cur->data to use that as next itration value of cur
+                Node * cur2;
+                for(cur2=cur->next;cur2;cur2=cur2->next)
+                    if(cur2->data != cur->data)
+                        break;
+                int val_to_del = cur->data;
+                while (improved_search2(val_to_del) != -1)
+                {
+                    delete_with_key(val_to_del);
+                }
+                
+                cur = cur2;
+                // remove all of node with value of cur->data;
+            }
+
+        }
+        
+
     }   
 
     void reverse_chains(int k)
@@ -956,13 +980,15 @@ int main()
     l10.insert_end(9);l10.insert_end(2);l10.insert_end(3);
     l9.add_num(l10);
     l9.print();*/
-
+    
     LinkedList l11;
-    l11.insert_sorted(1);l11.insert_sorted(1);l11.insert_sorted(1);
-    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(1);
+    l11.insert_sorted(0);l11.insert_sorted(1);l11.insert_sorted(1);
+    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(3);
     l11.print();
     l11.remove_all_repeated();
     l11.print();
+    // LinkedList l12;
+
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
