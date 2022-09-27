@@ -638,6 +638,37 @@ public:
         // at the end we need to close the chain by ending with nullptr
         tail->next = nullptr;
     }
+    void add_num(LinkedList &another)
+    {
+        Node *cur = head;
+        Node *acur = another.head;
+        int carry = 0;
+        while (cur && acur)
+        {
+            int val = cur->data + acur->data + carry;
+            cur->data = val%10;
+            carry = val/10;
+            cur = cur->next;
+            acur = acur->next;
+        }
+
+        while (cur)
+        {
+            int val = cur->data+carry;
+            cur->data = val%10;
+            carry = val/10;
+            cur = cur->next;
+        }
+        
+        while (acur)
+        {
+            int val = acur->data+carry;
+            this->insert_end(val%10);
+            carry = val/10;
+            acur = acur->next;
+        }
+        
+    }
 
 #ifdef DEBUG
     void debug_verify_data_integrity()
@@ -907,6 +938,14 @@ int main()
    l7.insert_alternate(l8);
    l7.print();
 */
+
+    LinkedList l9;
+    l9.insert_end(1);l9.insert_end(2);l9.insert_end(3);l9.insert_end(4);
+    LinkedList l10;
+    l10.insert_end(9);l10.insert_end(2);l10.insert_end(3);
+    l9.add_num(l10);
+    l9.print();
+
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
