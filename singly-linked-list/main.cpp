@@ -899,14 +899,14 @@ int main()
     l6.print();
     */
 
-
+/*
    LinkedList l7;
    l7.insert_end(1);l7.insert_end(2);l7.insert_end(3);l7.insert_end(4);l7.insert_end(5);
    LinkedList l8;
    l8.insert_end(44);l8.insert_end(55);l8.insert_end(66);l8.insert_end(77);l8.insert_end(88);l8.insert_end(99);l8.insert_end(101);
    l7.insert_alternate(l8);
    l7.print();
-
+*/
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
