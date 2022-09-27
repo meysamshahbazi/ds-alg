@@ -231,6 +231,7 @@ public:
             }
             // where we have just one Node 
             delete tail;
+            head = nullptr;
             tail = nullptr;        
         }
     }
@@ -672,7 +673,6 @@ public:
     void remove_all_repeated()
     {
         // assume given list is sorted!
-    
         Node *cur=head;
         int nb_rm = 0;
         int len = get_lenght();
@@ -697,24 +697,12 @@ public:
                 // remove all of node with value of cur->data;
                 while (improved_search2(val_to_del) != -1)
                 {
-                    // cout<<cur->data<<endl;
                     delete_with_key(val_to_del);
                     nb_rm++;
                 }
-                // if(cur2=nullptr) 
-                cur = cur2;
-                
+                cur = cur2;                
             }
         }
-        if(nb_rm == len )
-        {
-            head = nullptr;
-            tail =nullptr;
-        }
-
-        // tail->next = nullptr;
-        
-
     }   
 
     void reverse_chains(int k)
@@ -997,14 +985,21 @@ int main()
     l10.insert_end(9);l10.insert_end(2);l10.insert_end(3);
     l9.add_num(l10);
     l9.print();*/
-    
+    /*
     LinkedList l11;l11.insert_sorted(1);
-    l11.insert_sorted(0);l11.insert_sorted(1);l11.insert_sorted(1);
-    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(7);l11.insert_sorted(4);l11.insert_sorted(4);l11.insert_sorted(4);
+    l11.insert_sorted(1);l11.insert_sorted(1);l11.insert_sorted(1);
+    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(4);l11.insert_sorted(4);l11.insert_sorted(4);
     l11.print();
     l11.remove_all_repeated();
     cout<<l11.get_lenght()<<endl;
     l11.print();
+
+    LinkedList l12;
+    l12.insert_front(0);
+    l12.print();
+    l12.delete_first();
+    l12.print();
+    */
 
 
 #ifdef DEBUG    
