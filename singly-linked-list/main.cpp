@@ -381,7 +381,7 @@ public:
 
     void delete_with_key(int value)
     {
-        int k = improved_search2(value);
+        int k = improved_search1(value);
         if( k != -1)
             delete_nth(k);
     }
@@ -667,9 +667,20 @@ public:
             carry = val/10;
             acur = acur->next;
         }
-        
     }
 
+    void remove_all_repeated()
+    {
+        // assume given list is sorted!
+        // TODO:
+        return;
+    }   
+
+    void reverse_chains(int k)
+    {
+        // TODO:
+        return;
+    }
 #ifdef DEBUG
     void debug_verify_data_integrity()
     {
@@ -938,14 +949,20 @@ int main()
    l7.insert_alternate(l8);
    l7.print();
 */
-
+/*
     LinkedList l9;
     l9.insert_end(1);l9.insert_end(2);l9.insert_end(3);l9.insert_end(4);
     LinkedList l10;
     l10.insert_end(9);l10.insert_end(2);l10.insert_end(3);
     l9.add_num(l10);
-    l9.print();
+    l9.print();*/
 
+    LinkedList l11;
+    l11.insert_sorted(1);l11.insert_sorted(1);l11.insert_sorted(1);
+    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(1);
+    l11.print();
+    l11.remove_all_repeated();
+    l11.print();
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
 #endif
