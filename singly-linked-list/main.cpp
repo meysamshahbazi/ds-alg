@@ -603,9 +603,40 @@ public:
         }
     }
 
-    void insert_alternate(LinkedList & another)
+    void insert_alternate(LinkedList &another)
     {
-        
+        Node *cur=head;
+        Node *acur= another.head;
+        while (cur && acur)
+        {
+            Node *cur_next = cur->next;
+            // Node *acur_next = acur->next;
+            Node * acur_cpy = new Node(acur->data);
+            cur->next = acur_cpy;
+            acur_cpy->next = cur_next;
+
+            tail = acur_cpy;
+            cur = cur_next;
+            acur = acur->next;
+        }
+        // we push back all remining nodes to the end of current list 
+        while (cur)
+        {
+            Node *cur_next = cur->next;
+            tail->next = cur;
+            tail = cur;   
+            cur = cur_next;
+        }           
+
+        while (acur)
+        {
+            Node * acur_cpy = new Node(acur->data);
+            tail->next = acur_cpy;
+            tail = acur_cpy;   
+            acur = acur->next;
+        }
+        // at the end we need to close the chain by ending with nullptr
+        tail->next = nullptr;
     }
 
 #ifdef DEBUG
@@ -853,7 +884,7 @@ int main()
     l5.print();
     l5.rotate_left2(4);
     l5.print();
-    */
+    
 
     LinkedList l6;
     l6.insert_end(1);
@@ -866,6 +897,15 @@ int main()
     //    l6.push_node_to_back(l6.get_nth(3));
     l6.arrange_odd_even();
     l6.print();
+    */
+
+
+   LinkedList l7;
+   l7.insert_end(1);l7.insert_end(2);l7.insert_end(3);l7.insert_end(4);l7.insert_end(5);
+   LinkedList l8;
+   l8.insert_end(44);l8.insert_end(55);l8.insert_end(66);l8.insert_end(77);l8.insert_end(88);l8.insert_end(99);l8.insert_end(101);
+   l7.insert_alternate(l8);
+   l7.print();
 
 #ifdef DEBUG    
     cout<<list.debug_to_string()<<endl;
