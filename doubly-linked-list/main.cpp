@@ -105,7 +105,63 @@ public:
                 embed_after(cur->prev,value);
                 return;
         }
-
+    }
+    void delete_front()
+    {
+        if(!head) return; // if we have no item in list just return
+        if(!head->next) // if there is just one item in list:
+        {
+            delete head;
+            head = tail = nullptr;
+            return;
+        }
+        // otherwise we have atleast 2 node in list 
+        Node* new_head = head->next;
+        delete head;
+        head = new_head;
+        new_head->prev = nullptr;
+    }
+    void delete_end()
+    {
+        if(!head) return; // if we have no item in list just return
+        if(!head->next) // if there is just one item in list:
+        {
+            delete head;
+            head = tail = nullptr;
+            return;
+        }
+        // otherwise we have atleast 2 node in list 
+        Node* new_tail = tail->prev;
+        delete tail;
+        tail = new_tail;
+        tail->next = nullptr;
+    }
+    
+    Node* delete_and_link(Node* cur)
+    {
+        Node* new_cur = cur->prev;
+        link(cur->prev,cur->next);
+        delete cur;
+        return new_cur;
+    }
+    void delete_node_with_key(int val)
+    {
+        if(!head) return;
+        if(head->data == val) 
+        {
+            delete_front();
+            return;
+        }
+        for(Node* cur=head;cur;cur=cur->next)
+        {
+            if(cur->data==val)
+            {
+                delete_and_link(cur);
+                if(!cur->next)
+                    tail = cur;
+                return;
+            }
+        }
     }
 };
 
@@ -125,8 +181,40 @@ int main()
     cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->data<<endl;
     */
 //    l.insert_end(0);
-   l.insert_sorted(5);l.insert_sorted(50);l.insert_sorted(2);l.insert_sorted(1);
-   l.print();
+
+
+    l.insert_sorted(5);l.insert_sorted(50);l.insert_sorted(2);l.insert_sorted(1);
+    /*
+    l.print();
+    l.delete_front();
+    l.print();
+    l.delete_front();
+    l.print();
+    l.delete_front();
+    l.print();
+    l.delete_front();
+    l.print();
+    */
+    
+    /*
+    l.print();
+    l.delete_end();
+    l.print();
+    l.delete_end();l.print();
+    l.delete_end();l.print();
+    l.delete_end();l.print();*/
+    /*
+    Node * temp = l.get_head()->next->next;
+    l.print();
+    cout<<temp->data<<endl;
+    temp = l.delete_and_link(temp);
+    l.print();
+    cout<<temp->data<<endl;*/
+    l.print();
+    l.delete_node_with_key(5);l.print();
+    l.delete_node_with_key(2);l.print();
+    l.delete_node_with_key(1);l.print();
+    l.delete_node_with_key(50);l.print();
     return 0;
 }
 
