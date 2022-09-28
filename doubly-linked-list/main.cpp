@@ -23,13 +23,7 @@ struct Node
     ~Node() {}
 };
 
-void link(Node* first, Node* second)
-{
-    if(first)
-        first->next = second;
-    if(second)
-        second->prev = first;
-}
+
 class LinkedList
 {
 private:
@@ -40,6 +34,15 @@ public:
     LinkedList() {}
     LinkedList(const LinkedList&) = delete;
     LinkedList &operator=(const LinkedList &) = delete;
+
+    void link(Node* first, Node* second)
+    {
+        if(first)
+            first->next = second;
+        if(second)
+            second->prev = first;
+    }
+
     void insert_end(int value)
     {
         Node *item = new Node(value);
@@ -68,15 +71,37 @@ public:
             cout<<cur->data<<" ";
         cout<<endl;
     }
+    void embed_after(Node* befor,int value)
+    {
+        Node* item = new Node(value);
+        if(befor->next)
+        {
+            Node * after = befor->next;
+            link(befor,item);
+            link(item,after);
+        }
+        else 
+        {
+            insert_end(value);
+        }
+    }
+    Node* get_head(){return head;}
+    Node* get_tail(){return tail;}
 };
 
 int main()
 {       
     LinkedList l;
     l.insert_end(1);l.insert_end(2);l.insert_end(3);
-    l.print(); 
+    // l.print(); 
     l.insert_front(44);l.insert_front(55);l.insert_front(66);
     l.print();
+    l.embed_after(l.get_head(),111);
+    l.print();
+    cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->data<<endl;
+    l.embed_after(l.get_tail(),0);
+    l.print();
+    cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->data<<endl;
     return 0;
 }
 
