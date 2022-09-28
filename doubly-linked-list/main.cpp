@@ -163,6 +163,74 @@ public:
             }
         }
     }
+    void delete_all_nodes_with_key(int val)
+    {
+        if(!head) return;
+        
+        Node* cur=head;
+        while (cur)
+        {
+            if(cur->data==val)
+            {
+                if(cur == head)
+                {
+                    delete_front();
+                    cur = head;
+                }
+                else
+                {
+                    cur = delete_and_link(cur);
+
+                }
+            }
+            else 
+                cur = cur->next;
+        }
+    }
+    void delete_even_positions()
+    {
+        if(!head->next) return; // return for one node
+        Node* cur=head->next;
+        while (cur)
+        {
+            cur = delete_and_link(cur);
+            if(!cur->next || !cur->next->next) return;
+            cur = cur->next->next;
+        }
+    }
+
+    void delete_odd_positions()
+    {
+        // this function has bug!!!fix itS
+        if(!head->next)
+        {
+            delete_front();
+            return; // return for one node
+        }
+        Node* new_head = head->next;
+        Node* cur=head;
+        while (cur)
+        {
+            cur = delete_and_link(cur);
+            if(!cur->next || !cur->next->next) break;
+            cur = cur->next->next;
+        }
+        head = new_head;
+    }
+    bool is_palindrome()
+    {
+        Node *cur=head;
+        Node *rcur=tail;
+        while (cur && rcur)
+        {
+            if(cur->data!=rcur->data)
+                return false;
+            
+            cur=cur->next;
+            rcur=rcur->prev;
+        }
+        return true;
+    }
 };
 
 int main()
@@ -183,7 +251,7 @@ int main()
 //    l.insert_end(0);
 
 
-    l.insert_sorted(5);l.insert_sorted(50);l.insert_sorted(2);l.insert_sorted(1);
+    // l.insert_sorted(5);l.insert_sorted(50);l.insert_sorted(2);l.insert_sorted(1);
     /*
     l.print();
     l.delete_front();
@@ -210,11 +278,40 @@ int main()
     temp = l.delete_and_link(temp);
     l.print();
     cout<<temp->data<<endl;*/
+    /*
     l.print();
     l.delete_node_with_key(5);l.print();
     l.delete_node_with_key(2);l.print();
     l.delete_node_with_key(1);l.print();
     l.delete_node_with_key(50);l.print();
+    */
+    /*
+    l.insert_end(1);l.insert_end(1);l.insert_end(1);l.insert_end(2);
+    l.insert_end(4);l.insert_end(3);l.insert_end(1);l.insert_end(3);
+    l.print();
+    l.delete_all_nodes_with_key(1);
+    l.print();*/
+    /*
+    l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
+    l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);
+    l.print();
+    l.delete_even_positions();
+    l.print();*/ 
+    /*
+    l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
+    l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);
+    l.print();
+    l.delete_odd_positions();
+    l.print();
+    */
+    /*
+    l.insert_end(1);l.insert_end(3);l.insert_end(3);l.insert_end(1);
+    l.print();
+    cout<<l.is_palindrome()<<endl;*/
+
+    
+
+
     return 0;
 }
 
