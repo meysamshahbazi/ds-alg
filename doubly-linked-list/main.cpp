@@ -87,13 +87,34 @@ public:
     }
     Node* get_head(){return head;}
     Node* get_tail(){return tail;}
+    void insert_sorted(int value)
+    {
+        if(!head || value<= head->data)
+        {
+            insert_front(value);
+            return;
+        }
+        if(value >= tail->data)
+        {
+            insert_end(value);
+            return;
+        }
+        for(Node *cur=head;cur;cur=cur->next)
+        {
+            if(value>=cur->data)
+                embed_after(cur->prev,value);
+                return;
+        }
+
+    }
 };
 
 int main()
 {       
     LinkedList l;
+    /*
     l.insert_end(1);l.insert_end(2);l.insert_end(3);
-    // l.print(); 
+    l.print(); 
     l.insert_front(44);l.insert_front(55);l.insert_front(66);
     l.print();
     l.embed_after(l.get_head(),111);
@@ -102,6 +123,10 @@ int main()
     l.embed_after(l.get_tail(),0);
     l.print();
     cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->data<<endl;
+    */
+//    l.insert_end(0);
+   l.insert_sorted(5);l.insert_sorted(50);l.insert_sorted(2);l.insert_sorted(1);
+   l.print();
     return 0;
 }
 
