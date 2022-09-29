@@ -6,4 +6,5 @@ This repo contains my practices for data structures and algorithms in God progra
 ## Reminder: 
 
 - [ ] 18. SLL Homework 4 - 5 Medium to Hard Challenges problem 5
-- 
+- [ ] 6. Project Sparse Array and Matrix
+- [ ]
