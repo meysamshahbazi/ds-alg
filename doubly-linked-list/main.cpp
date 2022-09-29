@@ -224,11 +224,118 @@ public:
         }
         return true;
     }
+    Node* find_middle()
+    {
+        Node *cur=head;
+        Node *rcur=tail;
+        while (cur && rcur)
+        {
+            if(cur->next == rcur->prev || cur->next == rcur)
+                return cur->next;
+
+            cur=cur->next;
+            rcur=rcur->prev;    
+        }
+        return nullptr;
+    }
+    Node* find_middle2()
+    {
+        // in this case we should use just next pointer
+        Node* cur=head;
+        Node* mid=head;
+        bool go_next = false;
+
+        while (cur)
+        {
+            if(go_next) mid=mid->next;
+            go_next = !go_next;
+            cur=cur->next;
+        }
+        return mid;
+    }
+    int get_lenght() const
+    {
+        int len = 0;
+        for(Node *cur = head; cur; cur = cur->next,len++);
+        return len;    
+    }
+    void swap_forward_backward(int k)
+    {
+        Node *cur=head;
+        Node *rcur=tail;
+        int i=0;
+
+        while (cur && rcur)
+        {
+            if(i==k)
+            {
+                Node* cur_next = cur->next;
+                Node* rcur_prev = rcur->prev; 
+                Node* rcur_next = rcur->next; 
+                link(cur->prev,rcur);
+                link(rcur,cur_next);
+                link(rcur_prev,cur);
+                link(cur,rcur_next);
+                if(k == 0)
+                    std::swap(head,tail);
+                return;
+            }
+            i++;
+            cur=cur->next;
+            rcur=rcur->prev;
+        }
+    }
+    void reverse()
+    {
+        // we do it with the very simple idea :D
+        // travers the list and swap prev and next
+        // but pay attention for step in FOR loop is go to prev!!
+        for(Node*cur=head;cur;cur=cur->prev)
+        {
+            std::swap(cur->next,cur->prev);
+        }
+        std::swap(head,tail);
+    }
+    void merge_2sorted_listes(LinkedList &another)
+    {
+        Node *cur=head;
+        Node *acur=another.head;
+        while (cur)
+        {
+            if(acur->data < cur->data)
+            {
+                if(cur==head)
+                    insert_front(acur->data);
+                else 
+                    embed_after(cur->prev,acur->data);
+                acur = acur->next;
+                if(!acur) // in this case all of another list nodes are inside of this list
+                {
+                    break;
+                }
+            }
+            else 
+            {
+                cur = cur->next;
+            }
+        }
+        
+        while (acur)// if there was ant other of another list
+        {
+            insert_end(acur->data);
+            acur=acur->next;
+        }
+        
+    }
 };
 
 int main()
 {       
     LinkedList l;
+    l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
+    l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);l.insert_end(9);
+    l.print();
+
     /*
     l.insert_end(1);l.insert_end(2);l.insert_end(3);
     l.print(); 
@@ -290,21 +397,36 @@ int main()
     l.print();
     l.delete_even_positions();
     l.print();*/ 
-    
+    /*
     l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
     l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);
     l.print();
     l.delete_odd_positions();
     l.print();
-    
+    */
     /*
     l.insert_end(1);l.insert_end(3);l.insert_end(3);l.insert_end(1);
     l.print();
     cout<<l.is_palindrome()<<endl; */
+    /*
+    l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
+    l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);l.insert_end(9);
+    l.print();
+    cout<<l.find_middle2()->data<<endl;
+    cout<<l.get_lenght()<<endl;*/
+    /*
+    l.swap_forward_backward(7);
+    l.print();*/
+    // l.reverse();
 
-
-
-
+    // l.print();
+    LinkedList l1,l2;
+    l1.insert_sorted(1);l1.insert_sorted(2);//l1.insert_sorted(3);l1.insert_sorted(4);
+    l2.insert_sorted(0);l2.insert_sorted(2);l2.insert_sorted(3);
+    l1.print();
+    l2.print();
+    l1.merge_2sorted_listes(l2);
+    l1.print();
     return 0;
 }
 
