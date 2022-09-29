@@ -207,15 +207,8 @@ public:
             delete_front();
             return; // return for one node
         }
-        Node* new_head = head->next;
-        Node* cur=head;
-        while (cur)
-        {
-            cur = delete_and_link(cur);
-            if(!cur->next || !cur->next->next) break;
-            cur = cur->next->next;
-        }
-        head = new_head;
+        delete_front();
+        delete_even_positions();
     }
     bool is_palindrome()
     {
@@ -297,19 +290,19 @@ int main()
     l.print();
     l.delete_even_positions();
     l.print();*/ 
-    /*
+    
     l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
     l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);
     l.print();
     l.delete_odd_positions();
     l.print();
-    */
+    
     /*
     l.insert_end(1);l.insert_end(3);l.insert_end(3);l.insert_end(1);
     l.print();
-    cout<<l.is_palindrome()<<endl;*/
+    cout<<l.is_palindrome()<<endl; */
 
-    
+
 
 
     return 0;
