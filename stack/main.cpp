@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cassert>
 #include <string.h>
+#include <stack>
+#include <queue>
 // #include <ostream>
 
 using namespace std;
@@ -40,7 +42,7 @@ public:
     {
         return top==size-1;
     }
-    int is_empty()
+    bool is_empty()
     {
         return top ==-1;
     }
@@ -96,26 +98,92 @@ int revers_num(int num)
     }
     return ret;
 }
-bool isValid(string str)
+
+char close_with(const char c)
+{
+    // input char c colse with return value
+    if(c == ')') return '(';
+    if(c == ']') return '[';
+    return '{';
+}
+bool isValid1(string str)
 {
     // valid prantehesis
-    Stack<char> stk_opend(MAX_WORD_SIZE);
-    Stack<char> stk_closed(MAX_WORD_SIZE);
+    Stack<char> opened(MAX_WORD_SIZE);
+    
     for(char &c:str)
     {
-        if(c =='(')
+        if(c =='(' || c =='[' || c =='{' )
+            opened.push(c);
+        else if(opened.is_empty() || opened.pop() != close_with(c))
+            return false;
+    }
+    return opened.is_empty();
+}
+
+bool isValid(string s) //https://leetcode.com/problems/valid-parentheses/
+{
+    std::stack<char> opened;
+    for(const char &c:s)
+    {
+        if(c =='(' || c =='[' || c =='{' )
+            opened.push(c);
+        
+        else if( opened.empty() ) 
+            return false;
+        else
         {
-            stk_opend.push(c);
-        }
-        if(c == ')')
-        {
-            stk_closed.push(c);
+            char poped = opened.top();
+            opened.pop();
+            if(poped !=close_with(c))
+                return false;
         }
     }
-
-    
-
+    return opened.empty();
 }
+string removeDuplicates1(string s)
+{
+    Stack<char> stk(MAX_WORD_SIZE);
+    for(const char &c:s)
+    {
+        if(stk.is_empty() || c!=stk.peek() )
+            stk.push(c);
+        else 
+            stk.pop();
+    }
+    string ret (stk.get_top()+1, ' ' );
+    for(int i=ret.size()-1;i>=0;i--)
+        ret[i]=stk.pop();
+    return ret;
+}
+
+string removeDuplicates(string s) //https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
+{
+    std::stack<char> stk;
+    for(const char &c:s)
+    {
+        if(stk.empty() || c!=stk.top() )
+            stk.push(c);
+        else 
+            stk.pop();      
+    }
+    // string ret (stk.size(), ' ' );
+    // for(int i=ret.size()-1;i>=0;i--)
+    // {
+    //     ret[i]=stk.top();
+    //     stk.pop();
+    // }
+    string ret;
+    while (!stk.empty())
+    {
+        ret = stk.top()+ret;
+        stk.pop();
+    }
+    
+    return ret;
+}
+
+
 
 int main() 
 {
@@ -141,6 +209,13 @@ int main()
     string line{"abc df g higj"};
     std::cout<<reverse_subwords(line)<<endl;
     std::cout<<revers_num(4521)<<endl;
+
+    cout << isValid("(())") << "\n";		// 1
+	cout << isValid("(()[()])") << "\n";	// 1
+	cout << isValid("(][)") << "\n";		// 0
+	cout << isValid("(()") << "\n";	
+
+    cout<<removeDuplicates("abbaca")<<endl;;
     return 0;
 }
 
