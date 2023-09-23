@@ -208,7 +208,7 @@ int main()
 
     string line{"abc df g higj"};
     std::cout<<reverse_subwords(line)<<endl;
-    std::cout<<revers_num(4521)<<endl;
+    std::cout<<revers_num(45021)<<endl;
 
     cout << isValid("(())") << "\n";		// 1
 	cout << isValid("(()[()])") << "\n";	// 1
