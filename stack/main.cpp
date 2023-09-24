@@ -183,6 +183,50 @@ string removeDuplicates(string s) //https://leetcode.com/problems/remove-all-adj
     return ret;
 }
 
+vector<int> asteroidCollision(vector<int>& asteroids) { // https://leetcode.com/problems/asteroid-collision/
+    std::stack<int> stk;
+    std::vector<int> res;
+    for(auto a:asteroids){
+        bool do_push = true;
+        while (!stk.empty()){
+            if (a <0 && stk.top() >0) {
+                if(-a > stk.top()){
+                    stk.pop();
+                    do_push = true;
+                }
+                else if (-a == stk.top()){
+                    stk.pop();
+                    do_push = false;
+                    break;
+                }
+                else {
+                    do_push = false;
+                    break;
+                }
+            }
+            else {
+                do_push = true;
+                break;
+            }
+        }
+        if(do_push)
+            stk.push(a);
+    }
+    stack<int> stk2;
+    while (!stk.empty())
+    {
+        stk2.push(stk.top());
+        stk.pop();
+    }
+    while (!stk2.empty())
+    {
+        res.push_back(stk2.top());
+        stk2.pop();
+    }
+    
+    return res;
+
+}
 
 
 int main() 
@@ -215,7 +259,13 @@ int main()
 	cout << isValid("(][)") << "\n";		// 0
 	cout << isValid("(()") << "\n";	
 
-    cout<<removeDuplicates("abbaca")<<endl;;
+    cout<<removeDuplicates("abbaca")<<endl;
+    // hw2 p1 
+    vector<int> astroids = {1,-1,-2,-2};
+    auto res = asteroidCollision(astroids);
+    for(auto r:res)
+        cout<<r<<", ";
+    cout<<endl;
     return 0;
 }
 
