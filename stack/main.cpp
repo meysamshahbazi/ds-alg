@@ -52,7 +52,30 @@ public:
             std::cout<<array[i]<<" ";
         std::cout<<endl;
     }
-    int get_top(){return top;}
+    int get_top() const {return top;}
+    void insert_at_bottom(T x)
+    {
+        if(top ==-1){
+            push(x);
+            return;
+        }
+        else {
+            T t = pop();
+            insert_at_bottom(x);
+            push(t);
+        }
+    }
+    void reverse()
+    {
+        if(top == 0){
+            return;
+        }
+        else {
+            T t = pop();
+            reverse();
+            insert_at_bottom(t);
+        }
+    }
 };
 #define MAX_WORD_SIZE 10
 string reverse_subwords(string line)
@@ -266,6 +289,14 @@ int main()
     for(auto r:res)
         cout<<r<<", ";
     cout<<endl;
+    // hw2 p2
+    Stack<int> stk2(20);
+    stk2.push(1);stk2.push(2);stk2.push(3);
+    stk2.display();
+    stk2.insert_at_bottom(0);
+    stk2.display();
+    stk2.reverse();
+    stk2.display();
     return 0;
 }
 
