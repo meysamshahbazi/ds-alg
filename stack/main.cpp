@@ -261,7 +261,7 @@ int main()
 
     cout<<removeDuplicates("abbaca")<<endl;
     // hw2 p1 
-    vector<int> astroids = {1,-1,-2,-2};
+    vector<int> astroids = {8,-8};//{1,-1,-2,-2};
     auto res = asteroidCollision(astroids);
     for(auto r:res)
         cout<<r<<", ";
