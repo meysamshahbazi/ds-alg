@@ -284,6 +284,7 @@ int scoreOfParentheses(stack<char> s)
             return 2*scoreOfParentheses(stk_inside);
         }
     }
+    return 0;
 }
 
 int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-parentheses/
@@ -293,6 +294,36 @@ int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-paren
         stk.push(c);
     
     return scoreOfParentheses(stk);
+}
+
+// https://leetcode.com/problems/daily-temperatures/
+vector<int> dailyTemperatures(vector<int>& temperatures) 
+{
+    
+    stack<int> stk;
+    for(auto t:temperatures)
+        stk.push(t);
+        
+    int i = temperatures.size()-1;
+    stack<int> calculated;
+    stack<int> answer;
+    while (!stk.empty()) {
+        int t = stk.top();
+        stk.pop();
+        if(calculated.empty()){
+            answer.push(0);
+            calculated.push(t);
+            continue;
+        }
+        
+        if(stk.top() > t ){
+            answer.push(answer.top()+1);
+        }
+        else
+            answer.push(1);
+    }
+    
+
 }
 
 int main() 
