@@ -251,6 +251,49 @@ vector<int> asteroidCollision(vector<int>& asteroids) { // https://leetcode.com/
 
 }
 
+int scoreOfParentheses(stack<char> s)
+{
+    int closeness = 0;
+    stack<char> stk;
+    if(s.empty()) return 0;
+    if(s.size() == 2 ){
+        return  1;
+    }
+
+    while (!s.empty()) {
+        char c = s.top();
+        if ( c==')' )
+            closeness++;
+        else 
+            closeness--;
+
+        stk.push(c);
+        s.pop();
+
+        if( closeness == 0 ){
+            return scoreOfParentheses(s)+scoreOfParentheses(stk);       
+        }
+
+        if(s.size() == 1){
+            stack<char> stk_inside;
+            while(stk.size() > 1) {
+                char cc = stk.top();
+                stk.pop();
+                stk_inside.push(cc);
+            }
+            return 2*scoreOfParentheses(stk_inside);
+        }
+    }
+}
+
+int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-parentheses/
+{
+    stack<char> stk;
+    for(char c:s)
+        stk.push(c);
+    
+    return scoreOfParentheses(stk);
+}
 
 int main() 
 {
@@ -289,7 +332,7 @@ int main()
     for(auto r:res)
         cout<<r<<", ";
     cout<<endl;
-    // hw2 p2
+    // hw2 p2,p3
     Stack<int> stk2(20);
     stk2.push(1);stk2.push(2);stk2.push(3);
     stk2.display();
@@ -297,6 +340,9 @@ int main()
     stk2.display();
     stk2.reverse();
     stk2.display();
+    // hw2 p5
+    string s = "(()(()))";
+    cout<<scoreOfParentheses(s)<<"\n";
     return 0;
 }
 
