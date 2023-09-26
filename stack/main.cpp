@@ -299,31 +299,35 @@ int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-paren
 // https://leetcode.com/problems/daily-temperatures/
 vector<int> dailyTemperatures(vector<int>& temperatures) 
 {
-    
+    // TODO: sumbit proper code!
     stack<int> stk;
     for(auto t:temperatures)
         stk.push(t);
-        
-    int i = temperatures.size()-1;
-    stack<int> calculated;
+    
+    stack<int> greaters;
     stack<int> answer;
     while (!stk.empty()) {
         int t = stk.top();
-        stk.pop();
-        if(calculated.empty()){
-            answer.push(0);
-            calculated.push(t);
-            continue;
-        }
         
-        if(stk.top() > t ){
-            answer.push(answer.top()+1);
+        while (!greaters.empty() && t>greaters.top()) {
+            greaters.pop();
         }
-        else
-            answer.push(1);
+
+        if(greaters.empty())
+            answer.push(-1);
+        else 
+            answer.push(greaters.top());
+
+        greaters.push(t);
+        stk.pop();
     }
     
-
+    vector<int> res;
+    while (!answer.empty()) {
+        res.push_back(answer.top());
+        answer.pop();
+    }
+    return res;
 }
 
 int main() 
@@ -374,6 +378,15 @@ int main()
     // hw2 p5
     string s = "(()(()))";
     cout<<scoreOfParentheses(s)<<"\n";
+    // hw2 p6
+    vector<int> temps = {8, 73, 74, 75, 71, 69, 72, 76, 73} ;
+    for(auto r:temps)
+        cout<<r<<", ";
+    cout<<endl;
+    auto next_greaters = dailyTemperatures(temps);
+    for(auto r:next_greaters)
+        cout<<r<<", ";
+    cout<<endl;
     return 0;
 }
 
