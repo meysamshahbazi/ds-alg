@@ -77,6 +77,57 @@ public:
         }
     }
 };
+
+class StackLL
+{
+private: 
+    struct Node
+    {
+        int data{};
+        Node *next{nullptr};
+        Node(int data):data(data) {}
+    };
+    Node * head{nullptr};
+public:
+    ~StackLL() {
+        while (!empty()) {
+            pop();
+        }
+    }
+    int pop()
+    {
+        assert(!empty());
+        int element = head->data;
+        Node *temp = head;
+        head = head->next;
+        delete temp;
+        return element;
+    }
+    void push(int data)
+    {
+        Node *newNode  = new Node(data);
+        newNode->next = head;
+        head = newNode;
+        
+    }
+    int empty() 
+    {
+        return !head;
+    }
+    void display()
+    {
+        for(Node *cur=head;cur;cur = cur->next)
+            cout<<cur->data<<", ";
+        cout<<"\n";
+    }
+    int peek()
+    {
+       assert(!empty());
+       return head->data;
+    }
+
+};
+
 #define MAX_WORD_SIZE 10
 string reverse_subwords(string line)
 {
@@ -299,7 +350,6 @@ int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-paren
 // https://leetcode.com/problems/daily-temperatures/
 vector<int> dailyTemperatures(vector<int>& temperatures) 
 {
-    
     stack<int> stk;
     for(auto t:temperatures)
         stk.push(t);
@@ -374,6 +424,19 @@ int main()
     // hw2 p5
     string s = "(()(()))";
     cout<<scoreOfParentheses(s)<<"\n";
+    // hw2 p6
+
+    // --
+    StackLL stkll;
+	stkll.push(10);
+	stkll.push(20);
+	stkll.push(30);
+
+	stkll.display();	// 30 20 10
+	cout << stkll.peek() << "\n";	// 30
+
+	while (!stkll.empty())
+		cout << stkll.pop() << " ";
     return 0;
 }
 
