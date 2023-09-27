@@ -349,8 +349,26 @@ int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-paren
 
 // https://leetcode.com/problems/daily-temperatures/
 vector<int> dailyTemperatures(vector<int>& temperatures) 
+{    
+    stack<int> greaters_index;
+    vector<int> answer(temperatures.size());
+    for(int i=temperatures.size()-1;i>=0;i--){      
+        while (!greaters_index.empty() && temperatures[i]>=temperatures[greaters_index.top()]) {
+            greaters_index.pop();
+        }
+
+        if(greaters_index.empty())
+            answer[i] = 0;
+        else 
+            answer[i] = greaters_index.top()-i;
+
+        greaters_index.push(i);
+    }
+    return answer;
+}
+
+vector<int> next_greater_num(vector<int>& temperatures) 
 {
-    // TODO: sumbit proper code!
     stack<int> stk;
     for(auto t:temperatures)
         stk.push(t);
@@ -434,7 +452,7 @@ int main()
     for(auto r:temps)
         cout<<r<<", ";
     cout<<endl;
-    auto next_greaters = dailyTemperatures(temps);
+    auto next_greaters = next_greater_num(temps);
     for(auto r:next_greaters)
         cout<<r<<", ";
     cout<<endl;
@@ -450,6 +468,19 @@ int main()
 
 	while (!stkll.empty())
 		cout << stkll.pop() << " ";
+        
+    cout<<endl;
+    vector<int> dt = {73,74,75,71,69,72,76,73};
+    dt = {30,40,50,60};
+    dt = {30,60,90};
+    dt = {89,62,70,58,47,47,46,76,100,70};
+    for(auto g:dt)
+        cout<<g<<", ";
+    cout<<endl;
+    auto greaters_ = dailyTemperatures(dt);
+    for(auto g:greaters_)
+        cout<<g<<", ";
+    cout<<endl;
     return 0;
 }
 
