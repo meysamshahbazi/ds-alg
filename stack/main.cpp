@@ -398,6 +398,59 @@ vector<int> next_greater_num(vector<int>& temperatures)
     }
     return res;
 }
+bool isHigher(char op1, char op2)
+{
+    // return true if op1 has higher precedence to op2
+    if(op1 == '*' || op1 == '/' )
+        if(op2 == '-' || op2 == '+' )
+            return true;
+    
+    return false;
+}
+
+string infixToPostfix(string &infix)
+{
+    stack<char> operators;
+    string postfix;
+    for(char c:infix){
+        if(isdigit(c)){
+            postfix += c;
+        }
+        else {
+            if(c == '(' ) {
+                operators.push(c);
+            }
+            else if(c == ')' ) {
+                 while (!operators.empty() ){
+                        if(operators.top() != '('){
+                            postfix += operators.top();
+                            operators.pop();
+                        }
+                        else {
+                            operators.pop();
+                            break;
+                        }
+                }
+            }
+            else{
+                while (!operators.empty() && !isHigher(c,operators.top()) && operators.top() !='('){
+                        postfix += operators.top();
+                        operators.pop();
+                }
+                operators.push(c);
+            }
+            
+        }
+    }
+    while (!operators.empty()) {
+        char c = operators.top();
+        postfix += c;
+        operators.pop();
+    }
+    
+
+    return postfix;
+}
 
 int main() 
 {
@@ -481,6 +534,10 @@ int main()
     for(auto g:greaters_)
         cout<<g<<", ";
     cout<<endl;
+    // --------------------------------
+    string infix = "1+3*5-8/2";
+    infix = "2+3-((5+2)*3)";
+    cout<<infixToPostfix(infix)<<endl;
     return 0;
 }
 
