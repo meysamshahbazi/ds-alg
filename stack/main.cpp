@@ -125,6 +125,29 @@ public:
        assert(!empty());
        return head->data;
     }
+    int getLenght()
+    {
+        int len = 0;
+        for(Node *cur=head;cur;cur = cur->next)
+            len++;
+        return len;
+    }
+    void delete_middle()
+    {
+        int len = getLenght();
+
+        Node *cur;
+        int index = 0;
+        for(cur=head;cur;cur = cur->next){
+            index++;
+            if(index == len/2)
+                break;
+        }
+        Node *temp = cur->next;// Node to be deleted!
+        cur->next = temp->next;
+        delete temp;
+        
+    }
 
 };
 
@@ -398,22 +421,33 @@ vector<int> next_greater_num(vector<int>& temperatures)
     }
     return res;
 }
-bool isHigher(char op1, char op2)
-{
-    // return true if op1 has higher precedence to op2
-    if(op1 == '*' || op1 == '/' )
-        if(op2 == '-' || op2 == '+' )
-            return true;
+// bool isHigher(char op1, char op2)
+// {
+//     // return true if op1 has higher precedence to op2
+//     if(op1 == '*' || op1 == '/' )
+//         if(op2 == '-' || op2 == '+' )
+//             return true;
     
-    return false;
-}
+//     return false;
+// }
 
+int OpOrder(char op)
+{
+    if( op=='^' )
+        return 3;
+    else if ( op=='*'|| op=='/')
+        return 2;
+    else if ( op=='+'|| op=='-')
+        return 1;
+    else return 0;
+}
+// https://practice.geeksforgeeks.org/problems/infix-to-postfix-1587115620/1?category%5B%5D=Stack&category%5B%5D=Stack&page=2&query=category%5B%5DStackpage2category%5B%5DStack
 string infixToPostfix(string &infix)
 {
     stack<char> operators;
     string postfix;
     for(char c:infix){
-        if(isdigit(c)){
+        if(isdigit(c) || iswalnum(c)){
             postfix += c;
         }
         else {
@@ -433,9 +467,11 @@ string infixToPostfix(string &infix)
                 }
             }
             else{
-                while (!operators.empty() && !isHigher(c,operators.top()) && operators.top() !='('){
+                while (!operators.empty() && (OpOrder(c)<=OpOrder(operators.top()))
+                     && operators.top() !='(' && c != '^'){
                         postfix += operators.top();
                         operators.pop();
+                        
                 }
                 operators.push(c);
             }
@@ -450,6 +486,55 @@ string infixToPostfix(string &infix)
     
 
     return postfix;
+}
+
+string infixToPretfix(string &infix)
+{
+    infix.reserve();
+    for(char c:infix) {
+
+    }
+
+}
+
+#include <math.h>
+double calc(double a,double b,char op)
+{
+    if(op == '+')
+        return a+b;
+    if(op == '-')
+        return a-b;
+    if(op == '*')
+        return a*b;
+    if(op == '/')
+        return a/b;
+    if(op == '^')
+        return pow(a,b);
+
+}
+
+double evalaute_postfix(string postfix)
+{
+    stack<double> stk;
+    for (char c:postfix){
+        if(isdigit(c)){
+            string s = "";
+            s += c;
+            stk.push(atof(s.c_str()));
+        }
+        else {
+            double b = stk.top(); stk.pop();
+            double a = stk.top(); stk.pop();
+            double r = calc(a,b,c);
+            stk.push(r);
+        }
+    }
+    return stk.top();
+}
+
+string removeExpressionBrackets(string str)
+{
+    
 }
 
 int main() 
@@ -536,8 +621,28 @@ int main()
     cout<<endl;
     // --------------------------------
     string infix = "1+3*5-8/2";
-    infix = "2+3-((5+2)*3)";
+    // infix = "A+b-((5+2)*3)";
+    infix = "4^3^2";
+    infix = "5+4^3^2-9";
+    infix = "a+b*(c^d-e)^(f+g*h)-i";
+    infix = "1+2^3^4*5-6";
+    infix = "h^m^q^(7-4)";
+    // hw3 p1
     cout<<infixToPostfix(infix)<<endl;
+    // hw3 p2
+    string postfix = "52/";
+    postfix = "12+3+";
+    postfix = "123*+";
+    postfix = "135*+72/-";
+    postfix = "432^^";
+    cout<<evalaute_postfix(postfix)<<endl;
+    //hw3 p3
+    // hw3 p4
+    StackLL stkp4;
+    stkp4.push(1);stkp4.push(2);stkp4.push(3);stkp4.push(4);stkp4.push(5);
+    stkp4.display();
+    stkp4.delete_middle();
+    stkp4.display();
     return 0;
 }
 
