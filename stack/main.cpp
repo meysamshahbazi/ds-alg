@@ -532,9 +532,37 @@ double evalaute_postfix(string postfix)
     return stk.top();
 }
 
+char getSign(char a,char b)
+{
+    return a==b ? '+':'-';
+}
 string removeExpressionBrackets(string str)
 {
-    
+    string res = "";
+    stack<char> prantesis;
+    stack<char> sign_of_prantesis;
+    stack<char> ops;
+    sign_of_prantesis.push('+');
+    ops.push('+');
+    for(char c:str){
+        if(isdigit(c))
+            res +=c;
+        else if(c == '('){
+            if(ops.top() == '-'){
+                prantesis.push(c);                
+                sign_of_prantesis.push(getSign(ops.top(),sign_of_prantesis.top()));// check for empty stack
+            }
+        }
+        else if(c == ')'){
+            prantesis.pop();                
+            sign_of_prantesis.pop();
+        }
+        else {// c is +-
+            ops.push(c);
+            res += getSign(sign_of_prantesis.top(),c);
+        }
+    }
+    return res;
 }
 
 int main() 
@@ -636,13 +664,23 @@ int main()
     postfix = "135*+72/-";
     postfix = "432^^";
     cout<<evalaute_postfix(postfix)<<endl;
-    //hw3 p3
+    // hw3 p3
     // hw3 p4
     StackLL stkp4;
     stkp4.push(1);stkp4.push(2);stkp4.push(3);stkp4.push(4);stkp4.push(5);
     stkp4.display();
     stkp4.delete_middle();
     stkp4.display();
+    // hw 3 p5
+    string expr;
+    expr = "1+2-3-4+5-6-7+8";
+    expr = "9-(2+3)";
+    expr = "9-(2-3)";
+    expr = "9+(2-3)";
+    expr = "1-(2-3-(4+5))-6-(7-8)";
+    expr = "1-(2-3-(4+5)+6-7)";
+    expr = "1-(2-3-(4+5-(6-7)))";
+    cout<<removeExpressionBrackets(expr)<<endl;
     return 0;
 }
 
