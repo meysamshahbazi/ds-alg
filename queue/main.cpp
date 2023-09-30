@@ -161,21 +161,29 @@ private:
 public:
     void pop()
     {
+        added_elements--;
         q.pop();
     }
 
     void push(int value)
     {
-        queue<int> qq;
-        while(!q.empty()){
-            qq.push(q.front());
+        // queue<int> qq;
+        // while(!q.empty()){
+        //     qq.push(q.front());
+        //     q.pop();
+        // }
+        // q.push(value);
+        // while(!qq.empty()){
+        //     q.push(qq.front());
+        //     qq.pop();
+        // }
+        int sz = added_elements;
+        q.push(value);
+        while(sz--){
+            q.push(q.front());
             q.pop();
         }
-        q.push(value);
-        while(!qq.empty()){
-            q.push(qq.front());
-            qq.pop();
-        }
+        added_elements++;
     }
 
     int peek()
@@ -183,6 +191,85 @@ public:
         return q.front();
     }
     bool empty() { return q.empty();}
+};
+
+class QueueHw1p3
+{
+private:
+    int size;
+    int added_element{0};
+    stack<int> s1;
+    stack<int> s2;
+public:
+    QueueHw1p3()
+    {
+
+    }
+    bool empty()
+    {
+        return added_element==0;   
+    }
+    void enqueue(int value)
+    {
+        while (!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        s1.push(value);
+        while (!s2.empty()) {
+            s1.push(s2.top());
+            s2.pop();
+        }
+        added_element++;
+    }
+    int dequeue()
+    {
+        int val = s1.top();
+        s1.pop();
+        added_element--;
+        return val;
+    }
+};
+
+class QueueHw1p4
+{
+private:
+    int size;
+    int added_element{0};
+    stack<int> s1;
+    stack<int> s2;
+public:
+    QueueHw1p4()
+    {
+
+    }
+    bool empty()
+    {
+        return added_element==0;   
+    }
+    void enqueue(int value)
+    {
+        s1.push(value);
+        added_element++;
+
+    }
+    int dequeue()
+    {
+        while (!s1.empty())
+        {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        int val = s2.top();
+        s2.pop();
+        while (!s2.empty())
+        {
+            s1.push(s2.top());
+            s2.pop();
+        }
+        added_element--;
+        return val;
+    }
 };
 
 int main()
@@ -202,7 +289,7 @@ int main()
     cout<<dq.dequeue_front()<<endl;
     dq.enqueue_rear(7);
     dq.display();
-    // hw2 p2
+    // hw1 p2
     Stack stk;
     stk.push(10); stk.push(20); stk.push(30); 
     while (!stk.empty() ){
@@ -210,7 +297,31 @@ int main()
         stk.pop();
     }
     cout<<endl;
-    // hw3 p3
+    // hw1 p3
+    QueueHw1p3 qup3;
+    for(int i=1;i <=3;i++)
+        qup3.enqueue(i);
+    cout<<qup3.dequeue()<<", ";
+    for(int i=4;i<=5;i++)
+        qup3.enqueue(i);
+
+    while (!qup3.empty()) {
+        cout<<qup3.dequeue()<<", ";
+    }
+    cout<<endl;
+    
+    // hw1 p4
+    QueueHw1p4 qup4;
+    for(int i=1;i <=3;i++)
+        qup4.enqueue(i);
+    cout<<qup4.dequeue()<<", ";
+    for(int i=4;i<=5;i++)
+        qup4.enqueue(i);
+
+    while (!qup4.empty()) {
+        cout<<qup4.dequeue()<<", ";
+    }
+    cout<<endl;
     return 0;
 }
 
