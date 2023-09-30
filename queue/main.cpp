@@ -161,16 +161,28 @@ private:
 public:
     void pop()
     {
-
+        q.pop();
     }
+
     void push(int value)
     {
+        queue<int> qq;
+        while(!q.empty()){
+            qq.push(q.front());
+            q.pop();
+        }
         q.push(value);
+        while(!qq.empty()){
+            q.push(qq.front());
+            qq.pop();
+        }
     }
+
     int peek()
     {
-
+        return q.front();
     }
+    bool empty() { return q.empty();}
 };
 
 int main()
@@ -191,6 +203,14 @@ int main()
     dq.enqueue_rear(7);
     dq.display();
     // hw2 p2
+    Stack stk;
+    stk.push(10); stk.push(20); stk.push(30); 
+    while (!stk.empty() ){
+        cout<<stk.peek()<<", ";
+        stk.pop();
+    }
+    cout<<endl;
+    // hw3 p3
     return 0;
 }
 
