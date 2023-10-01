@@ -10,8 +10,8 @@ template<class T>
 struct Node
 {
     T data{};
-    Node<T>* left;
-    Node<T>* right;
+    Node<T>* left{nullptr};
+    Node<T>* right{nullptr};
     Node(T data): data{data} 
     {
     }
@@ -50,6 +50,150 @@ void clear(Node<char>* current)
     current->right = nullptr;
     delete current;
 }
+
+class BinaryTree
+{
+    Node<int>* root{};
+    void print_inorder(Node<int>* current)
+    {
+        if(!current)
+            return;
+
+        print_inorder(current->left);
+        cout<<current->data<<" ";
+        print_inorder(current->right);
+    }
+public:
+    BinaryTree(int root_value){
+        root = new Node<int>(root_value);
+    }
+    void print_inorder()
+    {
+        print_inorder(root);
+        cout<<"\n";
+    }
+    void add(vector<int> values,vector<char> direction)
+    {
+        assert(values.size()==direction.size());
+        Node<int>* current = this->root;
+        for(int i=0; (int) i<values.size();i++){
+            if(direction[i]=='L'){
+                if(!current->left)
+                    current->left = new Node<int>(values[i]);
+                else
+                    assert(current->left->data == values[i]);
+                current = current->left;
+            }
+            else { // Right
+                if(!current->right)
+                    current->right = new Node<int>(values[i]);
+                else
+                    assert(current->right->data == values[i]);
+                current = current->right;
+            }
+        }
+    }
+    int tree_max(Node<int>* node)
+    {
+        if(!node->right && !node->left)
+            return node->data;
+        else if(node->right && !node->left){
+            int max_sub = tree_max(node->right);
+            if(max_sub > node->data)
+                return max_sub;
+            else 
+                return node->data;
+        }
+        else if(!node->right && node->left){
+            int max_sub = tree_max(node->left);
+            if(max_sub > node->data)
+                return max_sub;
+            else 
+                return node->data;
+        }
+        else {
+            int max_right = tree_max(node->right);
+            int max_left = tree_max(node->left);
+            if(node->data >= max_right && node->data >= max_left)
+                return node->data;
+            if(max_right >= node->data && max_right >= max_left)
+                return max_right;
+            if(max_left >= max_right && max_left >= node->data)
+                return max_left;
+
+        }
+        
+    }
+    int tree_max()
+    {
+        return tree_max(root);
+    }
+    bool isLeaf(Node<int>* node)
+    {
+        return !node->left && !node->right;
+    }
+    int tree_height(Node<int> *node)
+    {
+        if(!node)
+            return 0;
+        else if( isLeaf(node) )
+            return 0;
+        else
+            return 1+max(tree_height(node->left),tree_height(node->right));
+
+    }
+    int tree_height()
+    {
+        return tree_height(root);
+    }
+    int total_nodes(Node<int> *node)
+    {
+        if(!node)
+            return 0;
+        return 1 + total_nodes(node->left) + total_nodes(node->right);
+    }
+    int total_nodes()
+    {
+        return total_nodes(root);
+    }
+    int total_leaves(Node<int>* node)
+    {
+        if(!node)
+            return 0;
+        else if( isLeaf(node) )
+            return 1;
+        return total_leaves(node->left)+total_leaves(node->right);
+
+    }
+    int total_leaves()
+    {
+        return total_leaves(root);
+    }
+    bool is_exists(int value,Node<int>* node)
+    {
+        if(!node)
+            return false;
+        return is_exists(value,node->left) || is_exists(value,node->right) || (node->data==value);
+        
+    }
+    bool is_exists(int value)
+    {
+        return is_exists(value,root);
+    }
+    bool is_perfect(Node<int>* node)
+    {
+        if(!node) 
+            return true;
+        else if( (!node->left && node->right) || (node->left && !node->right) )
+            return false;
+        return is_perfect(node->right) && is_perfect(node->left);
+
+    }
+    bool is_perfect()
+    {
+        return is_perfect(root);
+    }
+};
 
 int main()
 {
@@ -97,6 +241,27 @@ int main()
     clear(mul);
     cout<<"print for second time\n";
     print_postorder(mul);cout<<"\n";
+
+    BinaryTree tree(1);
+	tree.add( { 2, 4, 7 }, { 'L', 'L', 'L' });
+	tree.add( { 2, 4, 8 }, { 'L', 'L', 'R' });
+	tree.add( { 2, 15, 9 }, { 'L', 'R', 'R' });
+	tree.add( { 3, 6, 10 }, { 'R', 'R', 'L' });
+
+	tree.print_inorder();
+    // hw1 p1
+    cout<<tree.tree_max()<<endl;
+    // hw1 p2
+    cout<<tree.tree_height()<<endl;
+    // hw1 p3
+    cout<<tree.total_nodes()<<endl;
+    // hw1 p4
+    cout<<tree.total_leaves()<<endl;
+    // hw1 p5
+    cout<<tree.is_exists(2)<<endl;
+    cout<<tree.is_exists(14)<<endl;
+    // hw1 p6
+    cout<<tree.is_perfect()<<endl;
     return 0;
 }
 
