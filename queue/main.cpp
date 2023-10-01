@@ -272,6 +272,153 @@ public:
     }
 };
 
+class PriorityQueue
+{
+private:
+    queue<int> q3;
+    queue<int> q2;
+    queue<int> q1;
+public:
+    bool empty()
+    {
+        return q1.empty() && q2.empty() && q3.empty();
+    }
+    void enqueue(int value, int priorty)
+    {
+        if(priorty==3)
+            q3.push(value);
+        if(priorty==2)
+            q2.push(value);
+        if(priorty==1)
+            q1.push(value);
+    }
+    int dequeue()
+    {
+        if(!q3.empty()){
+            int val = q3.front();
+            q3.pop();
+            return val;
+        }
+        if(!q2.empty()){
+            int val = q2.front();
+            q2.pop();
+            return val;
+        }
+        if(!q1.empty()){
+            int val = q1.front();
+            q1.pop();
+            return val;
+        }
+    }
+    void display()
+    {
+        cout<<"P3: ";
+        while (!q3.empty()) {
+            cout<<q3.front()<<", ";
+            q3.pop();
+        }
+        cout<<endl;
+        cout<<"P2: ";
+        while (!q2.empty()) {
+            cout<<q2.front()<<", ";
+            q2.pop();
+        }
+        cout<<endl;
+        cout<<"P1: ";
+        while (!q3.empty()) {
+            cout<<q1.front()<<", ";
+            q1.pop();
+        }
+        cout<<endl;
+    }
+
+
+};
+
+
+class QueueHw2p2 {
+    int size{};
+    int front{-1};
+    int rear{0};
+    int *array{};
+
+    int next(int pos) {
+        ++pos;
+        if(pos==size)
+            pos = 0;
+        return pos;
+    }
+public:
+    QueueHw2p2(int size):size{size}
+    {
+        array = new int[size];
+    }
+    ~QueueHw2p2()
+    {
+        delete[] array;
+    }
+    bool empty()
+    {
+        return rear==0 && front==-1;   
+    }
+    bool isFull()
+    {
+        return !empty() && rear==front;
+    }
+    void enqueue(int value)
+    {
+        assert(!isFull());
+        array[rear+1] = value;
+        rear = next(rear);
+    }
+    int dequeue()
+    {
+        assert(!empty());
+        int value = array[front+1];
+        front = next(front);
+        if(rear-front==0) { // queue is about to be empty!
+            rear =-1;
+            front =-1;
+        }
+        return value;
+    }
+    void display()
+    {
+        cout<<"Front: "<<front<<" - Rear: "<<rear<<"\t";
+        if(isFull())
+            cout<<"full";
+        else if( empty() ) {
+            cout<<"Empty\n";
+            return;
+        }
+        cout<<"\n";
+        for(int cur=front,step=0;cur!=rear;++step,cur=next(cur))
+            cout<<array[cur]<< ", ";
+        cout<<"\n";
+    }
+};
+
+class Last_k_numbers_sum_stream
+{
+private:
+    queue<int> q;
+    int k;
+    int sum{0};
+public:
+    Last_k_numbers_sum_stream(int k):k{k}
+    {
+    }
+    int next(int new_num){
+        if(q.size() == k) {
+            sum -= q.front();
+            q.pop();
+        }
+        sum +=new_num;
+        q.push(new_num);
+        return sum;
+    }
+};
+
 int main()
 {   
     // hw1 p1
@@ -322,6 +469,84 @@ int main()
         cout<<qup4.dequeue()<<", ";
     }
     cout<<endl;
+    // hw2 p1
+    PriorityQueue tasks;
+
+	tasks.enqueue(1131, 1);
+	tasks.enqueue(3111, 3);
+	tasks.enqueue(2211, 2);
+	tasks.enqueue(3161, 3);
+
+	// tasks.display();
+
+
+	cout << tasks.dequeue() << "\n";	// 3111
+	cout << tasks.dequeue() << "\n";	// 3161
+
+	tasks.enqueue(1535, 1);
+	tasks.enqueue(2815, 2);
+	tasks.enqueue(3845, 3);
+	tasks.enqueue(3145, 3);
+
+
+	while (!tasks.empty())
+		cout << tasks.dequeue() << " ";
+    cout<<"\n---------------------------------------------"<<endl;
+    //---------------------------------------------    
+    // hw2 p2 
+    // QueueHw2p2 qu(6);
+	// assert(qu.empty());
+	// qu.display();
+
+	// for (int i = 1; i <= 6; ++i) {
+	// 	assert(!qu.isFull());
+	// 	qu.enqueue(i);
+	// 	qu.display();
+	// }
+	// assert(qu.isFull());
+
+	// for (int i = 1; i <= 6; ++i) {
+	// 	assert(!qu.empty());
+	// 	qu.dequeue();
+	// 	//qu.display();
+	// }
+
+	// for (int i = 1; i <= 6; ++i) {
+	// 	assert(!qu.isFull());
+	// 	qu.enqueue(i);
+	// 	qu.display();
+	// }
+
+	// qu.dequeue();
+	// assert(!qu.isFull());
+	// qu.enqueue(7);
+	// assert(qu.isFull());
+	// qu.display();
+
+	// qu.dequeue();
+	// qu.dequeue();
+	// assert(!qu.isFull());
+	// qu.enqueue(8);
+	// assert(!qu.isFull());
+	// qu.display();
+	// qu.enqueue(9);
+	// assert(qu.isFull());
+	// qu.display();
+
+	// for (int i = 1; i <= 6; ++i) {
+	// 	assert(!qu.empty());
+	// 	qu.dequeue();
+	// 	qu.display();
+	// }
+
+    // hw2 p3
+    Last_k_numbers_sum_stream lknss(4);
+    int num;
+    while (cin>>num)
+    {
+        cout<<lknss.next(num)<<endl;
+    }
+    
     return 0;
 }
 
