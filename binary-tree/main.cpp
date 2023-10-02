@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stack>
 #include <queue>
-
+#include <math.h>
 using namespace std;
 
 template<class T>
@@ -277,6 +277,102 @@ public:
         return max(hieght_sum,max(left_dim,right_dim));
 
     }
+    void level_order_traversal1()
+    {
+        queue<Node<T>*> q;
+        q.push(root);
+        while(!q.empty()){
+            Node<T>* cur = q.front();
+            q.pop();
+            cout<<cur->data<<" ";
+            if(cur->left)
+                q.push(cur->left);
+            if(cur->right)
+                q.push(cur->right);
+        }
+        cout<<endl;
+    }
+
+    void level_order_traversal2()
+    {
+        queue<Node<T>*> q;
+        q.push(root);
+        int level = 0;
+        while(!q.empty()){
+            int sz = q.size();
+            cout<<"levle "<<level<<": ";
+
+            while(sz--){
+                Node<T>* cur = q.front();
+                q.pop();
+
+                cout<<cur->data<<" ";
+                
+                if(cur->left)
+                    q.push(cur->left);
+                if(cur->right)
+                    q.push(cur->right);
+            }
+            level++;
+            cout<<"\n";
+            
+        }
+        cout<<endl;
+    }
+    // https://leetcode.com/problems/check-completeness-of-a-binary-tree/
+    bool is_complete()
+    {
+ 
+    }
+    void level_order_traversal_spiral()
+    {
+        deque<Node<T>*> q;
+        q.push_front(root);
+        int level = 0;
+        while(!q.empty()){
+            int sz = q.size();
+            cout<<"levle "<<level<<": ";
+
+            if(level%2==0){
+                while(sz--){
+                    Node<T>* cur = q.front();
+                    q.pop_front();
+
+                    cout<<cur->data<<" ";
+                    
+                    if(cur->left)
+                        q.push_back(cur->left);
+                    if(cur->right)
+                        q.push_back(cur->right);
+                }
+            }
+            else {
+                while(sz--){
+                    Node<T>* cur = q.back();
+                    q.pop_back();
+
+                    cout<<cur->data<<" ";
+                    
+                    if(cur->right)
+                        q.push_front(cur->right);
+                    if(cur->left)
+                        q.push_front(cur->left);
+                }
+            }
+            level++;
+            cout<<"\n";
+            
+        }
+        cout<<endl;
+    }
+    void level_order_traversal_recursive()
+    {
+        level_order_traversal_recursive(root);
+    }
+    void level_order_traversal_recursive(Node<T>* node)
+    {
+        
+    }
 
 };
 
@@ -365,6 +461,12 @@ int main()
     postfix = "534*2^+";
     BinaryTree<char> exp_tree(postfix);
     exp_tree.print_inorder();
+    // 
+    tree.level_order_traversal1();
+    tree.level_order_traversal2();
+    // hw 3 p2
+    tree.level_order_traversal_spiral();
+    cout<<tree.is_complete()<<endl;
     return 0;
 }
 
