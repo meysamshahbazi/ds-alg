@@ -83,6 +83,26 @@ public:
     {
         stack<Node<int>*> stk;
         Node<int>* cur = root;
+        stk.push(root);
+        while (!stk.empty()) {
+            if(cur->left) {
+                stk.push(cur);
+                cur = cur->left;
+            }
+            else{
+                if(cur->right){
+                    stk.push(cur);
+                    cur = cur->right;
+                }
+                else {
+                    cout<<cur->data<<" ";
+                    cur = stk.top();
+                    stk.pop();
+                }
+            }
+
+        }
+        
         
     }
     void print_inorder(Node<int>* current)
