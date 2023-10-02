@@ -54,6 +54,57 @@ void clear(Node<char>* current)
 class BinaryTree
 {
     Node<int>* root{};
+
+public:
+    BinaryTree(int root_value){
+        root = new Node<int>(root_value);
+    }
+    ~BinaryTree()
+    {
+        clear();
+    }
+    void clear()
+    {
+        clear(root);
+    }
+    void clear(Node<int>* current)
+    {
+        if(!current)
+            return;
+
+        clear(current->left);
+        current->left = nullptr;
+        clear(current->right);
+        current->right = nullptr;
+        delete current;
+        current = nullptr;
+    }
+    void print_inorder_iterative() // without recursion
+    {
+        stack<Node<int>*> stk;
+        Node<int>* cur = root;
+        stk.push(root);
+        while (!stk.empty()) {
+            if(cur->left) {
+                stk.push(cur);
+                cur = cur->left;
+            }
+            else{
+                if(cur->right){
+                    stk.push(cur);
+                    cur = cur->right;
+                }
+                else {
+                    cout<<cur->data<<" ";
+                    cur = stk.top();
+                    stk.pop();
+                }
+            }
+
+        }
+        
+        
+    }
     void print_inorder(Node<int>* current)
     {
         if(!current)
@@ -62,10 +113,6 @@ class BinaryTree
         print_inorder(current->left);
         cout<<current->data<<" ";
         print_inorder(current->right);
-    }
-public:
-    BinaryTree(int root_value){
-        root = new Node<int>(root_value);
     }
     void print_inorder()
     {
@@ -262,6 +309,12 @@ int main()
     cout<<tree.is_exists(14)<<endl;
     // hw1 p6
     cout<<tree.is_perfect()<<endl;
+    // hw2 p1 
+    // tree.clear();
+    // cout<<tree.is_exists(2)<<endl;
+    // hw2 p2
+    tree.print_inorder();
+    tree.print_inorder_iterative();
     return 0;
 }
 
