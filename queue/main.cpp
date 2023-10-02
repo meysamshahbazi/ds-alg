@@ -419,6 +419,36 @@ public:
     }
 };
 
+// https://leetcode.com/problems/product-of-the-last-k-numbers/
+class ProductOfNumbers {
+public:
+    stack<int> stk;
+    ProductOfNumbers() {
+        
+    }
+    
+    void add(int num) {
+        stk.push(num);
+    }
+    
+    int getProduct(int k) {
+        stack<int> temp;
+        int i{0};
+        int product = 1;
+        while(i<k){
+            int top = stk.top();
+            product *= top;
+            temp.push(top);
+            stk.pop();
+            i++;
+        }
+        while (!temp.empty()) {
+            stk.push(temp.top());
+            temp.pop();
+        }
+        return product;
+    }
+};
 int main()
 {   
     // hw1 p1
@@ -540,13 +570,26 @@ int main()
 	// }
 
     // hw2 p3
-    Last_k_numbers_sum_stream lknss(4);
-    int num;
-    while (cin>>num)
-    {
-        cout<<lknss.next(num)<<endl;
-    }
-    
+    // Last_k_numbers_sum_stream lknss(4);
+    // int num;
+    // while (cin>>num)
+    // {
+    //     cout<<lknss.next(num)<<endl;
+    // }
+    cout<<"------------------------"<<endl;
+    ProductOfNumbers productOfNumbers = ProductOfNumbers();
+    productOfNumbers.add(3);        // [3]
+    productOfNumbers.add(0);        // [3,0]
+    productOfNumbers.add(2);        // [3,0,2]
+    productOfNumbers.add(5);        // [3,0,2,5]
+    productOfNumbers.add(4);        // [3,0,2,5,4]
+    cout<<productOfNumbers.getProduct(2)<<endl; // return 20. The product of the last 2 numbers is 5 * 4 = 20
+    cout<<productOfNumbers.getProduct(3)<<endl; // return 40. The product of the last 3 numbers is 2 * 5 * 4 = 40
+    cout<<productOfNumbers.getProduct(4)<<endl; // return 0. The product of the last 4 numbers is 0 * 2 * 5 * 4 = 0
+    productOfNumbers.add(8);        // [3,0,2,5,4,8]
+    cout<<productOfNumbers.getProduct(2)<<endl; // return 32. The product of the last 2 numbers is 4 * 8 = 32 
+
+
     return 0;
 }
 
