@@ -50,14 +50,31 @@ void clear(Node<char>* current)
     current->right = nullptr;
     delete current;
 }
-
+template <class T>
 class BinaryTree
 {
-    Node<int>* root{};
+    Node<T>* root{};
 
 public:
-    BinaryTree(int root_value){
-        root = new Node<int>(root_value);
+    BinaryTree(T root_value)
+    {
+        root = new Node<T>(root_value);
+    }
+    BinaryTree(string postfix)
+    {
+        stack<Node<char>*> stk;
+        for(char c:postfix){
+            Node<char>* node = new Node<char>(c);
+            // if(stk.size()==2){
+            if(!isdigit(c)){
+                node->right = stk.top();
+                stk.pop();
+                node->left = stk.top();
+                stk.pop();
+            }
+            stk.push(node);
+        }
+        root = stk.top();
     }
     ~BinaryTree()
     {
@@ -67,7 +84,7 @@ public:
     {
         clear(root);
     }
-    void clear(Node<int>* current)
+    void clear(Node<T>* current)
     {
         if(!current)
             return;
@@ -81,86 +98,83 @@ public:
     }
     void print_inorder_iterative() // without recursion
     {
-        stack<Node<int>*> stk;
-        Node<int>* cur = root;
-        stk.push(root);
-        while (!stk.empty()) {
-            if(cur->left) {
-                stk.push(cur);
-                cur = cur->left;
-            }
-            else{
-                if(cur->right){
-                    stk.push(cur);
-                    cur = cur->right;
-                }
-                else {
-                    cout<<cur->data<<" ";
-                    cur = stk.top();
-                    stk.pop();
-                }
-            }
-
-        }
-        
+        stack<Node<T>*> stk;
+        Node<T>* cur = root;
         
     }
-    void print_inorder(Node<int>* current)
+    void traverse_left_boundry()
+    {
+        Node<T>* cur = root;
+        while(!isLeaf(cur)){
+            if(cur->left){
+                cout<<cur->data<<" ";
+                cur = cur->left;
+            }
+            else if(cur->right){
+                cout<<cur->data<<" ";
+                cur = cur->right;
+            }
+        }
+        cout<<cur->data<<" \n";
+    }
+
+    void print_inorder(Node<T>* current)
     {
         if(!current)
             return;
-
+        if(current->left) cout<<"(";
         print_inorder(current->left);
         cout<<current->data<<" ";
         print_inorder(current->right);
+        if(current->right) cout<<")";
     }
     void print_inorder()
     {
         print_inorder(root);
         cout<<"\n";
     }
-    void add(vector<int> values,vector<char> direction)
+    void add(vector<T> values,vector<char> direction)
     {
         assert(values.size()==direction.size());
-        Node<int>* current = this->root;
-        for(int i=0; (int) i<values.size();i++){
+        Node<T>* current = this->root;
+        for(T i=0; (int) i<values.size();i++){
             if(direction[i]=='L'){
                 if(!current->left)
-                    current->left = new Node<int>(values[i]);
+                    current->left = new Node<T>(values[i]);
                 else
                     assert(current->left->data == values[i]);
                 current = current->left;
             }
             else { // Right
                 if(!current->right)
-                    current->right = new Node<int>(values[i]);
+                    current->right = new Node<T>(values[i]);
                 else
                     assert(current->right->data == values[i]);
                 current = current->right;
             }
         }
     }
-    int tree_max(Node<int>* node)
+    T tree_max(Node<T>* node)
     {
         if(!node->right && !node->left)
             return node->data;
         else if(node->right && !node->left){
-            int max_sub = tree_max(node->right);
+            T max_sub = tree_max(node->right);
             if(max_sub > node->data)
                 return max_sub;
             else 
                 return node->data;
         }
         else if(!node->right && node->left){
-            int max_sub = tree_max(node->left);
+            T max_sub = tree_max(node->left);
             if(max_sub > node->data)
                 return max_sub;
             else 
                 return node->data;
         }
         else {
-            int max_right = tree_max(node->right);
-            int max_left = tree_max(node->left);
+            T max_right = tree_max(node->right);
+            T max_left = tree_max(node->left);
             if(node->data >= max_right && node->data >= max_left)
                 return node->data;
             if(max_right >= node->data && max_right >= max_left)
@@ -175,11 +189,11 @@ public:
     {
         return tree_max(root);
     }
-    bool isLeaf(Node<int>* node)
+    bool isLeaf(Node<T>* node)
     {
         return !node->left && !node->right;
     }
-    int tree_height(Node<int> *node)
+    int tree_height(Node<T> *node)
     {
         if(!node)
             return 0;
@@ -193,7 +207,7 @@ public:
     {
         return tree_height(root);
     }
-    int total_nodes(Node<int> *node)
+    int total_nodes(Node<T> *node)
     {
         if(!node)
             return 0;
@@ -203,7 +217,7 @@ public:
     {
         return total_nodes(root);
     }
-    int total_leaves(Node<int>* node)
+    int total_leaves(Node<T>* node)
     {
         if(!node)
             return 0;
@@ -216,18 +230,18 @@ public:
     {
         return total_leaves(root);
     }
-    bool is_exists(int value,Node<int>* node)
+    bool is_exists(int value,Node<T>* node)
     {
         if(!node)
             return false;
         return is_exists(value,node->left) || is_exists(value,node->right) || (node->data==value);
         
     }
-    bool is_exists(int value)
+    bool is_exists(T value)
     {
         return is_exists(value,root);
     }
-    bool is_perfect(Node<int>* node)
+    bool is_perfect(Node<T>* node)
     {
         if(!node) 
             return true;
@@ -240,6 +254,30 @@ public:
     {
         return is_perfect(root);
     }
+    // https://leetcode.com/problems/diameter-of-binary-tree/
+    int get_diameter()
+    {
+        return get_diameter(root);
+    }
+    int get_diameter(Node<T>* node)
+    {
+        int left_dim = 0;
+        
+        int right_dim = 0;
+        
+        int hieght_sum = 0;
+        if(node->left){
+            left_dim = get_diameter(node->left);
+            hieght_sum += 1+tree_height(node->left);
+        }
+        if(node->right){
+            right_dim = get_diameter(node->right);
+            hieght_sum += 1+tree_height(node->right);
+        }
+        return max(hieght_sum,max(left_dim,right_dim));
+
+    }
+
 };
 
 int main()
@@ -289,7 +327,7 @@ int main()
     cout<<"print for second time\n";
     print_postorder(mul);cout<<"\n";
 
-    BinaryTree tree(1);
+    BinaryTree<int> tree(1);
 	tree.add( { 2, 4, 7 }, { 'L', 'L', 'L' });
 	tree.add( { 2, 4, 8 }, { 'L', 'L', 'R' });
 	tree.add( { 2, 15, 9 }, { 'L', 'R', 'R' });
@@ -315,6 +353,18 @@ int main()
     // hw2 p2
     tree.print_inorder();
     tree.print_inorder_iterative();
+    // hw2 p3
+    tree.traverse_left_boundry();
+
+    //hw2 p4 
+    cout<<tree.get_diameter()<<endl;
+    //hw2 p5
+    string postfix;
+    postfix = "23+4*";
+    postfix = "51+2/";
+    postfix = "534*2^+";
+    BinaryTree<char> exp_tree(postfix);
+    exp_tree.print_inorder();
     return 0;
 }
 
