@@ -4,6 +4,8 @@
 #include <stack>
 #include <queue>
 #include <math.h>
+#include <bits/stdc++.h>
+#include <utility>
 using namespace std;
 
 template<class T>
@@ -322,7 +324,43 @@ public:
     // https://leetcode.com/problems/check-completeness-of-a-binary-tree/
     bool is_complete()
     {
- 
+        queue<Node<T>*> q;
+        queue< Node<T>*> nodes;
+        q.push(root); 
+        while(!q.empty()){
+            int sz = q.size();
+            while(sz--) {
+                Node<T>* cur = q.front();
+                q.pop();
+                if(cur->left){
+                    q.push(cur->left);
+                    nodes.push(cur->left);
+                }
+                else {
+                    nodes.push(nullptr);
+                }
+                if(cur->right){
+                    q.push(cur->right);
+                    nodes.push(cur->right);
+                }
+                else {
+                    nodes.push(nullptr);
+                }
+            } 
+        }
+        while (!nodes.empty()) {
+            Node<T>* node = nodes.front();
+            nodes.pop();
+            if(!node) {
+                while (!nodes.empty()) {
+                    Node<T>* right = nodes.front();
+                    nodes.pop();
+                    if(right)
+                        return false;
+                }
+            }
+        }
+        return true;
     }
     void level_order_traversal_spiral()
     {
@@ -375,6 +413,51 @@ public:
     }
 
 };
+
+
+// LeetCode Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+// "1,2,3,4,5,null,7"
+
+queue<string> parse(string str)
+{
+    queue<string> v;
+    stringstream ss(str);
+ 
+    while (ss.good()) {
+        string substr;
+        getline(ss, substr, ',');
+        v.push(substr);
+    }
+    return v;
+}
+
+TreeNode* createFromString(string str)
+{
+    queue<string> nodes = parse(str);
+    TreeNode* root;
+
+    while (!nodes.empty())
+    {
+        string s = nodes.front();
+        nodes.pop();
+        TreeNode* cur{nullptr};
+        if(s!="null"){
+            cur = new TreeNode(atoi(s.c_str()));
+    
+        }
+    }
+    
+}
+ 
 
 int main()
 {
