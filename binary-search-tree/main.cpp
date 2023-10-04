@@ -36,10 +36,36 @@ public:
 
         return right && right->search(target);
     }
+    void insert(int target)
+    {
+        if (target < data) {
+            if(!left)
+                left = new BinarySearchTree(target);
+            else 
+                left->insert(target);
+        }
+        else if (target > data) {
+            if (!right)
+                right =  new BinarySearchTree(target);
+            else 
+                right->insert(target);
+        }
+        // otherwise target == data and already exist!
+    }
  };
 
 int main()
 {
+    BinarySearchTree tree(50);
+	tree.insert(20);
+	tree.insert(45);
+	tree.insert(70);
+	tree.insert(73);
+	tree.insert(35);
+	tree.insert(15);
+	tree.insert(60);
+
+	tree.print_inorder(); cout<<endl;
     return 0;
 }
 
