@@ -55,9 +55,9 @@ void clear(Node<char>* current)
 template <class T>
 class BinaryTree
 {
-    Node<T>* root{};
 
 public:
+    Node<T>* root{};
     BinaryTree(T root_value)
     {
         root = new Node<T>(root_value);
@@ -187,7 +187,45 @@ public:
 
         return repr;
     }
+    bool is_symmetric()
+    {
+        return is_mirror(root->left,root->right);
+    }
+    
 
+    // https://leetcode.com/problems/symmetric-tree/
+    bool is_mirror(Node<T>* first,Node<T>* second)
+    {
+        if(!first && !second)
+            return true;
+        if( (!first && second) || (first && !second))
+            return false;
+        if (first->data != second->data)
+            return false;
+        
+        return is_mirror(first->left,second->right) && is_mirror(first->right,second->left);
+    }
+    bool is_flip_equiv(BinaryTree<T>* other)
+    {
+        return flipEquiv(this->root,other->root);
+    }
+    // https://leetcode.com/problems/flip-equivalent-binary-trees/
+    bool flipEquiv(Node<T>* root1, Node<T>* root2)
+    {
+         if( !root1 && !root2)
+            return true;
+
+        if(root1->data != root2->data)
+            return false;
+
+        if( (!root1 && root2) || (root1 && !root2))
+            return false;
+
+        return  ( flipEquiv(root1->left,root2->left) && flipEquiv(root1->right,root2->right) ) ||
+                ( flipEquiv(root1->left,root2->right) && flipEquiv(root1->right,root2->left) );
+
+
+    }
     string parenthesize_canonical()
     {
         return parenthesize_canonical(root);
@@ -713,6 +751,12 @@ int main()
     cout<<tree2.parenthesize()<<endl;
     cout<<tree.parenthesize()<<endl;
     cout<<tree.parenthesize_canonical()<<endl;
+    // hw5 p1
+    cout<<tree.is_symmetric()<<endl;
+    cout<<tree1.is_symmetric()<<endl;
+    cout<<tree2.is_symmetric()<<endl;
+    // hw5 p2
+    cout<<tree.is_flip_equiv(&tree1)<<endl;
     return 0;
 }
 
