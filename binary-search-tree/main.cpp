@@ -36,6 +36,21 @@ public:
 
         return right && right->search(target);
     }
+    bool search_iterative(int target)
+    {
+        BinarySearchTree* cur = this;
+        while (cur)
+        {
+            if (target==cur->data)
+                return true;
+            else if (target < cur->data)
+                cur = cur->left;
+            else 
+                cur = cur->right;
+        }
+        return false;
+        
+    }
     void insert(int target)
     {
         if (target < data) {
@@ -52,7 +67,76 @@ public:
         }
         // otherwise target == data and already exist!
     }
+    bool is_bst()
+    {
+        if (!left && !right)
+            return true;
+
+        if (!left)  
+            return (data < right->data) && right->is_bst();
+        
+        if (!right)
+            return (data > left->data) && left->is_bst();
+
+        if(data > right->data || data < left->data)
+            return false;
+
+        return left->is_bst() && right->is_bst();
+    }
+    static BinarySearchTree* build_balanced_bst_tree(vector<int> &values)
+    {
+        vector<int> values_left;
+        vector<int> values_right;
+
+        for(int i=0; i<values.size()/2; ++i)
+            values_left.push_back(values[i]);
+        
+        for(int i=values.size()/2+1; i<values.size(); ++i)
+            values_right.push_back(values[i]);
+
+        BinarySearchTree* bst = new BinarySearchTree(values[values.size()/2]);
+        
+        if(values_left.size())
+            bst->left = build_balanced_bst_tree(values_left);
+        
+        if(values_right.size())
+            bst->right = build_balanced_bst_tree(values_right);
+        
+        return bst;
+    }
+    int total_nodes(BinarySearchTree *node)
+    {
+        if(!node)
+            return 0;
+        return 1 + total_nodes(node->left) + total_nodes(node->right);
+    }
+    int total_nodes() {
+        return total_nodes(this);
+    }
+    int kth_smallest(int k)
+    {
+        int total_nodes_on_left = total_nodes(left);
+        int total_nodes_on_right = total_nodes(right);
+        int total_nodes = total_nodes_on_left+total_nodes_on_right+1;
+        if(k <= total_nodes_on_left)
+            return left->kth_smallest(k);
+        if (k == total_nodes_on_left+1)
+            return data;
+        if (k<=total_nodes)
+            return right->kth_smallest(k-total_nodes_on_left-1);
+        return -1234;
+    }
+    int lowest_common_ancestor(int n1, int n2)
+    {
+        if (n1 <= data && n2 >=data)
+            return data;
+        if(n1<data && n2 <data)
+            return left->lowest_common_ancestor(n1,n2);
+        if(n1>data && n2>data)
+            return right->lowest_common_ancestor(n1,n2);
+    }
  };
+
 
 int main()
 {
@@ -66,6 +150,43 @@ int main()
 	tree.insert(60);
 
 	tree.print_inorder(); cout<<endl;
+    // hw1 p1
+    cout<<tree.search(60)<<endl;
+    cout<<tree.search_iterative(60)<<endl;
+
+    cout<<tree.search(100)<<endl;
+    cout<<tree.search_iterative(100)<<endl;
+    // hw1 p2
+    cout<<tree.is_bst()<<endl;
+    // hw1 p3
+    vector<int> values = {0,1,2,3,4,5,6,7,8,9};
+    BinarySearchTree* tree2 = BinarySearchTree::build_balanced_bst_tree(values);
+    tree2->print_inorder(); cout<<"\n";
+    // hw1 p4
+    tree.print_inorder(); cout<<endl;
+    cout<<tree.kth_smallest(1)<<endl;
+    cout<<tree.kth_smallest(2)<<endl;
+    cout<<tree.kth_smallest(3)<<endl;
+    cout<<tree.kth_smallest(4)<<endl;
+    cout<<tree.kth_smallest(5)<<endl;
+    cout<<tree.kth_smallest(6)<<endl;
+    cout<<tree.kth_smallest(7)<<endl;
+    cout<<tree.kth_smallest(8)<<endl;
+    cout<<tree.kth_smallest(9)<<endl;
+    // hw1 p5
+    BinarySearchTree tree3(50);
+	tree3.insert(20);
+    tree3.insert(60);
+    tree3.insert(15);
+    tree3.insert(45);
+    tree3.insert(58);
+    tree3.insert(70);
+    tree3.insert(16);
+    tree3.insert(35);
+    tree3.insert(36);
+    tree3.insert(73);
+    tree3.insert(76);
+    cout<<tree.lowest_common_ancestor(45,36)<<endl;
     return 0;
 }
 
