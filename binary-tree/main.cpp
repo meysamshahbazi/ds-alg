@@ -78,6 +78,67 @@ public:
         }
         root = stk.top();
     }
+    BinaryTree(deque<int> &preorder, deque<int> &inorder)
+    {
+        root = generateNode(preorder, inorder);
+    }
+    
+    Node<T>* generateNode(deque<int> &preorder, deque<int> &inorder)
+    {
+        if(preorder.size() == 0) 
+            return nullptr;
+
+        T value = preorder.front();
+        preorder.pop_front();
+        Node<T>* node = new Node<T>(value);
+        deque<int> left_inorder;
+        deque<int> right_inorder;
+        deque<int> left_preorder;
+        deque<int> right_preorder;
+        while (inorder.front() != value) {
+            left_inorder.push_back(inorder.front());
+            left_preorder.push_back(preorder.front());
+            inorder.pop_front();
+            preorder.pop_front();
+        }
+
+        while (inorder.back() != value) {
+            right_inorder.push_front(inorder.back());
+            right_preorder.push_front(preorder.back());
+            inorder.pop_back();
+            preorder.pop_back();
+        }
+        inorder.pop_back();
+        assert(inorder.empty());
+        node->left = generateNode(left_preorder, left_inorder);
+        node->right = generateNode(right_preorder, right_inorder);
+        
+        return node;
+    }
+    /**
+     * @brief Construct a new Binary Tree object
+     * 
+     * @param preorder_queue 
+     */
+    BinaryTree(queue<pair<int, int>> &preorder_queue)
+    {
+        root = generateNode(preorder_queue);
+    }
+    Node<T>* generateNode(queue<pair<int, int>> &preorder_queue)
+    {
+
+        pair<int,int> top_pair = preorder_queue.front();
+        preorder_queue.pop();
+        Node<T>* node = new Node<T>(top_pair.first);
+
+        if (top_pair.second)
+            return node;
+        
+        node->left = generateNode(preorder_queue);
+        node->right = generateNode(preorder_queue);
+        return node;
+    }
+
     ~BinaryTree()
     {
         clear();
@@ -549,7 +610,31 @@ int main()
     tree.level_order_traversal2();
     // hw 3 p2
     tree.level_order_traversal_spiral();
+    // hw 3 p3
     cout<<tree.is_complete()<<endl;
+    // hw4 p1
+    vector<int> pre_vec {1,2,4,7,8,5,9,3,6,10};
+    deque<int> preorder;
+    for(auto p:pre_vec)
+        preorder.push_back(p);
+
+    vector<int> in_vec {7,4,8,2,5,9,1,3,10,6};
+    deque<int> inorder;
+    for(auto p:in_vec)
+        inorder.push_back(p);
+
+    BinaryTree<int> tree1(preorder, inorder);
+    tree1.level_order_traversal2();
+    tree1.print_inorder();
+    // hw4 p2
+    cout<<"----------------------\n";
+    queue<pair<int, int>> preorder_queue;
+    preorder_queue.push(make_pair(1,0));
+    preorder_queue.push(make_pair(2,1));
+    preorder_queue.push(make_pair(3,1));
+    BinaryTree<int> tree2(preorder_queue);
+    tree2.level_order_traversal2();
+    tree2.print_inorder();
     return 0;
 }
 
