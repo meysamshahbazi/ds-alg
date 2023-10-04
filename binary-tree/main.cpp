@@ -165,6 +165,77 @@ public:
         Node<T>* cur = root;
         
     }
+    string parenthesize()
+    {
+        return parenthesize(root);
+    }
+    string parenthesize(Node<T>* node)
+    {
+        string repr = "(" + to_string(node->data);
+        
+        if(node->left)
+            repr += parenthesize(node->left);
+        else 
+            repr += "()";
+        
+        if (node->right)
+            repr += parenthesize(node->right);
+        else 
+            repr += "()";
+
+        repr += ")";
+
+        return repr;
+    }
+
+    string parenthesize_canonical()
+    {
+        return parenthesize_canonical(root);
+    }
+
+    string parenthesize_canonical(Node<T>* node)
+    {
+        string repr = "(" + to_string(node->data);
+        vector<string> v;
+
+        if(node->left)
+            v.push_back(parenthesize(node->left));
+        else 
+            v.push_back("()");
+        
+        if (node->right)
+            v.push_back(parenthesize(node->right));
+        else 
+            v.push_back("()");
+
+        sort(v.begin(),v.end());
+        
+        for (auto &s:v)
+            repr += s;
+
+        repr += ")";
+        return repr;
+    }
+
+    void print_preorder_complete()
+    {
+        print_preorder_complete(root);
+        cout<<"\n";
+    }
+    void print_preorder_complete(Node<T>* node)
+    {
+        cout<<node->data<<" ";
+        if(node->left)
+            print_preorder_complete(node->left);
+        else 
+            cout<<"-1 ";
+        
+        if(node->right)
+            print_preorder_complete(node->right);
+        else 
+            cout<<"-1 ";
+    }
+
     void traverse_left_boundry()
     {
         Node<T>* cur = root;
@@ -635,6 +706,13 @@ int main()
     BinaryTree<int> tree2(preorder_queue);
     tree2.level_order_traversal2();
     tree2.print_inorder();
+    cout<<"----------------------\n";
+    // TODO: solve this!
+    // https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
+    tree.print_preorder_complete();
+    cout<<tree2.parenthesize()<<endl;
+    cout<<tree.parenthesize()<<endl;
+    cout<<tree.parenthesize_canonical()<<endl;
     return 0;
 }
 
