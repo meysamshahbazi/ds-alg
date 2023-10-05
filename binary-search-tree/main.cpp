@@ -13,10 +13,14 @@ private:
     int data;
     BinarySearchTree *left {};
     BinarySearchTree *right{};
+    BinarySearchTree *parent{nullptr};
 public:    
-    BinarySearchTree() : data(0), left(nullptr), right(nullptr) {}
-    BinarySearchTree(int x) : data(x), left(nullptr), right(nullptr) {}
-    BinarySearchTree(int x, BinarySearchTree *left, BinarySearchTree *right) : data(x), left(left), right(right) {}
+    BinarySearchTree() 
+    : data(0), left(nullptr), right(nullptr), parent{nullptr} {}
+    BinarySearchTree(int x) 
+    : data(x), left(nullptr), right(nullptr), parent{nullptr} {}
+    BinarySearchTree(int x, BinarySearchTree *left, BinarySearchTree *right) 
+    : data(x), left(left), right(right), parent{nullptr} {}
 
     void print_inorder() 
     {
@@ -64,6 +68,26 @@ public:
                 right =  new BinarySearchTree(target);
             else 
                 right->insert(target);
+        }
+        // otherwise target == data and already exist!
+    }
+    void insert2(int target) // with parent!
+    {
+        if (target < data) {
+            if(!left){
+                left = new BinarySearchTree(target);
+                left->parent = this;
+            }
+            else 
+                left->insert2(target);
+        }
+        else if (target > data) {
+            if (!right){
+                right =  new BinarySearchTree(target);
+                right->parent = this;
+            }
+            else 
+                right->insert2(target);
         }
         // otherwise target == data and already exist!
     }
@@ -184,6 +208,43 @@ public:
         
         return make_pair(false, -1);
     }
+    BinarySearchTree* find_Node(int target)
+    {
+        if(target == data)
+            return this;
+        if (target < data){
+            if (left)
+                return left->find_Node(target);
+            else 
+                return nullptr;
+        }
+        if(!right)
+            return nullptr;
+        return right->find_Node(target);
+    }
+    pair<bool, int> successor2(int target)
+    {
+        BinarySearchTree* cur_child = find_Node(target);
+        
+        if(!cur_child)
+            return make_pair(false,-1);
+            
+        BinarySearchTree* cur_parent = cur_child->parent;
+        
+        if (cur_child->right){
+            return make_pair(true, cur_child->right->min_value());
+        }
+
+        while (cur_parent && cur_parent->right == cur_child ) {
+            cur_child = cur_parent;
+            cur_parent = cur_parent->parent;
+        }
+        
+        if (cur_parent)
+            return make_pair(true, cur_parent->data);
+        
+        return make_pair(false, -1);
+    }
 
 
  };
@@ -239,8 +300,20 @@ int main()
     tree3.insert(76);
     cout<<tree.lowest_common_ancestor(45,36)<<endl;
     tree.print_inorder(); cout<<endl;
-    pair<bool, int> suc_pair =  tree.successor(60);
+    pair<bool, int> suc_pair =  tree.successor(35);
     cout<<suc_pair.second<<endl;
+    // hw2 p1
+    BinarySearchTree tree4(50);
+	tree4.insert2(20);
+	tree4.insert2(45);
+	tree4.insert2(70);
+	tree4.insert2(73);
+	tree4.insert2(35);
+	tree4.insert2(15);
+	tree4.insert2(60);
+    tree4.print_inorder(); cout<<endl;
+    pair<bool, int> suc_pair2 =  tree4.successor2(35);
+    cout<<suc_pair2.second<<endl;
     return 0;
 }
 
