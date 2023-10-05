@@ -135,6 +135,57 @@ public:
         if(n1>data && n2>data)
             return right->lowest_common_ancestor(n1,n2);
     }
+    int min_value()
+    {
+        BinarySearchTree* cur = this;
+        while(cur && cur->left)
+            cur = cur->left;
+        return cur->data;
+    }
+    bool find_chain(vector<BinarySearchTree*> &ancestors, int target)
+    {
+        ancestors.push_back(this);
+        if(target == data)
+            return true;
+        if (target < data)
+            return  left && left->find_chain(ancestors, target);
+        
+        return right && right->find_chain(ancestors, target);
+    }
+    BinarySearchTree* get_next(vector<BinarySearchTree*> &ancestors)
+    {
+        if(ancestors.size() == 0)
+            return nullptr;
+        BinarySearchTree* node = ancestors.back();
+        ancestors.pop_back();
+        return node;
+    }
+    pair<bool, int> successor(int target)
+    {
+        vector<BinarySearchTree*> ancestors;
+
+        if(!find_chain(ancestors, target))
+            return make_pair(false,-1);
+
+        BinarySearchTree* child = get_next(ancestors);
+
+        if (child->right)
+            return make_pair(true, child->right->min_value());
+
+        BinarySearchTree* parent = get_next(ancestors);
+
+        while (parent && parent->right == child) {
+            child = parent;
+            parent = get_next(ancestors);
+        }
+
+        if (parent)
+            return make_pair(true, parent->data);
+        
+        return make_pair(false, -1);
+    }
+
+
  };
 
 
@@ -187,6 +238,9 @@ int main()
     tree3.insert(73);
     tree3.insert(76);
     cout<<tree.lowest_common_ancestor(45,36)<<endl;
+    tree.print_inorder(); cout<<endl;
+    pair<bool, int> suc_pair =  tree.successor(60);
+    cout<<suc_pair.second<<endl;
     return 0;
 }
 
