@@ -5,8 +5,8 @@ This repo contains my practices for data structures and algorithms in God progra
 
 ## Reminder: 
 
-- [ ] 18. SLL Homework 4 - 5 Medium to Hard Challenges problem 5
+- [ ] Singly Linked List: Homework 4 problem 5
 - [ ] 6. Project Sparse Array and Matrix
-- [ ] 3. Homework 1 - 6 Easy to Medium Challenges problem 6
-- [ ] binary tree hw5
+- [ ] Stack: 3. Homework 1 problem 6
+- [ ] Binary Tree hw5
 - [ ] https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
