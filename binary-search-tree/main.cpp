@@ -245,8 +245,12 @@ public:
         
         return make_pair(false, -1);
     }
-
-
+    bool is_degenerate(vector<int> &preorder)
+    {
+        BinarySearchTree* root = new BinarySearchTree(preorder[0]);
+        
+        return true;
+    }
  };
 
 
@@ -314,6 +318,9 @@ int main()
     tree4.print_inorder(); cout<<endl;
     pair<bool, int> suc_pair2 =  tree4.successor2(35);
     cout<<suc_pair2.second<<endl;
+    // hw2 p3
+    vector<int> preorder = {25, 8, 11, 13, 12};
+    cout<<tree.is_degenerate(preorder)<<endl;
     return 0;
 }
 
