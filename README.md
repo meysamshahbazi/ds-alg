@@ -12,3 +12,5 @@ This repo contains my practices for data structures and algorithms in God progra
 - [ ] Binary Tree hw5
 - [ ] <https://leetcode.com/problems/serialize-and-deserialize-binary-tree/>
 - [ ] binary search tree hw2 p2 , hw3 and hw4!
+- [ ] heapm hw1 p5
+

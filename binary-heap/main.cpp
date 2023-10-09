@@ -47,13 +47,13 @@ private:
         int child_pos = left(parent_pos);
         int right_child = right(parent_pos);
 
-        if(child_pos == -1)
+        if (child_pos == -1)
             return;
         
-        if( right_child != -1 && array[right_child] < array[child_pos])
+        if (right_child != -1 && array[right_child] < array[child_pos])
             child_pos = right_child;
 
-        if(array[parent_pos] > array[child_pos]) {
+        if (array[parent_pos] > array[child_pos]) {
             swap(array[child_pos], array[parent_pos]);
             heapify_down(child_pos);
         }
@@ -133,12 +133,52 @@ public:
 
         return is_heap_array(p, n, left_idx) && is_heap_array(p, n, right_idx);
     }
+    void display()
+    {
+        for (int i=0; i<size; i++)
+            cout<<array[i]<<" ";
+        cout<<endl;
+    }
+    void sort()
+    {
+        int n = size;
+        int* array_ = array;
+        for (int i=0; i <n; ++i) {
+            heapify_up(size-1);
+            array++;
+            size--;
+        }   
+        size = n;
+        array = array_;
+    }
     void heap_sort(int *p, int n)
     {
-        
+        int* old_arr = array;
+        int old_size = size;
 
+        array  = p;
+        size = n;
+
+        // do sorting ...
+        heapify();
+        // this is not efficent!
+        // for (int i=0; i <n; ++i) {
+        //     // heapify_down(0);
+        //     heapify();
+        //     array++;
+        //     size--;
+        // }
+        
+        // sort();
+        array = old_arr;
+        size = old_size;
+    }
+    int getSize() 
+    {
+        return size;
     }
 };
+
 
 class MaxHeap
 {
@@ -171,8 +211,44 @@ public:
     {
         return heap.empty();
     }
+    int getSize() 
+    {
+        return heap.getSize();
+    }
+};
+
+class KthNumberProcessor{
+    int k;
+    MaxHeap heap;
+    int next_value = INT_MAX;
+
+public:
+    KthNumberProcessor(int k): k{k} 
+    {
+    }
+    int next(int new_num)
+    {
+        if(new_num < next_value)
+            heap.push(new_num);
+
+        while (heap.getSize() > k) {
+            heap.pop();
+        }
+        
+        next_value = heap.top();
+        return next_value;
+    }
+};
+
+class PriorityQueue
+{
+private:
+    MaxHeap heap;
+    
+public:
 
 };
+
 int main()
 {
     MinHeap heap;
@@ -206,6 +282,33 @@ int main()
     cout<<heap.is_heap_array(p,14)<<endl;
     swap(p[0], p[5]);
     cout<<heap.is_heap_array(p,14)<<endl;
+    // hw1 p5
+
+    // int arr[] = {1,8,5,7,6};
+    int arr[] = {2, 5, 12, 7, 6, 22, 14, 19, 10, 17, 8, 37, 25, 30};
+    heap.heap_sort(arr,14);
+    heap.display();
+    for (int i = 0; i <14;i++)
+        cout<<arr[i]<<" ";
+    cout<<endl;
+
+    // heap.display();
+    // heap.sort();
+    // heap.display();
+
+    // hw2 p1  UNCOMMENT FOR TEST!
+
+    /*
+    KthNumberProcessor kthp(4);
+    cout<<"insert for Kth Number Processor\n";
+    int num;
+    while (cin>>num) {
+        cout<<kthp.next(num)<<"\n";
+    }
+    */
+
+
+    
     return 0;
 }
 
