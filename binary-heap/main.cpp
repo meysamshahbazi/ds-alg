@@ -162,12 +162,12 @@ public:
         // do sorting ...
         heapify();
         // this is not efficent!
-        // for (int i=0; i <n; ++i) {
-        //     // heapify_down(0);
-        //     heapify();
-        //     array++;
-        //     size--;
-        // }
+        for (int i=0; i <n; ++i) {
+            // heapify_down(0);
+            heapify();
+            array++;
+            size--;
+        }
         
         // sort();
         array = old_arr;
@@ -245,8 +245,12 @@ class PriorityQueue
 private:
     MaxHeap heap;
     
+    
 public:
-
+    void enqueue (int task_id = 1131, int priority = 1)
+    {
+        heap.push(priority);
+    }
 };
 
 int main()
