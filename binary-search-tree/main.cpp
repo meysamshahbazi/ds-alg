@@ -245,60 +245,6 @@ public:
         
         return make_pair(false, -1);
     }
-    // bool is_degenerate(vector<int> &preorder)
-    // {
-    //     vector<BinarySearchTree*> bst_vec;
-
-    //     BinarySearchTree* parent = new BinarySearchTree(preorder[0]);
-    //     BinarySearchTree* child = new BinarySearchTree(preorder[1]);
-
-    //     if(preorder[1] > preorder[0])
-    //         parent->right = new BinarySearchTree(preorder[1]);
-    //     else 
-    //         parent->left = new BinarySearchTree(preorder[1]);
-
-    //     bst_vec.push_back(parent);
-    //     bst_vec.push_back(child);
-
-
-    //     for(int i=2; i<preorder.size(); i++) { 
-    //         if (bst_vec[i-2]->left) { // node has left
-    //             if(preorder[i] > bst_vec[i-2]->data ) 
-    //                 return false;
-    //             else { // code for insert
-    //                 if (preorder[i] > bst_vec[i-1]->data) {
-    //                     BinarySearchTree* child = new BinarySearchTree(preorder[i]);
-    //                     bst_vec[i-1]->right = child;
-    //                     bst_vec.push_back(child);
-    //                 }
-    //                 else {
-    //                     BinarySearchTree* child = new BinarySearchTree(preorder[i]);
-    //                     bst_vec[i-1]->left = child;
-    //                     bst_vec.push_back(child);
-    //                 }
-    //             } 
-                     
-    //         }
-    //         else { // node has right 
-    //             if(preorder[i] < bst_vec[i-2]->data ) 
-    //                 return false;
-    //             else { // code for insert
-    //                 if (preorder[i] > bst_vec[i-1]->data) {
-    //                     BinarySearchTree* child = new BinarySearchTree(preorder[i]);
-    //                     bst_vec[i-1]->right = child;
-    //                     bst_vec.push_back(child);
-    //                 }
-    //                 else {
-    //                     BinarySearchTree* child = new BinarySearchTree(preorder[i]);
-    //                     bst_vec[i-1]->left = child;
-    //                     bst_vec.push_back(child);
-    //                 }
-    //             } 
-    //         }
-    //     }
-
-    //     return true;
-    // }
     bool is_degenerate(vector<int> &preorder)
     {
         vector<BinarySearchTree*> bst_vec;
