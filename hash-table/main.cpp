@@ -215,38 +215,88 @@ public:
             
 		}
 	}
+};
 
+class PhoneHashTableProbe
+{
+private:
+    int table_size;
+    vector<PhoneEntry*> table;
+    PhoneEntry* deleted{};
+public:
+    PhoneHashTableProbe(int table_size) :table_size(table_size)
+    {
+        table.resize(table_size);
+        deleted = new PhoneEntry("","");
+    }
+    bool put(PhoneEntry phone)
+    {
+        int idx = phone.hash() % table_size;
+        for(int step = 0; step<table_size; ++step) {
+            if(table[idx] == deleted || !table[idx]) {
+                table[idx] = new PhoneEntry(phone.name, phone.phone_number);
+                return true;
+            }
+            else if (table[idx]->name == phone.name) {
+                table[idx]->phone_number = phone.phone_number;
+                return true;
+            }
+            idx = (idx +1) % table_size;
+        }
+        return false;
+    }
+    bool remove(PhoneEntry phone)
+    {
+        int idx = phone.hash() % table_size;
+
+        for (int step = 0; step < table_size; ++step) {
+            if (!table[idx])
+                break;
+            if(table[idx] != deleted && table[idx]->name == phone.name) {
+                delete table[idx];
+                table[idx] = deleted;
+                return true;
+            }
+            idx = (idx + 1) % table_size;
+        }
+        return false;
+    }
+
+    bool get(PhoneEntry &phone)
+    {
+        int idx = phone.hash() % table_size;
+
+        for (int step = 0; step < table_size; ++step) {
+            if (!table[idx])
+                break;
+            if(table[idx] != deleted && table[idx]->name == phone.name) {
+                phone.phone_number = table[idx]->phone_number;
+                return true;
+            }
+            idx = (idx +1) % table_size;
+        }
+        return false;
+    }
+
+    void print_all()
+    {
+        for( int hash = 0; hash < table_size; ++hash) {
+            cout<<hash<<": ";
+            if (table[hash] == deleted)
+                cout<< "X";
+            else if (!table[hash])
+                cout<< "E";
+            else 
+                table[hash]->print();
+            cout<<endl;
+        }
+        cout<<"-------------------------\n";
+    }
 };
 
 int main()
 {
-    // PhoneHashTable table(3);
-	// table.put(PhoneEntry("mostafa", "604-401-120"));
-	// table.put(PhoneEntry("mostafa", "604-401-777"));	// update
-	// table.put(PhoneEntry("ali", "604-401-343"));
-	// table.put(PhoneEntry("ziad", "604-401-17"));
-	// table.put(PhoneEntry("hany", "604-401-758"));
-	// table.put(PhoneEntry("belal", "604-401-550"));
-	// table.put(PhoneEntry("john", "604-401-223"));
-
-	// PhoneEntry e("mostafa", "");
-	// if (table.get(e))
-	// 	cout << e.phone_number << "\n";	// 604-401-777
-
-	// table.print_all();
-	// // Hash 0: (ali, 604-401-343)  (hany, 604-401-758)  (john, 604-401-223)
-	// // Hash 1: (mostafa, 604-401-777)  (ziad, 604-401-17)
-	// // Hash 2: (belal, 604-401-550)
-
-	// cout << table.remove(PhoneEntry("smith", "")) << "\n"; // 0
-	// cout << table.remove(PhoneEntry("hany", "")) << "\n";  // 1
-	// cout << table.remove(PhoneEntry("belal", "")) << "\n";  // 1
-	// table.print_all();
-	// // Hash 0: (ali, 604-401-343)  (john, 604-401-223)
-	// // Hash 1: (mostafa, 604-401-777)  (ziad, 604-401-17)
-
-    // hw1 p5
-    PhoneHashTableLL table(3);
+    PhoneHashTable table(3);
 	table.put(PhoneEntry("mostafa", "604-401-120"));
 	table.put(PhoneEntry("mostafa", "604-401-777"));	// update
 	table.put(PhoneEntry("ali", "604-401-343"));
@@ -255,7 +305,58 @@ int main()
 	table.put(PhoneEntry("belal", "604-401-550"));
 	table.put(PhoneEntry("john", "604-401-223"));
 
+	PhoneEntry e("mostafa", "");
+	if (table.get(e))
+		cout << e.phone_number << "\n";	// 604-401-777
+
 	table.print_all();
+	// Hash 0: (ali, 604-401-343)  (hany, 604-401-758)  (john, 604-401-223)
+	// Hash 1: (mostafa, 604-401-777)  (ziad, 604-401-17)
+	// Hash 2: (belal, 604-401-550)
+
+	cout << table.remove(PhoneEntry("smith", "")) << "\n"; // 0
+	cout << table.remove(PhoneEntry("hany", "")) << "\n";  // 1
+	cout << table.remove(PhoneEntry("belal", "")) << "\n";  // 1
+	table.print_all();
+	// Hash 0: (ali, 604-401-343)  (john, 604-401-223)
+	// Hash 1: (mostafa, 604-401-777)  (ziad, 604-401-17)
+
+    // hw1 p5
+    PhoneHashTableLL tablell(3);
+	tablell.put(PhoneEntry("mostafa", "604-401-120"));
+	tablell.put(PhoneEntry("mostafa", "604-401-777"));	// update
+	tablell.put(PhoneEntry("ali", "604-401-343"));
+	tablell.put(PhoneEntry("ziad", "604-401-17"));
+	tablell.put(PhoneEntry("hany", "604-401-758"));
+	tablell.put(PhoneEntry("belal", "604-401-550"));
+	tablell.put(PhoneEntry("john", "604-401-223"));
+
+	tablell.print_all();
+
+    cout<<"***************************\n";
+    PhoneHashTableProbe tablepr(11);
+	tablepr.put(PhoneEntry("mostafa", "604-401-120"));
+	tablepr.put(PhoneEntry("mostafa", "604-401-777"));
+	tablepr.put(PhoneEntry("ali", "604-401-343"));
+	tablepr.put(PhoneEntry("ziad", "604-401-17"));
+	tablepr.put(PhoneEntry("hany", "604-401-758"));
+	tablepr.put(PhoneEntry("belal", "604-401-550"));
+	tablepr.put(PhoneEntry("john", "604-401-223"));
+    tablepr.print_all();
+
+    cout << tablepr.remove(PhoneEntry("smith", "")) << "\n"; // 0
+	cout << tablepr.remove(PhoneEntry("hany", "")) << "\n";  // 1
+	cout << tablepr.remove(PhoneEntry("john", "")) << "\n";  // 1
+	tablepr.print_all();
+
+    PhoneEntry pe("belal", "");
+	if (tablepr.get(pe))
+		cout << pe.phone_number << "\n";	// 604-401-550
+
+	tablepr.put(PhoneEntry("hany", "604-401-555"));
+	tablepr.print_all();
+
+    
 
     return 0;
 }
