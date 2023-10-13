@@ -1,6 +1,8 @@
 #include<iostream>
 #include <vector>
 #include<cassert>
+#include<unordered_map>
+#include<unordered_set>
 
 using namespace std;
 
@@ -294,6 +296,129 @@ public:
     }
 };
 
+int count_unique_substrings(const string &str)
+{
+    unordered_set<string> set;
+    for (int i = 0; i<str.size(); i++) {
+        for (int n = 1; i + n <= str.size(); n++)
+            set.insert(str.substr(i,n));
+    }
+    int sum = 0;
+    for (auto s: set)
+        sum++;
+
+    return set.size();
+}
+
+int count_substrings_match(const string &str1, const string &str2)
+{
+    unordered_set<string> set1;
+    for (int i = 0; i<str1.size(); i++) {
+        for (int n = 1; i + n <= str1.size(); n++)
+            set1.insert(str1.substr(i,n));
+    }
+
+    unordered_set<string> set2;
+    for (int i = 0; i<str2.size(); i++) {
+        for (int n = 1; i + n <= str2.size(); n++)
+            set2.insert(str2.substr(i,n));
+    }
+    int res = 0;
+    for (auto s:set1) {
+        if (set2.count(s))
+            res++;
+    }
+    return res;
+}
+
+
+int sum_string(string str)
+{
+    long long sum = 0;
+    for (int i = 0; i< (int) str.size(); ++i)
+        sum += ( str[i] - 'a') ;
+
+    return sum;
+}
+
+int count_anagram_substrings(const string &str)
+{
+    int sum = 0;
+
+    for (int n = 1; n <= str.size(); n++){
+        unordered_set<int> set;
+        for (int i = 0; i+n <= str.size(); i++) {
+            set.insert(sum_string(str.substr(i,n)));
+        }
+        sum += set.size();
+    }   
+
+    return sum;   
+}
+
+struct Node{
+    int data;
+    Node * next;
+
+    Node(int data):data(data){} 
+
+};
+class LinkedList
+{
+private:
+    Node *head {nullptr};
+    Node *tail {nullptr};
+public:
+    void print()
+    {
+        Node* cur = head;
+        while (cur) {
+            cout<<cur->data<<" ";
+            cur = cur->next;
+        }
+        cout<<endl; 
+    }
+    void insert_end(int value)
+    {
+        Node * node = new Node(value);
+        node->next = nullptr;
+        if (head == nullptr) {
+            head = node;
+            tail = node;
+        }
+        else {
+            tail->next = node;
+            tail = node;
+        }
+    }
+    void create_cycle()
+    {
+        for (int i = 0; i < 4; i++)
+            insert_end(i);
+        
+        Node* now = tail;
+
+        for (int i = 0; i < 3; i++)
+            insert_end(i + 14);
+
+        tail->next = now;
+    }
+    void remove_cylce()
+    {
+        unordered_set<Node*> set;
+        
+        Node* cur = head;
+        while (cur) {
+            set.insert(cur);
+            if (set.count(cur->next))
+                cur->next = nullptr;
+            
+            cur = cur->next;
+        }
+         
+    }
+};
+
 int main()
 {
     PhoneHashTable table(3);
@@ -356,7 +481,30 @@ int main()
 	tablepr.put(PhoneEntry("hany", "604-401-555"));
 	tablepr.print_all();
 
-    
+    // hw2 p1 
+    string str_hw2_p1;
+    str_hw2_p1 = "aaaaa";
+    cout<<str_hw2_p1<<": "<<count_unique_substrings(str_hw2_p1)<<endl;
+    str_hw2_p1 = "aaaba";
+    cout<<str_hw2_p1<<": "<<count_unique_substrings(str_hw2_p1)<<endl;
+    str_hw2_p1 = "abcdef";
+    cout<<str_hw2_p1<<": "<<count_unique_substrings(str_hw2_p1)<<endl;
+    // hw2 p2
 
+    cout<<count_substrings_match("aaab","aa")<<endl;
+    cout<<count_substrings_match("aaab","ab")<<endl;
+    cout<<count_substrings_match("aaaaa","xy")<<endl;
+    cout<<count_substrings_match("aaaaa","aaaaa")<<endl;
+    // hw2 p3
+    cout<<"---------------------------------\n";
+    cout<<count_anagram_substrings("aaaaa")<<endl;
+    cout<<count_anagram_substrings("abcba")<<endl;
+    cout<<count_anagram_substrings("aabade")<<endl;
+    // hw2 p4
+    cout<<"---------------------------------\n";
+    LinkedList lst;
+    lst.create_cycle();
+    lst.remove_cylce();
+    lst.print();
     return 0;
 }
