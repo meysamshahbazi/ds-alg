@@ -3,6 +3,7 @@
 #include<vector>
 #include <algorithm>
 #include<map>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -58,7 +59,7 @@ public:
         
         return child[cur]->word_exist_recur(str, idx +1);
     }
-    // hw1 p2
+    // hw1 p1
     bool word_exist(string str)
     {
         trie* root = this;
@@ -81,6 +82,7 @@ public:
         
         return child[cur]->prefix_exist(str, idx +1);
     }
+    // https://leetcode.com/problems/replace-words/
     string first_word_prefix(const string &str)
     {
         for (int n = 1; n <= (int) str.size(); n++)
@@ -89,9 +91,61 @@ public:
         
         return str;
     }
-    bool suffix_exist(string str)
-    {
 
+    string replaceWords(vector<string>& dictionary, string sentence) 
+    {
+        insert(dictionary);
+        stringstream ss(sentence);
+        string s;
+        string res;
+        while (getline(ss, s, ' ')) {
+            // store token string in the vector
+            res += first_word_prefix(s)+" ";
+        }
+
+        return res;
+    }
+    void get_all_strings(vector<string> &res, string sub="")
+    {
+        if(isLeaf){
+            res.push_back(sub);            
+        }
+        for(int i = 0; i < MAX_CHAR; i++) {
+            if(child[i]){
+                child[i]->get_all_strings(res, sub + (char)(i+'a'));
+            }
+        }
+    }
+    void auto_complete(const string &str, vector<string>& res)
+    {
+        trie* root = this;
+        for (int idx = 0; idx < (int)str.size(); idx++) {
+            int cur = str[idx] - 'a';
+            if(!root->child[cur])
+                return;
+            root = root->child[cur];
+        }
+        root->get_all_strings(res,str);
+    }
+    // https://leetcode.com/problems/implement-magic-dictionary
+    bool word_exist_with_1_change(string str)
+    {
+        trie* root = this;
+        for (int idx = 0; idx < (int)str.size(); idx++) {
+            int cur = str[idx] - 'a';
+            if(!root->child[cur]) {
+                for(int i = 0; i < MAX_CHAR; i++) {// check if remining part of str exist as suffix!
+                    if(root->child[i] && root->child[i]->word_exist_recur(str.substr(idx+1,str.length()-idx-1)))
+                        return true;
+                }
+                return false;
+            }
+            root = root->child[cur];
+        }
+
+        return false;
+
+        
     }
 };
 
@@ -213,11 +267,17 @@ int main()
 	cout << root.prefix_exist("xy") << "\n";
 
     // hw1 p2
+    // 
     trie hw1p2;
     vector<string> vec = {"xyz", "xyzea", "a", "bc"};
     hw1p2.insert(vec);
     cout<<hw1p2.first_word_prefix("x")<<endl;
     cout<<hw1p2.first_word_prefix("xyzabc")<<endl;
+    trie leetcode;
+    vector<string> dictionary = {"cat","bat","rat"};
+    cout<<leetcode.replaceWords(dictionary,"the cattle was rattled by the battery")<<endl;
+    dictionary = {"a","b","c"};
+    cout<<leetcode.replaceWords(dictionary,"aadsfasf absbs bbab cadsfafs")<<endl;
     // hw1 p3
     {
     cout<<"--------------\n";
@@ -276,6 +336,41 @@ int main()
 	path = {"user", "mostafa", "private"};
 	cout << tree.subpath_exist(path) << "\n"; // 0
     }
+    // hw2 p1
+    cout<<"--------------\n";
+    vector<string> res;
+    root.get_all_strings(res);
+    for(auto r:res)
+        cout<<r<<"\n";
+{
+    trie tree;
+    cout<<"--------------\n";
+	tree.insert("abcd");
+	tree.insert("xyz");
+	tree.insert("a");
+	tree.insert("ab");
+	tree.insert("xyzw");
+	tree.insert("bcd");
+    tree.insert("abx");
+    tree.insert("abyz");
 
+	vector<string> res;
+	tree.get_all_strings(res);
+	for (int i = 0; i < (int) res.size(); ++i)
+		cout << res[i] << "\n";
+
+    cout<<"--------------\n";
+    vector<string> res2;
+    tree.auto_complete("ab",res2);
+    for (int i = 0; i < (int) res2.size(); ++i)
+		cout << res2[i] << "\n";
+}
+    cout<<"--------------\n";
+    trie hw2p3;
+    hw2p3.insert("hello");
+    cout<<hw2p3.word_exist_with_1_change("hello")<<endl;
+    cout<<hw2p3.word_exist_with_1_change("hexlo")<<endl;
+    cout<<hw2p3.word_exist_with_1_change("xello")<<endl;
+    cout<<hw2p3.word_exist_with_1_change("xyllo")<<endl;
     return 0;
 }
