@@ -128,14 +128,14 @@ public:
         root->get_all_strings(res,str);
     }
     // https://leetcode.com/problems/implement-magic-dictionary
-    bool word_exist_with_1_change(string str)
+    bool word_exist_with_1_change2(string searchWord)
     {
         trie* root = this;
-        for (int idx = 0; idx < (int)str.size(); idx++) {
-            int cur = str[idx] - 'a';
+        for (int idx = 0; idx < (int)searchWord.size(); idx++) {
+            int cur = searchWord[idx] - 'a';
             if(!root->child[cur]) {
                 for(int i = 0; i < MAX_CHAR; i++) {// check if remining part of str exist as suffix!
-                    if(root->child[i] && root->child[i]->word_exist_recur(str.substr(idx+1,str.length()-idx-1)))
+                    if(root->child[i] && root->child[i]->word_exist(searchWord.substr(idx+1,searchWord.length()-idx-1)))
                         return true;
                 }
                 return false;
@@ -144,8 +144,22 @@ public:
         }
 
         return false;
+    }
+    bool word_exist_with_1_change(string searchWord)
+    {
+        trie* root = this;
+        for (int idx = 0; idx < (int)searchWord.size(); idx++) {
+            for(char c = 'a'; c <= 'z'; c++) {
+                if (searchWord[idx] != c) {
+                    string changedWord = searchWord;
+                    changedWord[idx] = c;
+                    if (word_exist(changedWord))
+                        return true;
+                }
+            }
+        }
 
-        
+        return false;
     }
 };
 
@@ -368,9 +382,16 @@ int main()
     cout<<"--------------\n";
     trie hw2p3;
     hw2p3.insert("hello");
+    hw2p3.insert("leetcode");
+    hw2p3.insert("hallo");
     cout<<hw2p3.word_exist_with_1_change("hello")<<endl;
-    cout<<hw2p3.word_exist_with_1_change("hexlo")<<endl;
-    cout<<hw2p3.word_exist_with_1_change("xello")<<endl;
-    cout<<hw2p3.word_exist_with_1_change("xyllo")<<endl;
+    cout<<hw2p3.word_exist_with_1_change("hhllo")<<endl;
+    cout<<hw2p3.word_exist_with_1_change("hell")<<endl;
+    cout<<hw2p3.word_exist_with_1_change("leetcoded")<<endl;
+    // cout<<hw2p3.word_exist_with_1_change("hello")<<endl;
+    // cout<<hw2p3.word_exist_with_1_change("hexlo")<<endl;
+    // cout<<hw2p3.word_exist_with_1_change("xello")<<endl;
+    // cout<<hw2p3.word_exist_with_1_change("xyllo")<<endl;
+
     return 0;
 }
