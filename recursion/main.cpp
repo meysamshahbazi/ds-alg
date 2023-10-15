@@ -77,6 +77,50 @@ void left_max(int arr[], int len)
     arr[len - 1] = max(arr[len - 1], arr[len - 2]);
 }
 
+void right_max(int arr[], int len, int start_position = 0)
+{
+    if (start_position == len - 1)
+        return;
+    
+    right_max(arr, len, start_position+1);
+    arr[start_position] = max(arr[start_position], arr[start_position + 1]);
+}
+
+int suffix_sum(int arr[], int len, int N)
+{
+    if (N == 1)
+        return arr[len - 1];
+
+    return arr[len-1] + suffix_sum(arr, len - 1, N - 1);
+}
+
+int prefix_sum(int arr[], int len, int N, int start_pos = 0)
+{
+    if (N == 1)
+        return arr[start_pos];
+    
+    return arr[start_pos] + prefix_sum(arr, len - 1, N - 1, start_pos + 1);
+}
+bool is_palindrome(int arr[], int len, int start_pos = 0)
+{
+    if (len == 1)
+        return true;
+    if (len == 2)
+        return arr[start_pos] == arr[start_pos + 1];
+    if (arr[start_pos] != arr[start_pos + len - 1])
+        return false;
+
+    return is_palindrome(arr, len - 2, start_pos + 1);
+}
+
+bool is_prefix(string main, string prefix, int start_pos = 0)
+{
+    if (prefix.size() < start_pos + 1)
+
+    if(main[start_pos] != prefix[start_pos])
+        return false;
+}
+
 int main()
 {
     // hw1 p1
@@ -89,22 +133,41 @@ int main()
     // hw1 p4
     int arr2[] = {1, 8, 2, 10, 3};
     cout<<sum(arr2, 5)<<endl;
+    // p5
     cout<<average(arr2,5)<<endl;
+    // p6
     array_increment(arr2, 5);
     for(int i = 0; i < 5; i++)
         cout<<arr2[i]<<", ";
     cout<<endl;
 
-    // hw1 p 
+    // hw1 p7 
     accumulate_arr(arr2, 5);
     for(int i = 0; i < 5; i++)
         cout<<arr2[i]<<", ";
     cout<<endl;
 
+    // hw1 p8
     int arr3[6] = {1,3,5,7,4,2};
     left_max(arr3, 6);
-
     for(int i = 0; i < 6; i++)
         cout<<arr3[i]<<", ";
     cout<<endl;
+
+    // hw1 p9
+    int arr4[6] = {1,3,5,7,4,2};
+    right_max(arr4, 6);
+    for(int i = 0; i < 6; i++)
+        cout<<arr4[i]<<", ";
+    cout<<endl;
+    // hw1 p10
+    int arr10[] = {1, 3, 4, 6, 7};
+    cout<<suffix_sum(arr10, 5, 3)<<endl;
+    // p11
+    cout<<prefix_sum(arr10, 5, 3)<<endl;
+    // p12
+    int arr12[] = { 1, 8, 2, 8, 1 };
+    cout<<is_palindrome(arr12,5)<<endl;
+
+    return -1;
 }
