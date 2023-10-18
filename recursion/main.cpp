@@ -115,10 +115,47 @@ bool is_palindrome(int arr[], int len, int start_pos = 0)
 
 bool is_prefix(string main, string prefix, int start_pos = 0)
 {
-    if (prefix.size() < start_pos + 1)
+    if ((int) prefix.size() - 1 < start_pos)
+        return true;
 
     if(main[start_pos] != prefix[start_pos])
         return false;
+    
+    return is_prefix(main, prefix, start_pos + 1);
+}
+
+bool is_prime(int num)
+{
+    for (int i = 2; i <= sqrt(num); i++)
+        if (num % i == 0)
+            return false;
+
+    return true;
+}
+
+int count_primes(int start, int end)
+{
+    if (end == start)
+        return 0;
+
+    if (is_prime(end))
+        return 1 + count_primes(start, end - 1);
+    
+    return count_primes(start, end - 1);
+}
+
+int path_sum(int grid[100][100], int row, int col, int ROWS, int COLS)
+{
+    
+
+}
+
+int fibonacci(int n)
+{
+    if (n == 0 || n == 1)
+        return 1;
+
+    return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 int main()
@@ -129,12 +166,12 @@ int main()
     cout<<my_pow(7, 3)<<endl;
     // hw1 p3
     int my_arr[6] = {1,2,11,8,7,9};
-    cout<<arr_max(my_arr,6)<<endl;
+    cout<<arr_max(my_arr, 6)<<endl;
     // hw1 p4
     int arr2[] = {1, 8, 2, 10, 3};
     cout<<sum(arr2, 5)<<endl;
     // p5
-    cout<<average(arr2,5)<<endl;
+    cout<<average(arr2, 5)<<endl;
     // p6
     array_increment(arr2, 5);
     for(int i = 0; i < 5; i++)
@@ -168,6 +205,18 @@ int main()
     // p12
     int arr12[] = { 1, 8, 2, 8, 1 };
     cout<<is_palindrome(arr12,5)<<endl;
+    // p13
+    cout<<"abcd: "<<is_prefix("abcdefgh", "abcd")<<endl;
+    cout<<": "<<is_prefix("abcdefgh", "")<<endl;
+    cout<<"abd: "<<is_prefix("abcdefgh", "abd")<<endl;
+    // p14 wasnt code practice!
+    // p15
+    cout<<count_primes(10,20)<<endl;
+    // p16
 
+    // p17
+    for (int i = 0; i < 20; i++)
+        cout<<fibonacci(i)<<", ";
+    cout<<endl;
     return -1;
 }
