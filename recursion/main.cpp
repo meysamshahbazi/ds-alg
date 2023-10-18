@@ -159,8 +159,23 @@ int count_primes(int start, int end)
 
 int path_sum(int grid[100][100], int row, int col, int ROWS, int COLS)
 {
+    if (row == ROWS - 1 && col == COLS - 1)
+        return grid[row][col];
+    
+    if ( row == ROWS - 1)
+        return grid[row][col] + path_sum(grid, row, col + 1, ROWS, COLS);
+    
+    if ( col == COLS - 1)
+        return grid[row][col] + path_sum(grid, row + 1, col, ROWS, COLS);
 
 
+    if (grid[row + 1][col] > grid[row][col + 1] && grid[row + 1][col] > grid[row + 1][col + 1])
+        return grid[row][col] + path_sum(grid, row + 1, col, ROWS, COLS);
+
+    if (grid[row][col + 1] > grid[row + 1][col] && grid[row][col + 1] > grid[row + 1][col + 1])
+        return grid[row][col] + path_sum(grid, row, col + 1, ROWS, COLS);
+
+    return grid[row][col] + path_sum(grid, row + 1, col + 1, ROWS, COLS);
 }
 
 int fibonacci(int n)
@@ -230,7 +245,11 @@ int main()
     // p15
     cout<<count_primes(10,20)<<endl;
     // p16
-
+    int grid[100][100];
+    grid[0][0] = 1;grid[0][1] = 7;grid[0][2] = 8;
+    grid[1][0] = 2;grid[1][1] = 10;grid[1][2] = 11;
+    grid[2][0] = 20;grid[2][1] = 5;grid[2][2] = 9;
+    cout<<path_sum(grid, 0, 0, 3, 3)<<endl;
     // p17
     for (int i = 0; i < 20; i++)
         cout<<fibonacci(i)<<", ";
