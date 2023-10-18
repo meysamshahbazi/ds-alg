@@ -123,6 +123,19 @@ bool is_prefix(string main, string prefix, int start_pos = 0)
     
     return is_prefix(main, prefix, start_pos + 1);
 }
+void do_something1(int n) {	// print number digit by digit reversed
+	if (n) {
+		cout << n % 10;
+		do_something1(n / 10);
+	}
+}
+
+void do_something2(int n) {
+	if (n) {
+		do_something2(n / 10);
+		cout << n % 10;
+	}
+}
 
 bool is_prime(int num)
 {
@@ -146,7 +159,7 @@ int count_primes(int start, int end)
 
 int path_sum(int grid[100][100], int row, int col, int ROWS, int COLS)
 {
-    
+
 
 }
 
@@ -210,6 +223,10 @@ int main()
     cout<<": "<<is_prefix("abcdefgh", "")<<endl;
     cout<<"abd: "<<is_prefix("abcdefgh", "abd")<<endl;
     // p14 wasnt code practice!
+    do_something1(123456);
+	cout << "\n";
+	do_something2(123456);
+    cout << "\n";
     // p15
     cout<<count_primes(10,20)<<endl;
     // p16
