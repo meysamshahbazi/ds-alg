@@ -31,6 +31,24 @@ void selection_sort(vector<int> &nums)
     }
 }
 
+void count_sort(vector<int> &array)
+{
+    int size = array.size();
+    int mxValue = array[0];
+    for (int i = 1; i < size; i++)
+        if (array[i] > mxValue)
+            mxValue = array[i];
+
+    vector<int> count(mxValue + 1);
+    for (int i = 0; i < size; i++)
+        count[array[i]] += 1;
+
+    int idx = 0;
+    for (int i = 0; i < mxValue; i++)
+        for (int j = 0; j < count[i]; j++, idx++)
+            array[idx] = i;
+}
+
 
 vector<int> read_vector() {
 	int n;
@@ -48,6 +66,7 @@ int main()
     vector<int> v = read_vector();
 	// insertion_sort(v);
     selection_sort(v);
+    count_sort(v);
 	for (int i = 0; i < (int) v.size(); ++i) {
 		cout << v[i] << " ";
 	}
