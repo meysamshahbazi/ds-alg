@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include<algorithm>
 
 using namespace std;
 
@@ -13,6 +14,20 @@ void insertion_sort(vector<int> &nums)
             j--;
         }
         nums[j + 1] = key;
+    }
+}
+
+void selection_sort(vector<int> &nums)
+{
+    int n = nums.size();
+
+    for (int i = 0; i < n - 1; i++){
+        int mn_idx = i;
+        for (int j = i + 1; j < n; j++)
+            if (nums[j] < nums[mn_idx])
+                mn_idx = j;
+
+        swap(nums[i], nums[mn_idx]);
     }
 }
 
@@ -31,8 +46,8 @@ vector<int> read_vector() {
 int main()
 {
     vector<int> v = read_vector();
-	insertion_sort(v);
-
+	// insertion_sort(v);
+    selection_sort(v);
 	for (int i = 0; i < (int) v.size(); ++i) {
 		cout << v[i] << " ";
 	}
