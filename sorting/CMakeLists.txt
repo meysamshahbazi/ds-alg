@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Define project name
-project(tree)
+project(sorting)
 
 
 # Declare the executable target built from your sources
