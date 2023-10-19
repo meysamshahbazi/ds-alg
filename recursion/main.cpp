@@ -162,10 +162,10 @@ int path_sum(int grid[100][100], int row, int col, int ROWS, int COLS)
     if (row == ROWS - 1 && col == COLS - 1)
         return grid[row][col];
     
-    if ( row == ROWS - 1)
+    if (row == ROWS - 1)
         return grid[row][col] + path_sum(grid, row, col + 1, ROWS, COLS);
     
-    if ( col == COLS - 1)
+    if (col == COLS - 1)
         return grid[row][col] + path_sum(grid, row + 1, col, ROWS, COLS);
 
 
