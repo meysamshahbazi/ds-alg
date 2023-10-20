@@ -149,6 +149,60 @@ vector<int> count_sort_v2(vector<int> &nums)
     return nums;
 }
 
+// https://leetcode.com/problems/minimum-absolute-difference/
+vector<vector<int>> minimumAbsDifference(vector<int>& arr)
+{
+    vector<vector<int>> output;
+    
+    if (arr.size() == 1)
+        return output;
+    
+    sort(arr.begin(), arr.end());
+
+    if (arr.size() == 2) {
+        output.push_back({arr[0], arr[1]});
+        return output;
+    }
+
+    int mnValue = arr[1] - arr[0];
+    for(int i = 1; i < (int) arr.size() - 1; ++i) {
+        if(arr[i + 1] - arr[i] < mnValue) {
+            mnValue = arr[i + 1] - arr[i];
+        }
+    }
+
+    for(int i = 0; i < (int) arr.size() - 1; ++i) {
+        if(arr[i + 1] - arr[i] == mnValue) {
+            output.push_back({arr[i], arr[i + 1]});
+        }
+    }
+
+    return output;
+}
+
+// https://leetcode.com/problems/largest-perimeter-triangle/
+int largestPerimeter(vector<int>& nums)
+{
+    sort(nums.begin(), nums.end());
+
+    for (int i = nums.size() - 1; i >= 2; i--) {
+        if (nums[i] < nums[i - 1] + nums[i - 2])
+            return nums[i] + nums[i - 1] + nums[i - 2]; 
+    }
+    return 0;
+}
+
+// https://leetcode.com/problems/array-partition/
+int arrayPairSum(vector<int>& nums)
+{
+    sort(nums.begin(), nums.end());
+
+    int sum = 0;
+
+    for (int i = 0; i < (int) nums.size() / 2; ++i) 
+        sum += nums[2 * i];
+    return sum;
+}
 
 vector<int> read_vector() {
 	int n;
@@ -168,6 +222,7 @@ void print(vector<T> &v)
 	}
     cout<<endl;
 }
+
 int main()
 {
     // vector<int> v = read_vector();
@@ -197,6 +252,17 @@ int main()
     count_sort_string_v2(hw1p5);
     print(hw1p5);
 
+    // hw2 p 1
+    vector<int> hw2p1 = {4,2,1,3};
+    minimumAbsDifference(hw2p1);
+
+    // hw2 p2
+    vector<int> hw2p2 = {2,1,2};
+    cout<<largestPerimeter(hw2p2)<<endl;
+    
+    //hw2 p3
+    vector<int> hw2p3 = {1,4,3,2};
+    cout<<arrayPairSum(hw2p3)<<endl;
     return -1;
 }
 
