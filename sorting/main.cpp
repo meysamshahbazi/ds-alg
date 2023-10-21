@@ -2,8 +2,18 @@
 #include <vector>
 #include<algorithm>
 #include <string>
+#include <numeric>
 
 using namespace std;
+
+template<class T>
+void print(vector<T> &v)
+{
+    for (int i = 0; i < (int) v.size(); ++i) {
+		cout << v[i] << " ";
+	}
+    cout<<endl;
+}
 
 void insertion_sort(vector<int> &nums)
 {
@@ -204,6 +214,96 @@ int arrayPairSum(vector<int>& nums)
     return sum;
 }
 
+// https://leetcode.com/problems/wiggle-sort/
+// https://leetcode.com/problems/wiggle-sort-ii/
+void wiggleSort(vector<int> &nums)
+{
+
+}
+
+// https://leetcode.com/problems/eliminate-maximum-number-of-monsters/
+int eliminateMaximum(vector<int>& dist, vector<int>& speed)
+{
+    vector<double> time(dist.size());
+
+    for (int i = 0;  i < (int) dist.size(); i ++)
+        time[i] = dist[i]/static_cast<double>(speed[i]);
+    
+
+    sort(time.begin(), time.end());
+
+    int num = 0;
+    for (int i = 0; i < (int) time.size(); i++) {
+        if (time[i] > i) 
+            num++;
+        else 
+            break;
+    }
+
+    return num; 
+}
+
+// https://leetcode.com/problems/maximize-sum-of-array-after-k-negations/
+int largestSumAfterKNegations(vector<int>& nums, int k)
+{
+    sort(nums.begin(), nums.end());
+
+    int idx = 0;
+    for (int i = 0; i < nums.size() && idx < k; i++ ) {
+        if (nums[i] < 0) {
+            nums[i] = -nums[i];
+            idx++;
+        }
+        else 
+            break;
+    }
+
+    sort(nums.begin(), nums.end());
+
+    while (idx < k) {
+        nums[0] = -nums[0];
+        idx++;    
+    }
+
+    return accumulate(nums.begin(), nums.end(), 0);
+}
+
+// https://leetcode.com/problems/shortest-unsorted-continuous-subarray/
+int findUnsortedSubarray_v1(vector<int> &nums)
+{
+    // O(nlogn)
+    vector<int> sorted(nums);
+    
+    sort(nums.begin(), nums.end());
+
+    int len = nums.size();
+
+    for (int i = 0; i < (int) nums.size(); i++) {
+        if (nums[i] == sorted[i])
+            len--;
+        else 
+            break;
+    }
+
+    if (len == 0) 
+        return len;
+
+    for (int i = (int) nums.size() - 1; i >= 0; i--) {
+        if (nums[i] == sorted[i])
+            len--;
+        else 
+            break;
+    }
+    return len;
+}
+
+// O(n)
+int findUnsortedSubarray_v2(vector<int> &nums)
+{
+    
+
+}
+
 vector<int> read_vector() {
 	int n;
 	cin >> n;
@@ -213,14 +313,6 @@ vector<int> read_vector() {
 		cin >> v[i];
 
 	return v;
-}
-template<class T>
-void print(vector<T> &v)
-{
-    for (int i = 0; i < (int) v.size(); ++i) {
-		cout << v[i] << " ";
-	}
-    cout<<endl;
 }
 
 int main()
@@ -252,7 +344,7 @@ int main()
     count_sort_string_v2(hw1p5);
     print(hw1p5);
 
-    // hw2 p 1
+    // hw2 p1
     vector<int> hw2p1 = {4,2,1,3};
     minimumAbsDifference(hw2p1);
 
@@ -263,6 +355,30 @@ int main()
     //hw2 p3
     vector<int> hw2p3 = {1,4,3,2};
     cout<<arrayPairSum(hw2p3)<<endl;
+
+    //hw2 p4 
+    vector<int> hw2p4 = {3,5,2,1,6,4};
+    wiggleSort(hw2p4);
+    print(hw2p4);
+
+    hw2p4 = {6,6,5,6,3,8};
+    wiggleSort(hw2p4);
+    print(hw2p4);
+
+    // hw2 p5
+    vector<int> dist = {3,2,4};
+    vector<int> speed = {5,3,2};
+    cout<<eliminateMaximum(dist,speed)<<endl;
+    
+    // hw2 p6
+    vector<int> hw2p6 = {3,-1,0,2};
+    cout<<largestSumAfterKNegations(hw2p6, 3)<<endl;
+
+    // hw3 p1
+    vector<int> hw3p1 = {2,6,4,8,10,9,15};
+    cout<<findUnsortedSubarray_v2(hw3p1)<<endl;
+    hw3p1 = {1,2,3,4};
+    cout<<findUnsortedSubarray_v2(hw3p1)<<endl;
     return -1;
 }
 

@@ -14,4 +14,5 @@ This repo contains my practices for data structures and algorithms in God progra
 - [ ] binary search tree hw2 p2 , hw3 and hw4!
 - [ ] heap hw1 p5, hw2 p2,3
 - [ ] hash hw2 p5
+- [ ] sort hw2 p4
 
