@@ -303,19 +303,48 @@ int findUnsortedSubarray_v2(vector<int> &nums)
     
 }
 
+bool sortbysec(const pair<int,int> &a,const pair<int,int> &b)
+{
+    return (a.second < b.second);
+}
+
 // https://leetcode.com/problems/most-profit-assigning-work/
 int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& worker)
 {
     sort(worker.begin(), worker.end());
 
+    int n = (int) difficulty.size();
+    int m = (int) worker.size();
+
+    vector<pair<int,int>> difficulty_profit(n);
     
+    for (int i = 0; i < n; i++)
+        difficulty_profit[i] = make_pair(difficulty[i], profit[i]);
+    
+    sort(difficulty_profit.begin(), difficulty_profit.end(), sortbysec);
+
+    int total_profit = 0;
+
+    int idx_tasks = n - 1;
+    int i = m - 1;
+
+    while (i >=0 && idx_tasks >= 0) {
+        if (worker[i] >= difficulty_profit[idx_tasks].first) {
+            total_profit += difficulty_profit[idx_tasks].second;
+            i--;
+        }
+        else 
+            idx_tasks--;
+    }
+
+    return total_profit;
 
 }
 
 // https://leetcode.com/problems/reduction-operations-to-make-the-array-elements-equal/
 int reductionOperations(vector<int>& nums) 
 {
-
+    
 }
 
 vector<int> read_vector() {
@@ -393,6 +422,15 @@ int main()
     cout<<findUnsortedSubarray_v2(hw3p1)<<endl;
     hw3p1 = {1,2,3,4};
     cout<<findUnsortedSubarray_v2(hw3p1)<<endl;
+
+    // hw3 p2
+    vector<int> difficulty = {2,4,6,8,10}, profit = {10,20,30,40,50}, worker = {4,5,6,7};
+    cout << maxProfitAssignment(difficulty, profit, worker) << endl;
+    // hw3 p3
+    vector<int> hw3p3 = {5,1,3};
+    hw3p3 = {1,1,1};
+    hw3p3 = {1,1,2,2,3};
+    cout << reductionOperations(hw3p3) << endl;
     return -1;
 }
 
