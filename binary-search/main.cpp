@@ -83,6 +83,25 @@ vector<int> searchRange(vector<int>& nums, int target)
     return {left, right};
 }
 
+// https://leetcode.com/problems/find-right-interval/
+vector<int> findRightInterval(vector<vector<int>>& intervals) 
+{
+    int size = (int) intervals.size();
+    vector<int> starts(size);
+    vector<int> right_intervals(size);
+    
+    for (int i = 0; i < size; i++)
+        starts[i] = intervals[i][0];
+
+    for (int i = 0; i < size; i++) {
+        int key = starts[i];
+        starts[i] = intervals[i][1];
+        
+    }
+
+    
+}
+
 int main()
 {
     vector<int> v { 2, 2, 2, 3, 4, 9, 17, 17, 17, 20 };
