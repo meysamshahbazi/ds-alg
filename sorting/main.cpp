@@ -301,6 +301,20 @@ int findUnsortedSubarray_v1(vector<int> &nums)
 int findUnsortedSubarray_v2(vector<int> &nums)
 {
     
+}
+
+// https://leetcode.com/problems/most-profit-assigning-work/
+int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& worker)
+{
+    sort(worker.begin(), worker.end());
+
+    
+
+}
+
+// https://leetcode.com/problems/reduction-operations-to-make-the-array-elements-equal/
+int reductionOperations(vector<int>& nums) 
+{
 
 }
 

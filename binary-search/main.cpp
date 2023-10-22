@@ -22,8 +22,50 @@ int binary_search(vector<int> &nums, int val)
     while (start <= end) {
         int mid = start + (end - start) / 2;
 
-        if (nums[mid] == val)
+        if (nums[mid] == val) 
             return mid;
+        if (nums[mid] < val)
+            start = mid + 1;
+        else if (nums[mid] > val)
+            end = mid - 1;
+    }
+    return -1;
+}
+
+int binary_search_left(vector<int> &nums, int val)
+{
+    int start = 0, end = (int) nums.size() - 1;
+
+    while (start <= end) {
+        int mid = start + (end - start) / 2;
+
+        if (nums[mid] == val) {
+            if( mid == 0 || nums[mid - 1] < val)
+                return mid;
+            else 
+                end = mid - 1;
+        }
+        if (nums[mid] < val)
+            start = mid + 1;
+        else if (nums[mid] > val)
+            end = mid - 1;
+    }
+    return -1;
+}
+
+int binary_search_right(vector<int> &nums, int val)
+{
+    int start = 0, end = (int) nums.size() - 1;
+
+    while (start <= end) {
+        int mid = start + (end - start) / 2;
+
+        if (nums[mid] == val) {
+            if( mid == (int) nums.size() - 1 || nums[mid + 1] > val)
+                return mid;
+            else 
+                start = mid + 1;
+        }
         if (nums[mid] < val)
             start = mid + 1;
         else if (nums[mid] > val)
@@ -35,16 +77,10 @@ int binary_search(vector<int> &nums, int val)
 // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
 vector<int> searchRange(vector<int>& nums, int target) 
 {
-    int start = 0, end = (int) nums.size() - 1;
+    int left = binary_search_left(nums, target);
+    int right = binary_search_right(nums, target);
 
-    int start_range = -1;
-    int end_range = -1;
-    int mid = -1;
-    
-    while (nums[start] != target || nums[end] != target) {
-
-    }
-
+    return {left, right};
 }
 
 int main()
@@ -65,6 +101,12 @@ int main()
 
     auto p = equal_range(v.begin(), v.end(), 17);
     cout << p.first - v.begin() << ", " << p.second - v.begin() << endl;
+
+    // hw1 p1
+    vector<int> hw1p1 = {5,7,7,8,8,10};
+    vector<int> res_hw1p1  = searchRange(hw1p1, 6);
+    print(res_hw1p1);
+
 
     return 0;
 }
