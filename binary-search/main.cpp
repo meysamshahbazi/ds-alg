@@ -184,10 +184,10 @@ int smallestDivisor(vector<int>& nums, int threshold)
     
     auto it = max_element(nums.begin(), nums.end());
     int start = 1, end = *it, answer = 1;
-    
+
     while (start <= end) {
         int mid = start + (end - start) / 2;
-        if( divide_less_than(nums, mid, threshold) ) {
+        if (divide_less_than(nums, mid, threshold) ) {
             end = mid - 1;
             answer = mid;
         }
@@ -196,6 +196,105 @@ int smallestDivisor(vector<int>& nums, int threshold)
     }
     
     return answer;
+}
+
+bool PossibleToMakeBouquet(vector<int>& bloomDay, int m, int k, int day)
+{
+    int bouquets = 0;
+    
+    int i = 0;
+
+    while (i < (int) bloomDay.size() - k + 1) {
+        bool bouquet_i = true;
+        int j;
+        for (j = i; j < i + k; j++) 
+            if (bloomDay[j] > day){
+                bouquet_i = false;
+                break;
+            }
+        
+        if (bouquet_i) {
+            bouquets += 1;
+            i += k;
+        }
+        else 
+            i = j + 1;
+        
+        if (bouquets >= m)
+            return true;
+    }
+    
+    return false;
+}
+
+/**
+ * @brief You are given an integer array bloomDay, an integer m and an integer k.
+ * You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+ * The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
+ * Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
+ * https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/
+ * @param bloomDay 
+ * @param m 
+ * @param k 
+ * @return int 
+ */
+int minDays(vector<int>& bloomDay, int m, int k)
+{
+    if (m * k > (int) bloomDay.size())
+        return -1;
+
+    auto it = max_element(bloomDay.begin(), bloomDay.end());
+    int start = 1, end = *it, answer = -1;
+    while (start <= end) {
+        int mid = start + (end - start) / 2;
+        if (PossibleToMakeBouquet(bloomDay, m, k, mid) ) {
+            end = mid - 1;
+            answer = mid;
+        }
+        else 
+            start = mid + 1;
+    }
+    
+    return answer;
+}
+
+bool canWarm(vector<int>& houses, vector<int>& heaters, int radius)
+{
+    int idx = 0;
+    int i = 0;
+    while (i < (int) houses.size()) {
+        if ( houses[i] <= heaters[idx] + radius && houses[i] >= heaters[idx] - radius ) {
+            i++;
+            continue;
+        }
+        else {
+            if (idx < (int) heaters.size() - 1)
+                idx++;
+            else 
+                return false;
+        }
+    }
+    return true;
+}
+
+// https://leetcode.com/problems/heaters/
+int findRadius(vector<int>& houses, vector<int>& heaters)
+{
+    sort(houses.begin(), houses.end());
+    sort(heaters.begin(), heaters.end());
+
+    int start = 0, end = houses.back() + heaters.back(), answer = 0;
+    while (start <= end) {
+        int mid = start + (end - start) / 2;
+        if (canWarm(houses, heaters, mid) ) {
+            end = mid - 1;
+            answer = mid;
+        }
+        else 
+            start = mid + 1;
+    }
+    
+    return answer;  
 }
 
 int main()
@@ -239,6 +338,16 @@ int main()
     // hw 2 p 1
     vector<int> hw2p1 = {1,2,5,9};
     cout<<smallestDivisor(hw2p1, 6)<<endl;
+
+    // hw2 p2
+    vector<int> hw2p2 = {1,10,3,10,2};
+    cout<<minDays(hw2p2, 3,1)<<endl;
+    // hw2 p3
+
+    vector<int> houses = {1,5};
+    vector<int> heaters = {10};
+    // cout<<canWarm(houses,heaters, 1)<<endl;
+    cout<<findRadius(houses, heaters)<<endl;
 
     return 0;
 }
