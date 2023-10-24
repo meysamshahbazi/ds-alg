@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 #include <numeric>
+#include <cmath>
 
 using namespace std;
 
@@ -129,18 +130,73 @@ int triangleNumber(vector<int>& nums)
         for (int j = i + 1; j < (int) pos_nums.size() - 1; j++) {
             auto it = lower_bound(pos_nums.begin() + j + 1, pos_nums.end(), pos_nums[i] + pos_nums[j]);
             int index =  it - pos_nums.begin() - j - 1;
-            total += index ;
+            total += index;
         }
     }
     return total;
 }
 
+bool possible(int n, long long rows)
+{
+    long sum = (rows * (rows + 1)) / 2;
+    return n >= sum;
+}
 // https://leetcode.com/problems/arranging-coins/
 int arrangeCoins(int n) 
 {
-    
+    int left = 0, right = n, answer = 0;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (possible(n, mid)){
+            left = mid + 1;
+            answer = mid;
+        }
+        else 
+            right = mid - 1;
+    }
+    return answer;
 }
 
+// https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/
+/**
+ * @brief Given an array of integers nums and an integer threshold,
+ *  we will choose a positive integer divisor, divide all the array by it, and sum the division's result.
+ *  Find the smallest divisor such that the result mentioned above is less than or equal to threshold.
+ * Each result of the division is rounded to the nearest integer greater than or equal to that element. (For example: 7/3 = 3 and 10/2 = 5).
+
+The test cases are generated so that there will be an answer.
+ * 
+ * @param nums 
+ * @param threshold 
+ * @return int 
+ */
+bool divide_less_than(vector<int> &nums, double divisor, int threshold)
+{
+    int sum = 0;
+    for (auto &n: nums)
+        sum += ceil(n / divisor);
+    
+
+    return sum <= threshold;
+}
+int smallestDivisor(vector<int>& nums, int threshold) 
+{
+    
+    auto it = max_element(nums.begin(), nums.end());
+    int start = 1, end = *it, answer = 1;
+    
+    while (start <= end) {
+        int mid = start + (end - start) / 2;
+        if( divide_less_than(nums, mid, threshold) ) {
+            end = mid - 1;
+            answer = mid;
+        }
+        else 
+            start = mid + 1;
+    }
+    
+    return answer;
+}
 
 int main()
 {
@@ -177,5 +233,12 @@ int main()
     vector<int> hw1p3 = {2,2,3,4};
     hw1p3 = {4,2,3,4};
     cout<<triangleNumber(hw1p3)<<endl;
+    // hw1 p4 
+    cout<<arrangeCoins(8)<<endl;
+    
+    // hw 2 p 1
+    vector<int> hw2p1 = {1,2,5,9};
+    cout<<smallestDivisor(hw2p1, 6)<<endl;
+
     return 0;
 }
