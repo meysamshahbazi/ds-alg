@@ -4,6 +4,7 @@
 #include <string>
 #include <numeric>
 #include <cmath>
+#include<climits>
 
 using namespace std;
 
@@ -297,6 +298,28 @@ int findRadius(vector<int>& houses, vector<int>& heaters)
     return answer;  
 }
 
+// https://leetcode.com/problems/missing-element-in-sorted-array/
+int missingElement(vector<int> &nums, int k)
+{
+
+}
+
+// https://leetcode.com/problems/sqrtx/
+int mySqrt(int x)
+{
+    double EPS = 0.00001;
+    double start = EPS, end = (double) 2*x;
+
+    while (fabs(end - start) > EPS) {
+        double mid = start + (end - start) / 2.0f;
+        if (mid*mid - x < 0.0f)
+            start = mid;
+        else 
+            end = mid;
+    }
+    return  end; 
+}
+
 int main()
 {
     vector<int> v { 2, 2, 2, 3, 4, 9, 17, 17, 17, 20 };
@@ -349,5 +372,6 @@ int main()
     // cout<<canWarm(houses,heaters, 1)<<endl;
     cout<<findRadius(houses, heaters)<<endl;
 
+    cout<<mySqrt(36)<<endl;
     return 0;
 }
