@@ -320,6 +320,43 @@ int mySqrt(int x)
     return  end; 
 }
 
+// https://www.spoj.com/problems/PIE/
+double circle_area(double r) {
+	const double PI = acos(-1.0);
+	return PI * r * r;
+}
+
+bool onePeiceForEachOne(vector<double> &pie_volume, int people, double area)
+{
+	int people_count = 0;
+
+	for (int i = 0; i < (int) pie_volume.size(); i++) {
+		people_count += floor(pie_volume[i] / area);
+		if (people_count >= people)
+			return true;
+	}
+	return false;
+}
+
+double largest_area(vector<double> &pie_radius, int people) {
+
+	vector<double> pie_volume(pie_radius.size());
+	for (int i = 0; i < (int) pie_volume.size(); i++)
+		pie_volume[i] = circle_area(pie_radius[i]);
+	auto it = max_element(pie_volume.begin(), pie_volume.end());
+	double start = 0, end = (double) *it;
+	double mid;
+	for (int i = 0; i < 100; i++) {
+		mid = start + (end - start) / 2.0f;
+        if (onePeiceForEachOne(pie_volume, people, mid))
+            start = mid;
+        else 
+            end = mid;
+	}
+
+	return mid;
+}
+
 int main()
 {
     vector<int> v { 2, 2, 2, 3, 4, 9, 17, 17, 17, 20 };
@@ -371,7 +408,10 @@ int main()
     vector<int> heaters = {10};
     // cout<<canWarm(houses,heaters, 1)<<endl;
     cout<<findRadius(houses, heaters)<<endl;
-
+    // hw4 p1
     cout<<mySqrt(36)<<endl;
+    // hw4 p2
+    vector<double> hw4p2 = {4, 3, 3};   
+    cout<<largest_area(hw4p2,4)<<endl;
     return 0;
 }
