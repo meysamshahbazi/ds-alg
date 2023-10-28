@@ -182,6 +182,56 @@ void print_adjaceny_matrix(GRAPH6 &graph)
 	}
 }
 
+class ImageGraph {
+private:
+	int rows{};
+	int cols{};
+	typedef vector<vector<int>> GRAPH;
+	GRAPH graph;
+public:
+	ImageGraph(int rows, int cols) 
+	:rows{rows}, cols{cols} {
+		graph = GRAPH(rows * cols);
+		for (int i = 0; i <rows; i++)
+			for (int j = 0; j <cols; j++) {
+				if (i - 1 >= 0)
+					graph[i * cols + j].push_back((i - 1) * cols + j);
+				if (j - 1 >= 0)
+					graph[i * cols + j].push_back(i * cols + j - 1);
+				
+				if (i + 1 < rows)
+					graph[i * cols + j].push_back((i + 1) * cols + j);
+				if (j + 1 < cols)
+					graph[i * cols + j].push_back(i * cols + j + 1);
+			}
+	}
+	void print() {
+		print_adjaceny_matrix2(graph);
+	}
+};
+
+void print_chain(GRAPH &graph, int from)
+{
+	cout << from << " ";
+
+	if (graph[from].empty()) 
+		return;
+
+	print_chain(graph, graph[from][0]);
+}
+
+void print_paths_len_2(GRAPH &graph)
+{
+	int nodes = (int) graph.size();
+	
+	for (int i = 0; i < nodes; i++)
+		for (int j = 0; j < (int) graph[i].size(); j++)
+			for (int k = 0; k < (int) graph[graph[i][j]].size(); k++)
+				cout << i << " "<<graph[i][j] <<" "<< graph[graph[i][j]][k]<< " "<< endl;
+	
+
+}
+
 int main()
 {
 	GRAPH3 hw1p1;
@@ -218,6 +268,33 @@ int main()
 	add_directed_edge(hw2p1, "California", "Texas", 30);
 	add_directed_edge(hw2p1, "California", "Texas", 30);
 	print_adjaceny_matrix(hw2p1);
+	cout<<"\n";
+	ImageGraph hw2p3(3,4);
+	hw2p3.print();
+	cout<<"\n";
+	GRAPH hw2p4(6);
+	add_directed_edge2(hw2p4, 4, 1);
+	add_directed_edge2(hw2p4, 1, 2);
+	add_directed_edge2(hw2p4, 5, 3);
+	add_directed_edge2(hw2p4, 0, 5);
+	add_directed_edge2(hw2p4, 3, 4);
+	add_directed_edge2(hw2p4, 4, 1);
+	print_chain(hw2p4, 0);
+	cout<<"\n";
+	print_chain(hw2p4, 3);
+	cout<<"\n";
+
+	GRAPH hw2p5(6);
+	add_directed_edge2(hw2p5, 2, 1);
+	add_directed_edge2(hw2p5, 2, 5);
+	add_directed_edge2(hw2p5, 2, 0);
+	add_directed_edge2(hw2p5, 2, 3);
+	add_directed_edge2(hw2p5, 0, 5);
+	add_directed_edge2(hw2p5, 1, 4);
+	add_directed_edge2(hw2p5, 5, 4);
+	add_directed_edge2(hw2p5, 4, 3);
+	add_directed_edge2(hw2p5, 4, 2);
+	print_paths_len_2(hw2p5);
     return 0;
 }
 
