@@ -232,6 +232,43 @@ void print_paths_len_2(GRAPH &graph)
 
 }
 
+int find_universal_sink_fast(GRAPH &graph)
+{
+	int nodes = (int) graph.size();
+
+	for (int i = 0; i < nodes; i++)
+		graph[i][i] = 0;// remove self loop
+
+	int from = 0, to = 0;
+
+	while (to < nodes) {
+		if (graph[from][to] == 0)
+			to++;
+		else 
+			from++;
+		if (from == nodes)
+			return -1;
+	}
+
+	for (int i = 0; i < nodes; i++) {
+		if (from != i) {
+			if (graph[from][i] !=0 || graph[i][from]  == 0)
+				return -1;
+		}
+	}
+	
+	return from;
+}
+
+void print_adjaceny_matrixxx(GRAPH &graph) {
+	int nodes = graph.size();
+	for (int from = 0; from < nodes; ++from) {
+		for (int to = 0; to < nodes; ++to) {
+			cout<<graph[from][to]<<" ";
+		}
+		cout<<endl;
+	}
+}
 int main()
 {
 	GRAPH3 hw1p1;
@@ -295,6 +332,45 @@ int main()
 	add_directed_edge2(hw2p5, 4, 3);
 	add_directed_edge2(hw2p5, 4, 2);
 	print_paths_len_2(hw2p5);
+	cout<<"\n";
+	// hw3 p1
+	GRAPH hw3p1(1,vector<int>(1));
+	// add_directed_edge(hw3p1, 0, 3);
+	// add_directed_edge(hw3p1, 1, 3);
+	// add_directed_edge(hw3p1, 2, 3);
+	// add_directed_edge(hw3p1, 4, 3);
+	// add_directed_edge(hw3p1, 5, 3);
+	
+	// add_directed_edge(hw3p1, 0, 3);
+	// add_directed_edge(hw3p1, 1, 3);
+	// add_directed_edge(hw3p1, 2, 3);
+	// add_directed_edge(hw3p1, 4, 3);
+	// add_directed_edge(hw3p1, 3, 5);
+	// add_directed_edge(hw3p1, 0, 5);
+	// add_directed_edge(hw3p1, 1, 5);
+	// add_directed_edge(hw3p1, 2, 5);
+	// add_directed_edge(hw3p1, 4, 5);
+
+	// add_directed_edge(hw3p1, 0, 1);
+	// add_directed_edge(hw3p1, 1, 2);
+	// add_directed_edge(hw3p1, 2, 3);
+	// add_directed_edge(hw3p1, 3, 4);
+
+	// add_directed_edge(hw3p1, 0, 0);
+	// add_directed_edge(hw3p1, 1, 1);
+	// add_directed_edge(hw3p1, 2, 2);
+	// add_directed_edge(hw3p1, 0, 1);
+	// add_directed_edge(hw3p1, 1, 2);
+	// add_directed_edge(hw3p1, 2, 3);
+	// add_directed_edge(hw3p1, 4, 3);
+	// add_directed_edge(hw3p1, 3, 2);
+	// add_directed_edge(hw3p1, 4, 3);
+	// add_directed_edge(hw3p1, 0, 1);
+	// add_directed_edge(hw3p1, 4, 3);
+	print_adjaceny_matrixxx(hw3p1);
+	cout<<find_universal_sink_fast(hw3p1)<<endl;
+	// ---------------------------------------------
+	
     return 0;
 }
 
