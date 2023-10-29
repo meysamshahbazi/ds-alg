@@ -195,11 +195,62 @@ vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int co
 	return image;
 }
 
-// https://leetcode.com/problems/count-sub-islands/
-int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
+void dfs(vector<vector<int>> &grid1, vector<vector<int>> &grid2, int r, int c, int R, int C, vector<vector<bool>> &visited, vector<int> &grid1_eq)
+{
+	int dr[] = {0, -1, +1 , 0};
+	int dc[] = {-1, 0, 0 , +1};
+	visited[r][c] = true;
+	grid1_eq.push_back(grid1[r][c]);
+	bool res = true;
 	
+	for (int i = 0; i < 4; i++){
+		if (isValidPixel(r + dr[i], c + dc[i], R, C)) {	
+			if (!visited[r + dr[i]][c + dc[i]] && grid2[r + dr[i]][c + dc[i]] == 1  /* && grid1[r + dr[i]][c + dc[i]] == 1 */ )
+				dfs(grid1, grid2, r + dr[i], c + dc[i], R, C, visited, grid1_eq);
+		}
+	}
+
+	// cout<<"["<<r<<","<<c<<"]";
+
 }
 
+// https://leetcode.com/problems/count-sub-islands/
+int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
+	int R = (int) grid1.size();
+
+	if (R == 0)
+		return 0;
+
+	int C = grid1[0].size();
+
+	int sub_islands = 0;
+	vector<vector<bool>> visited(R, vector<bool>(C));
+
+	for (int r = 0; r < R; r++)
+		for (int c = 0; c < C; c++) {
+			if (!visited[r][c] && grid2[r][c] == 1) {
+				vector<int> grid1_eq;
+				dfs(grid1, grid2, r, c, R, C, visited, grid1_eq);
+				bool grid1_have_zero = false;
+				for(auto g:grid1_eq)
+					if(g == 0) {
+						grid1_have_zero = true;
+						break;
+					}
+					if(!grid1_have_zero)
+						sub_islands++;
+					// cout<<endl;
+			}
+		}
+
+	return sub_islands;
+}
+
+void print(vector<vector<int>> &vec){
+	for(auto &v:vec) {
+		print(v);
+	}
+}
 int main()
 {
 	vector<vector<int>> nodes_edge = { {2, 0}, {0 ,1}, {1 ,4}, {4 ,3}, {3 ,1}, {1 ,0}, {0 ,3}, {5 ,6}, {6 ,6} };
@@ -218,8 +269,15 @@ int main()
 	cout<<countComponents(5,hw1p3)<<endl;
 	hw1p3 = {{0,1},{1,2},{3,4},{2,3}};
 	cout<<countComponents(5,hw1p3)<<endl;
-
-
+	// hw2 p 1 
+	vector<vector<int>> grid1 = {{1,1,1,0,0},{0,1,1,1,1},{0,0,0,0,0},{1,0,0,0,0},{1,1,0,1,1}}; 
+	vector<vector<int>> grid2 = {{1,1,1,0,0},{0,0,1,1,1},{0,1,0,0,0},{1,0,1,1,0},{0,1,0,1,0}};
+	grid1 = {{1,0,1,0,1},{1,1,1,1,1},{0,0,0,0,0},{1,1,1,1,1},{1,0,1,0,1}};
+	grid2 = {{0,0,0,0,0},{1,1,1,1,1},{0,1,0,1,0},{0,1,0,1,0},{1,0,0,0,1}};
+	print(grid1);
+	cout<<"\n";
+	print(grid2);
+	cout << countSubIslands(grid1, grid2)<<endl;
     return 0;
 }
 
