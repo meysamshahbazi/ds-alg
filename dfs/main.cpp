@@ -17,7 +17,6 @@ void print(vector<T> &v)
     cout<<endl;
 }
 
-
 typedef vector<vector<int>> GRAPH;
 
 void add_directed_edge(GRAPH &graph, int from, int to) {
@@ -31,7 +30,6 @@ void add_directed_edge(GRAPH &graph, vector<vector<int>> &nodes_edge) {
 		add_directed_edge(graph, from, to);
 	}
 }
-
 
 void print_adjaceny_matrix(GRAPH &graph) {
 	int nodes = graph.size();
@@ -143,6 +141,65 @@ int countComponents(int n, vector<vector<int>>& edges) {
 	return cc;
 }
 
+bool isValidPixel(int r, int c, int R, int C){
+	if (r < 0 || c < 0 || r >= R || c >= C)
+		return false;
+
+	return true;
+}
+
+vector<vector<int>> get_neighbour(int r, int c, int R, int C) {
+	vector<vector<int>> neighbour;
+
+	if (isValidPixel(r - 1, c , R, C))
+		neighbour.push_back({r - 1, c});
+	
+	if (isValidPixel(r + 1, c, R, C))
+		neighbour.push_back({r + 1, c});
+
+	if (isValidPixel(r, c - 1, R, C))
+		neighbour.push_back({r, c - 1});
+
+	if (isValidPixel(r, c + 1, R, C))
+		neighbour.push_back({r, c + 1});
+
+	return neighbour;
+}
+
+
+void dfs(vector<vector<int>>& image, int sr, int sc, int R, int C, int prev_color, int color)
+{
+	image[sr][sc] = color;
+	
+	vector<vector<int>> neighbours = get_neighbour(sr, sc, R, C);
+
+	for (auto &neighbour : neighbours) {
+		int r = neighbour[0];
+		int c = neighbour[1];
+		if (image[r][c] != prev_color) {
+			dfs(image, r, c, R, C, prev_color, color);
+		}
+	}
+}
+
+// https://leetcode.com/problems/flood-fill/
+vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+	int prev_color = image[sr][sc];
+	
+	int R = image.size();
+	if (R == 0) return image;
+	int C = image[0].size();
+	if (prev_color == color)
+		return image;
+	dfs(image, sr, sc, R, C, prev_color, color);
+	return image;
+}
+
+// https://leetcode.com/problems/count-sub-islands/
+int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
+	
+}
+
 int main()
 {
 	vector<vector<int>> nodes_edge = { {2, 0}, {0 ,1}, {1 ,4}, {4 ,3}, {3 ,1}, {1 ,0}, {0 ,3}, {5 ,6}, {6 ,6} };
@@ -161,6 +218,8 @@ int main()
 	cout<<countComponents(5,hw1p3)<<endl;
 	hw1p3 = {{0,1},{1,2},{3,4},{2,3}};
 	cout<<countComponents(5,hw1p3)<<endl;
+
+
     return 0;
 }
 
