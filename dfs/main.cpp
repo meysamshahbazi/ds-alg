@@ -209,9 +209,6 @@ void dfs(vector<vector<int>> &grid1, vector<vector<int>> &grid2, int r, int c, i
 				dfs(grid1, grid2, r + dr[i], c + dc[i], R, C, visited, grid1_eq);
 		}
 	}
-
-	// cout<<"["<<r<<","<<c<<"]";
-
 }
 
 // https://leetcode.com/problems/count-sub-islands/
@@ -239,7 +236,6 @@ int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
 					}
 					if(!grid1_have_zero)
 						sub_islands++;
-					// cout<<endl;
 			}
 		}
 
