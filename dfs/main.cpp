@@ -17,7 +17,8 @@ void print(vector<T> &v)
     cout<<endl;
 }
 
-void print(vector<vector<int>> &vec){
+template<class T>
+void print(vector<vector<T>> &vec){
 	for(auto &v : vec)
 		print(v);
 }
@@ -246,7 +247,7 @@ int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
 	return sub_islands;
 }
 
-void dfs_1(vector<vector<int>> &grid, int r, int c, int R, int C, int old_color, int color, vector<vector<bool>> &visited) 
+void dfs1(vector<vector<int>> &grid, int r, int c, int R, int C, int old_color, int color, vector<vector<bool>> &visited) 
 {	
 	int dr[] = {0, -1, +1 , 0};
 	int dc[] = {-1, 0, 0 , +1};
@@ -257,35 +258,47 @@ void dfs_1(vector<vector<int>> &grid, int r, int c, int R, int C, int old_color,
 	if (visited[r][c])
 		return;
 
-	if (grid[r][c] != old_color)
+	if (grid[r][c] != old_color && grid[r][c] != color)
 		return;
 
-	visited[r][c] = true;
-
 	bool isBorder = false;
+	
+	for (int i = 0; i < 4; i++) {
+		if (isValidPixel(r + dr[i], c + dc[i], R, C) ) {
+			if (r == 0 || c == 0 || r == R - 1 || c == C - 1) {
+				isBorder = true;
+				break;
+			}
 
-	for (int i = 0; i < 4; i++){
-		if (isValidPixel(r + dr[i], c + dc[i], R, C) &&
-		grid[r + dr[i]][c + dc[i]] != old_color/*   &&
-		grid[r + dr[i]][c + dc[i]] != color */ ) {
-			isBorder = true;
-			break;
+			if (visited[r + dr[i]][c + dc[i]]) {
+				if (grid[r + dr[i]][c + dc[i]] != color) {
+					isBorder = true;
+					break;
+				}
+			}
+			else { // Not visited!
+				if (grid[r + dr[i]][c + dc[i]] != old_color) {
+					isBorder = true;
+					break;
+				}
+			} 
 		}
 	}
 	
-	if (isBorder)
+	if (isBorder) {
 		grid[r][c] = color;
-	else 
-		return;
-
-	for (int i = 0; i < 4; i++) {
-		dfs_1(grid, r + dr[i], c + dc[i], R, C, old_color, color, visited);
 	}
 
+	visited[r][c] = true;
+
+	for (int i = 0; i < 4; i++) {
+		dfs1(grid, r + dr[i], c + dc[i], R, C, old_color, color, visited);
+	}
 }
 
 // https://leetcode.com/problems/coloring-a-border/
-vector<vector<int>> colorBorder(vector<vector<int>>& grid, int row, int col, int color) {
+vector<vector<int>> colorBorder1(vector<vector<int>>& grid, int row, int col, int color) {
+	// TODO solve it correctly!
 	int R = (int) grid.size();
 
 	if (R == 0)
@@ -293,7 +306,66 @@ vector<vector<int>> colorBorder(vector<vector<int>>& grid, int row, int col, int
 
 	int C = grid[0].size();
 	vector<vector<bool>> visited(R, vector<bool>(C));
-	dfs_1(grid, row, col, R, C, grid[row][col], color, visited);
+	
+	dfs1(grid, row, col, R, C, grid[row][col], color, visited);
+	return grid;
+}
+
+void dfs(const vector<vector<int>> &grid, int old_color, int r, int c, int R, int C, vector<vector<bool>> &visited)
+{
+	if (!isValidPixel(r, c, R, C))
+		return;
+
+	if (visited[r][c])
+		return;
+
+	if (grid[r][c] != old_color)
+		return;
+
+	int dr[4] {0, -1, +1, 0};
+	int dc[4] {-1, 0, 0, +1};
+	
+	visited[r][c] = true;
+
+	for (int i = 0; i < 4; i++)
+		dfs(grid, old_color, r + dr[i], c + dc[i], R, C, visited);
+}
+
+bool isBorder(const vector<vector<int>>& grid, int r, int c, int R, int C, const vector<vector<bool>> &visited)
+{
+	int dr[4] {0, -1, +1, 0};
+	int dc[4] {-1, 0, 0, +1};
+
+	if (r == 0 || c == 0 || r == R - 1 || c == C - 1) 
+		return true;
+	
+	for (int i = 0; i < 4; i++) {
+		if (!visited[r + dr[i]][c + dc[i]])
+			return true;
+	}
+
+	return false;
+}
+
+// https://leetcode.com/problems/coloring-a-border/
+vector<vector<int>> colorBorder(vector<vector<int>>& grid, int row, int col, int color)
+{
+	int R = (int) grid.size();
+	if (R == 0)
+		return grid;
+	int C = grid[0].size();
+
+	vector<vector<bool>> visited(R, vector<bool>(C));
+
+	// first update the visited matrix!
+	dfs(grid, grid[row][col], row, col, R, C, visited);
+
+	for (int r  = 0; r < R; r++) {
+		for (int c  = 0; c < C; c++) {
+			if (visited[r][c] && isBorder(grid, r, c, R, C, visited))
+				grid[r][c] = color;
+		}
+	}
 	return grid;
 }
 
@@ -324,11 +396,20 @@ int main()
 	cout<<"\n";
 	print(grid2);
 	cout << countSubIslands(grid1, grid2)<<endl;
-	// hw2 p1
+	// hw2 p2
 	vector<vector<int>> grid = {{1,1},{1,2}};
-	print(grid);
 	int row = 0, col = 0, color = 3;
+	grid = {{1,1,1},{1,1,1},{1,1,1}};
+	row = 1, col = 1, color = 2;
+
+	grid = {{2,1,3,2,1,1,2},{1,2,3,1,2,1,2},{1,2,1,2,2,2,2},{2,1,2,2,2,2,2},{2,3,3,3,2,1,2}};
+	row = 4, col = 4, color = 3;
+	print(grid);
+	cout<<endl;
 	grid = colorBorder(grid,row, col, color);
+	print(grid);
+	grid = {{2,1,3,2,1,1,3},{1,2,3,1,3,1,3},{1,2,1,3,2,3,3},{2,1,3,3,2,3,3},{2,3,3,3,3,1,3}};
+	cout<<endl;
 	print(grid);
     return 0;
 }
