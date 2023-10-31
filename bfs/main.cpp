@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <map>
 #include <set>
+#include <queue>
 
 using namespace std;
 
@@ -23,6 +24,14 @@ void print(vector<vector<T>> &vec){
 		print(v);
 }
 
+
+typedef vector<vector<int>> GRAPH;
+const int OO = 10000000;	// A big value expressing infinity
+
+void add_undirected_edge(GRAPH &graph, int from, int to) {
+	graph[from].push_back(to);
+	graph[to].push_back(from);
+}
 
 
 int main()

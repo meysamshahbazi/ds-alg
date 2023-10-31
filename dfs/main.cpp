@@ -417,6 +417,56 @@ int closedIsland(vector<vector<int>> &grid)
 	return count;
 }
 
+
+
+// }
+
+// void dfs(vector<vector<char>> &grid, int r, int c, int R, int C, vector<vector<bool>> &visited, vector<pair<int,int>> &path)
+// {
+
+// 	path.push_back(make_pair(r,c));
+// 	visited[r][c] = true;
+
+// 	int dr[4] {0, -1, +1, 0};
+// 	int dc[4] {-1, 0, 0, +1};
+
+// 	for (int i = 0; i < 4; i++) {
+// 		if (isValidPixel(r, c, R, C) && !visited[r][c] || grid[r][c] == grid[r + dr[i]][c + dc[i]] )
+// 			dfs(grid,r + dr[i],c + dc[i], R, C, visited, path);
+// 	}
+	
+void dfs(vector<vector<char>>& grid, vector<pair<int,int>> &path, vector<vector<bool>> &visited, int R, int C)
+{
+	int dr[4] {0, -1, +1, 0};
+	int dc[4] {-1, 0, 0, +1};
+
+	int r = path.back().first;
+	int c = path.back().second;
+	visited[r][c] = true;
+	
+	for (int i = 0; i < 4; i++){
+		int nr = r + dr[i];
+		int nc = c + dc[i];
+		if (isValidPixel(nr , nc, R, C) && !visited[nr][nc] ) {}
+	}
+}
+
+// https://leetcode.com/problems/detect-cycles-in-2d-grid/
+bool containsCycle(vector<vector<char>>& grid)
+{
+	int R = (int) grid.size();
+	if (R == 0)
+		return false;
+	int C = grid[0].size();
+
+	vector<vector<bool>> visited(R, vector<bool>(C));
+	for (int r = 0; r < R; r++)
+		for (int c = 0; c < C; c++) {
+			
+		}
+
+}
+
 int main()
 {
 	vector<vector<int>> nodes_edge = { {2, 0}, {0 ,1}, {1 ,4}, {4 ,3}, {3 ,1}, {1 ,0}, {0 ,3}, {5 ,6}, {6 ,6} };
@@ -459,6 +509,16 @@ int main()
 	grid = {{2,1,3,2,1,1,3},{1,2,3,1,3,1,3},{1,2,1,3,2,3,3},{2,1,3,3,2,3,3},{2,3,3,3,3,1,3}};
 	cout<<endl;
 	print(grid);
+	// hw 2 p3
+	vector<vector<int>> hw2p3 = {{1,1,1,1,1,1,1},
+								{1,0,0,0,0,0,1},
+								{1,0,1,1,1,0,1},
+								{1,0,1,0,1,0,1},
+								{1,0,1,1,1,0,1},
+								{1,0,0,0,0,0,1},
+								{1,1,1,1,1,1,1}};
+	print(hw2p3);
+	cout << closedIsland(hw2p3) << endl;
     return 0;
 }
 
