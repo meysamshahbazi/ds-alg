@@ -208,7 +208,7 @@ void dfs(vector<vector<int>> &grid1, vector<vector<int>> &grid2, int r, int c, i
 	grid1_eq.push_back(grid1[r][c]);
 	bool res = true;
 	
-	for (int i = 0; i < 4; i++){
+	for (int i = 0; i < 4; i++) {
 		if (isValidPixel(r + dr[i], c + dc[i], R, C)) {	
 			if (!visited[r + dr[i]][c + dc[i]] && grid2[r + dr[i]][c + dc[i]] == 1  /* && grid1[r + dr[i]][c + dc[i]] == 1 */ )
 				dfs(grid1, grid2, r + dr[i], c + dc[i], R, C, visited, grid1_eq);
@@ -367,6 +367,54 @@ vector<vector<int>> colorBorder(vector<vector<int>>& grid, int row, int col, int
 		}
 	}
 	return grid;
+}
+
+void dfs(vector<vector<int>> &grid, int r, int c, int R, int C, vector<vector<bool>> &visited, vector<pair<int,int>> &islands)
+{
+	if (!isValidPixel(r, c, R, C) || visited[r][c] || grid[r][c] == 1 )
+		return;
+
+	islands.push_back(make_pair(r,c));
+	visited[r][c] = true;
+
+	int dr[4] {0, -1, +1, 0};
+	int dc[4] {-1, 0, 0, +1};
+
+	for (int i = 0; i < 4; i++)
+		dfs(grid,r + dr[i],c + dc[i], R, C, visited, islands);
+	
+}
+
+// https://leetcode.com/problems/number-of-closed-islands/
+int closedIsland(vector<vector<int>> &grid)
+{
+	int R = (int) grid.size();
+	if (R == 0)
+		return 0;
+
+	int C = grid[0].size();
+
+	int count = 0;
+	vector<vector<bool>> visited(R, vector<bool>(C));
+	for (int r = 0; r < R; r++)
+		for (int c = 0; c < C; c++) {
+			if (!visited[r][c] && grid[r][c] == 0){
+				vector<pair<int,int>> islands;
+				dfs(grid,r,c,R,C,visited,islands);
+				bool isclosed = true;
+				for(auto &p:islands)
+					if(p.first == 0 || p.second ==0 || p.first == R-1 || p.second == C - 1){
+						isclosed = false;
+						break;
+					}
+				
+				if (isclosed)
+					count++;
+			}
+		}
+
+
+	return count;
 }
 
 int main()
