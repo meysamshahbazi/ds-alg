@@ -269,10 +269,117 @@ bool canReach(vector<int>& arr, int start)
 	return false;
 }
 
+bool isInRange(int num)
+{
+	return num <= 1000 && num >= 0;
+}
+
 // https://leetcode.com/problems/minimum-operations-to-convert-number/
 int minimumOperations(vector<int>& nums, int start, int goal)
 {
+	queue<int> q;
 	
+	q.push(start);
+	vector<int> len(1001, INT32_MAX);
+	int res;
+	for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size() ) {
+		while (sz--){
+			int start_ = q.front();
+			q.pop();
+			for (int num : nums) {
+				res = start_ + num;
+				if (res == goal)
+					return level + 1;
+				if (isInRange(res) && len[res] == INT32_MAX) {
+					len[res] = level + 1;
+					q.push(res);
+				}
+
+				res = start_ - num;
+				if (res == goal)
+					return level + 1;
+				if (isInRange(res) && len[res] == INT32_MAX) {
+					len[res] = level + 1;
+					q.push(res);
+				}
+				
+
+				res = start_ ^ num;
+				if (res == goal)
+					return level + 1;
+				if (isInRange(res) && len[res] == INT32_MAX) {
+					len[res] = level + 1;
+					q.push(res);
+				}
+			}
+		}		
+	}
+	return -1;
+}
+
+char getNextDigit(char c)
+{
+	if (c == '9')
+		return '0';
+
+	return c + 1;	
+}
+
+char getPervDigit(char c)
+{
+	if (c == '0')
+		return '9';
+
+	return c - 1;	
+}
+
+
+vector<string> lockAdj(string str)
+{
+	vector<string> res;
+	for(int i = 0; i < 4; i++) {
+		string adj = str;
+		adj[i] = getNextDigit(str[i]);
+		res.push_back(adj);
+		adj[i] = getPervDigit(str[i]);
+		res.push_back(adj);
+	}
+	return res;
+}
+
+
+// https://leetcode.com/problems/open-the-lock/
+int openLock(vector<string>& deadends, string target)
+{
+	queue<string> q;
+	q.push("0000");
+	vector<bool> visited(10000); // convert deadends to visited!
+
+	for (string &str : deadends) {
+		visited[stoi(str)] = true;
+		if (str == "0000")
+			return -1;
+	}
+	if ( target == "0000")
+		return 0;
+
+	for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size()){
+		while (sz--){
+			string cur = q.front();
+			q.pop();
+			vector<string> adjList = lockAdj(cur);
+			for (string &str : adjList) {
+				if (!visited[stoi(str)]) {
+					q.push(str);
+					visited[stoi(str)] = true;
+				}
+				if (str == target)
+					return level + 1;
+			}
+		}
+	}
+
+	return -1;
 }
 
 
@@ -329,6 +436,16 @@ int main()
 	// hw2 p1
 	vector<int> hw2p1 = {4,2,3,0,3,1,2};
 	cout<<canReach(hw2p1, 5)<<endl;
-
+	// hw2 p2
+	cout<<"-------------------------"<<endl;
+	vector<int> hw2p2 = {2,4,12};
+	cout<<minimumOperations(hw2p2, 2, 12)<< endl;
+	hw2p2 = {3,5,7};
+	cout<<minimumOperations(hw2p2, 0, -4)<< endl;
+	hw2p2 = {2,8,16};
+	cout<<minimumOperations(hw2p2, 0, 1)<< endl;
+	// hw2 p 3
+	vector<string> hw2p3 = {"0201","0101","0102","1212","2002"};
+	cout<<openLock(hw2p3, "0202")<<endl;
     return 0;
 }
