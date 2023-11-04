@@ -202,7 +202,7 @@ int getFood(vector<vector<char>> &matrix)
 		for (int j = 0; j < n; j++)
 			if (matrix[i][j] == '*') {
 				loc = make_pair(i,j);
-				break;
+				break;;
 			}
 	
 
@@ -237,6 +237,44 @@ int getFood(vector<vector<char>> &matrix)
 	return -1;
 
 }
+
+// https://leetcode.com/problems/jump-game-iii/
+bool canReach(vector<int>& arr, int start) 
+{
+	int n = (int) arr.size();
+	vector<int> len(n, INT32_MAX);
+
+	queue<int> q;
+	q.push(start);
+	len[start] = 0;
+
+	for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size() ) {
+		while (sz--){
+			int cur = q.front();
+			q.pop();
+			vector<int> adjlist;
+			if (cur + arr[cur] < n)
+				adjlist.push_back(cur + arr[cur]);
+			if (cur - arr[cur] >= 0)
+				adjlist.push_back(cur - arr[cur]);
+			for (int neighbour : adjlist) 
+				if (len[neighbour] == INT32_MAX) { 
+					q.push(neighbour);
+					len[neighbour] = level + 1;
+					if (arr[neighbour] == 0)
+						return true;
+				}
+		}
+	}
+	return false;
+}
+
+// https://leetcode.com/problems/minimum-operations-to-convert-number/
+int minimumOperations(vector<int>& nums, int start, int goal)
+{
+	
+}
+
 
 int main()
 {
@@ -288,6 +326,9 @@ int main()
 				{'X','0','0','X','#','X'},
 				{'X','X','X','X','X','X'}};
 	cout<<getFood(hw1p3)<<endl;
+	// hw2 p1
+	vector<int> hw2p1 = {4,2,3,0,3,1,2};
+	cout<<canReach(hw2p1, 5)<<endl;
 
     return 0;
 }
