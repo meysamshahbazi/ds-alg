@@ -381,7 +381,48 @@ int openLock(vector<string>& deadends, string target)
 
 	return -1;
 }
+#define INF INT32_MAX
+// https://leetcode.com/problems/walls-and-gates/ premium
+void wallsAndGates(vector<vector<int>>& rooms)
+{
+	int m = rooms.size();
+	if (m == 0)
+		return;
+	int n = rooms[0].size();
 
+	int dr[4] {0, -1, +1, 0};
+	int dc[4] {-1, 0, 0, +1};
+
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j <n; j++) {
+			if (rooms[i][j] == 0) {
+				queue<pair<int,int>> q;
+				q.push({i, j});
+				for (int level = 0, sz = 1; !q.empty(); level++, sz = q.size()){
+					while (sz--){
+						auto cur = q.front();
+						q.pop();
+						for (int d = 0; d < 4; d++){
+							int nr = dr[d] + cur.first;
+							int nc = dc[d] + cur.second; 
+							if (isValid(nr, nc, m, n) && rooms[nr][nc] != -1  && rooms[nr][nc] > (level + 1)) {
+								rooms[nr][nc] = level + 1;
+								q.push({nr,nc});
+							} 
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+}
+
+vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) 
+{
+	
+}
 
 int main()
 {
@@ -447,5 +488,9 @@ int main()
 	// hw2 p 3
 	vector<string> hw2p3 = {"0201","0101","0102","1212","2002"};
 	cout<<openLock(hw2p3, "0202")<<endl;
+	// hw3 p1
+	vector<vector<int>> hw3p1 = {{INF, -1,0, INF}, {INF, INF, INF, -1},{INF,-1, INF,-1}, {0, -1, INF, INF}};
+	wallsAndGates(hw3p1);
+	print(hw3p1);
     return 0;
 }
