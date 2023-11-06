@@ -509,17 +509,20 @@ vector<int> countSteppingNumbers(long long low, long long high)
 	vector<int> result;
 
 	queue<int> q;
-	for (int i = 0; i < 9; i++){
+	for (int i = 0; i < 10; i++){
 		q.push(i);
 		if (i >= low && i <= high)
 			result.push_back(i);
 	}
 
-	for (int level = 0, sz = 10; !q.empty(); level++, sz = q.size()){
+	for (int level = 0, sz = 10; !q.empty(); level++, sz = q.size()) {
 		while (sz--) {
 			int cur = q.front();
 			q.pop();
-			
+
+			if (cur == 0)
+				continue;
+
 			int prev = cur * 10 + prevDigit(cur % 10);
 			q.push(prev);
 			if (prev > high)
@@ -620,7 +623,7 @@ int main()
 	auto hw3p22 = pacificAtlantic(hw3p2);
 	print(hw3p22);
 	// hw3 p3 
-	auto hw3p3 = 	countSteppingNumbers(0,21);
+	auto hw3p3 = countSteppingNumbers(0,21);
 	print(hw3p3);
     return 0;
 }
