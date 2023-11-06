@@ -419,9 +419,125 @@ void wallsAndGates(vector<vector<int>>& rooms)
 
 }
 
+void bfs(vector<vector<int>>& heights, vector<vector<bool>> &visited, int r, int c, int R, int C)
+{
+	queue<pair<int, int>> q;
+	q.push({r, c});
+	visited[r][c] = true;
+	int dr[4] {0, -1, +1, 0};
+	int dc[4] {-1, 0, 0, +1};
+
+	for (int level = 0, sz = 1; !q.empty(); level++, sz = q.size()) {
+		while (sz--){
+			int cur_r = q.front().first;
+			int cur_c = q.front().second;
+			q.pop();
+			
+			for (int d = 0; d < 4; d++) {
+				int nr = cur_r + dr[d];
+				int nc = cur_c + dc[d];
+				if (isValid(nr, nc, R, C) && !visited[nr][nc] && heights[nr][nc] >= heights[cur_r][cur_c]) {
+					visited[nr][nc] = true;
+					q.push({nr,nc});
+				}
+			}
+		}
+		
+	}
+	
+}
+
+// https://leetcode.com/problems/pacific-atlantic-water-flow/
 vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) 
 {
+	vector<vector<int>> result;
+	int R = heights.size();
+	if (R == 0)
+		return result;
+	int C = heights[0].size();
+
+	vector<vector<bool>> tl(R, vector<bool>(C));
+	vector<vector<bool>> br(R, vector<bool>(C));
 	
+	int r,c;
+	r = 0;
+	for (c = 0; c < C; c++) {
+		bfs(heights, tl, r, c, R, C);
+	}
+	c = 0;
+	for (r = 0; r < R; r++) {
+		bfs(heights, tl, r, c, R, C);
+	}
+
+	r = R - 1;
+	for (c = 0; c < C; c++) {
+		bfs(heights, br, r, c, R, C);
+	}
+
+	c = C - 1;
+	for (r = 0; r < R; r++)
+		bfs(heights, br, r, c, R, C);
+
+	for (int r = 0; r < R; r++)
+		for (int c = 0; c < C; c++)
+			if (tl[r][c] && br[r][c])
+				result.push_back({r,c});
+
+	return result;
+
+}
+
+int nextDigit(int d)
+{
+	if (d == 9)
+		return 0;
+	return d + 1;
+}
+
+int prevDigit(int d)
+{
+	if (d == 0)
+		return 9;
+	return d - 1;
+}
+
+
+// https://leetcode.com/problems/stepping-numbers/ premium
+vector<int> countSteppingNumbers(long long low, long long high)
+{
+
+	vector<int> result;
+
+	queue<int> q;
+	for (int i = 0; i < 9; i++){
+		q.push(i);
+		if (i >= low && i <= high)
+			result.push_back(i);
+	}
+
+	for (int level = 0, sz = 10; !q.empty(); level++, sz = q.size()){
+		while (sz--) {
+			int cur = q.front();
+			q.pop();
+			
+			int prev = cur * 10 + prevDigit(cur % 10);
+			q.push(prev);
+			if (prev > high)
+				return result;
+
+			result.push_back(prev);
+
+			int next = cur * 10 + nextDigit(cur % 10);
+			q.push(next);
+
+			if (next > high)
+				return result;
+
+			result.push_back(next);
+		}
+	}
+
+	return result;
 }
 
 int main()
@@ -489,8 +605,22 @@ int main()
 	vector<string> hw2p3 = {"0201","0101","0102","1212","2002"};
 	cout<<openLock(hw2p3, "0202")<<endl;
 	// hw3 p1
-	vector<vector<int>> hw3p1 = {{INF, -1,0, INF}, {INF, INF, INF, -1},{INF,-1, INF,-1}, {0, -1, INF, INF}};
+	vector<vector<int>> hw3p1 = {{INF, -1,0, INF}, 
+								{INF, INF, INF, -1},
+								{INF,-1, INF,-1},
+								{0, -1, INF, INF}};
 	wallsAndGates(hw3p1);
 	print(hw3p1);
+	cout<< endl;
+	// hw3 p2: 
+	
+	vector<vector<int>> hw3p2 = {{1,2,2,3,5},{3,2,3,4,4},{2,4,5,3,1},{6,7,1,4,5},{5,1,1,2,4}};
+	print(hw3p2);
+	cout<< endl;
+	auto hw3p22 = pacificAtlantic(hw3p2);
+	print(hw3p22);
+	// hw3 p3 
+	auto hw3p3 = 	countSteppingNumbers(0,21);
+	print(hw3p3);
     return 0;
 }
