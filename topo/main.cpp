@@ -76,7 +76,7 @@ int main() {
 			add_directed_edge(graph, from, to);
 		}
         print_adjaceny_matrix(graph);
-        cout<<endl;
+        cout<<endl; 
 		vector<int> ordering = toposort(graph);
 
 		if (ordering.empty())
