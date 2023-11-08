@@ -30,7 +30,33 @@ void print_adjaceny_matrix(GRAPH &graph) {
 
 vector<int> toposort(const GRAPH &adjlist)
 {
-    
+    int sz = adjlist.size();
+    vector<int> indegree(sz, 0);
+    for (int i = 0; i < sz; i++)
+        for (int j : adjlist[i])
+            indegree[j]++;
+
+    queue<int> ready;
+
+    for (int i = 0; i < sz; i++)
+        if (!indegree[i])
+            ready.push(i);
+
+    vector<int> ordering;
+    while (!ready.empty()) {
+        int i = ready.front();
+        ready.pop();
+        ordering.push_back(i);
+
+        for (int j : adjlist[i])
+            if(--indegree[j] == 0)
+                ready.push(j);
+    }
+
+    if (ordering.size() != adjlist.size() )
+        ordering.clear();
+
+    return ordering;
 }
 
 int main() {
@@ -51,15 +77,15 @@ int main() {
 		}
         print_adjaceny_matrix(graph);
         cout<<endl;
-		// vector<int> ordering = topsort(graph);
+		vector<int> ordering = toposort(graph);
 
-		// if (ordering.empty())
-		// 	cout << "There is a cycle\n";
-		// else {
-		// 	for (int node : ordering)
-		// 		cout << node << " ";
-		// 	cout << "\n";
-		// }
+		if (ordering.empty())
+			cout << "There is a cycle\n";
+		else {
+			for (int node : ordering)
+				cout << node << " ";
+			cout << "\n";
+		}
 	}
 	return 0;
 }
