@@ -2,3 +2,4 @@
 .vscode/*
 hash-table/main
 build/*
+topo/data.txt
