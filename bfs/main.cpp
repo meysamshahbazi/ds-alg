@@ -543,6 +543,44 @@ vector<int> countSteppingNumbers(long long low, long long high)
 	return result;
 }
 
+// https://leetcode.com/problems/shortest-path-with-alternating-colors/
+vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges)
+{
+	vector<pair<vector<int>,vector<int>>> graph(n); // first for red, second for blue
+
+	for (auto &item : redEdges ) {
+		int from = item[0];
+		int to = item[1];
+		graph[from].first.push_back(to);
+	}
+	
+	for (auto &item : blueEdges ) {
+		int from = item[0];
+		int to = item[1];
+		graph[from].second.push_back(to);
+	}
+
+	queue<int> q;
+	vector<int> len(n, INT32_MAX);
+	q.push(0);
+	len[0] = 0;
+	vector<int> answer(n);
+
+	for (int level = 0, sz = 1; !q.empty(); level++, sz = q.size() ) {
+		while (sz--) {
+			int cur = q.front();
+			q.pop();
+			
+			for (int ngnbr : graph[cur].first) {
+				
+			}
+			
+		}
+		
+	}
+
+}
+
 int main()
 {
 	vector<vector<int>> nodes_edge = { {2, 0}, {0 ,1}, {1 ,4}, {4 ,3}, {3 ,1}, {1 ,0}, {0 ,3}, {5 ,6}, {6 ,6} };
