@@ -176,6 +176,13 @@ vector<GRAPH> getGraphs(const string &path)
 	return graphs;
 }
 
+// https://leetcode.com/problems/sequence-reconstruction/ premium
+
+bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs) 
+{
+	
+}
+
 int main() {
 	freopen("../data.txt", "rt", stdin);
 	int cases;
