@@ -180,8 +180,31 @@ vector<GRAPH> getGraphs(const string &path)
 
 bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs) 
 {
+	GRAPH graph(org.size() );
+
+	for (auto seq : seqs) {
+		for (int i = 0; i < (int) seq.size() - 1; i++) {
+			if (seq[i] > org.size() || seq[i + 1] > org.size() )
+				return false;
+			add_directed_edge(graph, seq[i] - 1, seq[i + 1] - 1);
+		}
+	}
+
+	auto ordering = toposort(graph);
+
+	if (ordering.size() != org.size())
+		return false;
 	
+	for (int i = 0; i < ordering.size(); i++)
+		if (ordering[i] != org[i] - 1)
+			return false;
+
+	return true;
 }
+
+// https://leetcode.com/problems/minimum-height-trees/
+
+
 
 int main() {
 	freopen("../data.txt", "rt", stdin);
@@ -224,6 +247,17 @@ int main() {
 		else 
 			print(ordering);
 	}
+	// hw2 p1
+	vector<int> org = {1,2,3};
+	vector<vector<int>> seqs = {{1,2},{1,3}};
+	cout<<sequenceReconstruction(org, seqs)<<endl; 
+	seqs = {{1,2}};
+	cout<<sequenceReconstruction(org, seqs)<<endl; 
+	seqs = {{1,2},{1,3}, {2,3}};
+	cout<<sequenceReconstruction(org, seqs)<<endl; 
+	org = {4, 1, 5, 2, 6, 3};
+	seqs = {{5,2,6,3}, {4,1,5,2}};
+	cout<<sequenceReconstruction(org, seqs)<<endl; 
 	return 0;
 }
 
