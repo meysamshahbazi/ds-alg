@@ -32,8 +32,8 @@ int knapsack(int idx, int remain_capacity, vector<int> &sizes, vector<int> &valu
 
 // https://leetcode.com/problems/longest-increasing-subsequence/
 class Solution300 {
-	vector<int> nums;
-	const static int MAX = 2500 + 1;
+    vector<int> nums;
+	const static int MAX = 100 + 1;
 	int memory[MAX][MAX];
 public:
 	int lis(int idx, int min_idx) {
@@ -44,7 +44,6 @@ public:
 		if (ret != -1)
 			return ret;
 
-
 		int choice1 = lis(idx + 1, min_idx); // leave choice
 		int choice2 = 0;
 		
@@ -52,13 +51,112 @@ public:
 			choice2 = 1 + lis(idx + 1, idx);
 		
 		return ret = max(choice1, choice2);
-
 	}
-
     int lengthOfLIS(vector<int>& nums) {
 		this->nums = nums;
 		memset(memory, -1, sizeof(memory));
 		return lis(0, nums.size());
+    }
+};
+
+class Solution300_1 {
+	// const static int MAX = 2500 + 1;
+	vector<int> m_nums;
+	int *memory{nullptr};
+public:
+	int lis(int idx) {
+		if (idx == (int) m_nums.size())
+			return 0;
+
+		auto &ret = memory[idx];
+		if (ret != -1)
+			return ret;
+
+		ret = 0;
+		for (int i = idx + 1; i < m_nums.size(); i++)
+			if (m_nums[i] > m_nums[idx])
+				ret = max(ret, lis(i));
+		
+		ret += 1; // for including ith index
+		return ret;
+	}
+
+    int lengthOfLIS(vector<int>& nums) {
+		memory = new int[nums.size() + 1];
+		memset(memory, -1,(nums.size() + 1)*sizeof(int));
+		m_nums = nums;
+		m_nums.insert(m_nums.begin(), INT32_MIN);
+		int lis_0 = lis(0);
+		delete[] memory;
+		return lis_0 - 1;
+    }
+};
+
+// https://leetcode.com/problems/longest-common-subsequence/
+class Solution1143 {
+	string m_text1, m_text2;
+	const static int MAX = 1001;
+	int memory[MAX][MAX];
+public:
+	int lcs(int idx1, int idx2)
+	{
+		if (idx1 == m_text1.size() || idx2 == m_text2.size())
+			return 0;
+
+		auto &ret = memory[idx1][idx2];
+		if (ret != -1)
+			return ret;
+
+		if (m_text1[idx1] == m_text2[idx2])
+			return 1 + lcs(idx1 + 1, idx2 + 1);
+		
+		int option1 = lcs(idx1 + 1, idx2);
+		int option2 = lcs(idx1, idx2 + 1);
+		return ret = max(option1, option2);
+	}
+    int longestCommonSubsequence(string text1, string text2) {
+		memset(memory, -1,sizeof(memory));
+		m_text1 = text1;
+		m_text2 = text2;
+		return lcs(0, 0);
+    }
+};
+
+int mem_ss[500 + 1][2000 + 1];
+vector<int> values_ss;
+
+int subset_sum_dp(int idx, int target)
+{
+	if (idx == (int) values_ss.size() )
+		return target == 0;
+
+	auto &ret = mem_ss[idx][target];
+	if (ret != -1)
+		return ret;
+
+	int leave = subset_sum_dp(idx + 1, target);
+	int pick = 0;
+	if (target >= values_ss[idx])
+		pick = subset_sum_dp(idx + 1, target - values_ss[idx]);
+
+	if (leave == 1 || pick == 1)
+		return ret = 1;
+
+	return ret = 0;
+}
+
+bool subset_sum(const vector<int> &values, int target)
+{
+	memset(mem_ss, -1, sizeof(mem_ss));
+	values_ss = values;
+	return subset_sum_dp(0, target) == 1;
+}
+
+// https://leetcode.com/problems/partition-equal-subset-sum/
+class Solution416 {
+public:
+    bool canPartition(vector<int>& nums) {
+		
     }
 };
 
@@ -82,12 +180,22 @@ int main()
 	}
 	
 	cout << knapsack(0, capacity, sizes, values) << endl;
-	//
 
 	vector<int> nums = {10,9,2,5,3,7,101,18};
 	Solution300 s300;
 	cout << s300.lengthOfLIS(nums) << endl;
 
+	Solution300_1 s300_1;
+	vector<int> nums_1 = {10,9,2,5,3,7,101,18};
+	cout<<s300_1.lengthOfLIS(nums_1)<<endl;;
+	// 
+	Solution1143 s1143;
+	cout << s1143.longestCommonSubsequence("abcde", "ace") << endl;
+	// hw1 p 1
+	vector<int> hw1p1 = {3, 12, 4, 12, 5, 2};
+	cout << subset_sum(hw1p1, 9) << endl;
+	hw1p1 = {3, 40, 4, 12, 5, 2};
+	cout << subset_sum(hw1p1, 30) << endl;
 	return 0;
 }
 
