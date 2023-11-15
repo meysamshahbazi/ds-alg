@@ -33,33 +33,32 @@ int knapsack(int idx, int remain_capacity, vector<int> &sizes, vector<int> &valu
 // https://leetcode.com/problems/longest-increasing-subsequence/
 class Solution300 {
 	vector<int> nums;
-	vector<vector<int>> table;
-	int nums_min;
-	int nums_max;
+	const static int MAX = 2500 + 1;
+	int memory[MAX][MAX];
 public:
-	int lis(int idx, int min_) {
+	int lis(int idx, int min_idx) {
 		if (idx == nums.size())
 			return 0;
 
-		auto &ret = table[idx][min_ - nums_min + 1];
+		auto &ret = memory[idx][min_idx];
 		if (ret != -1)
 			return ret;
 
-		int choice1 = lis(idx + 1, min_); // leave choice
+
+		int choice1 = lis(idx + 1, min_idx); // leave choice
 		int choice2 = 0;
-
-		if (nums[idx] > min_) // we can pick
-			choice2 = 1 + lis(idx + 1, nums[idx]);
-
+		
+		if ( min_idx >= nums.size() || nums[idx] > nums[min_idx]) // we can pick
+			choice2 = 1 + lis(idx + 1, idx);
+		
 		return ret = max(choice1, choice2);
+
 	}
 
     int lengthOfLIS(vector<int>& nums) {
 		this->nums = nums;
-		nums_min = *min_element(nums.begin(), nums.end()); 
-		nums_max = *max_element(nums.begin(), nums.end()); 
-		table = vector<vector<int>>(nums.size(), vector<int>(nums_max - nums_min + 2 , -1));
-		return lis(0, nums_min-1);
+		memset(memory, -1, sizeof(memory));
+		return lis(0, nums.size());
     }
 };
 
