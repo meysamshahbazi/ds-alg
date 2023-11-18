@@ -60,7 +60,6 @@ public:
 };
 
 class Solution300_1 {
-	// const static int MAX = 2500 + 1;
 	vector<int> m_nums;
 	int *memory{nullptr};
 public:
@@ -154,9 +153,45 @@ bool subset_sum(const vector<int> &values, int target)
 
 // https://leetcode.com/problems/partition-equal-subset-sum/
 class Solution416 {
+	vector<int> m_nums;
+	char mem[201][100*200+1]; // 1 we can 0 we cant, and -1 means not explored yet.
+	int m_sum{0};
 public:
+	char diff(int idx, int picked_sum)
+	{
+		if (idx == (int) m_nums.size() )
+			return 2 * picked_sum == m_sum;
+
+		auto &ret = mem[idx][picked_sum];
+		if (ret != -1)
+			return ret;
+
+		char leave = diff(idx + 1, picked_sum); // leave choice!
+		char pick = diff(idx + 1, picked_sum + m_nums[idx]);
+
+		if (leave == 1 || pick == 1)
+			return ret = 1;
+
+		return ret = 0;
+	}
     bool canPartition(vector<int>& nums) {
+		m_nums = nums;
+		m_sum = accumulate(m_nums.begin(), m_nums.end(), 0);
 		
+		if (m_sum %2 != 0)
+			return false;
+			
+		memset(mem, -1, sizeof(mem));
+
+		return diff(0, 0) == 1;
+    }
+};
+
+// https://leetcode.com/problems/maximum-height-by-stacking-cuboids/
+class Solution1691 {
+public:
+    int maxHeight(vector<vector<int>>& cuboids) {
+        
     }
 };
 
@@ -196,6 +231,12 @@ int main()
 	cout << subset_sum(hw1p1, 9) << endl;
 	hw1p1 = {3, 40, 4, 12, 5, 2};
 	cout << subset_sum(hw1p1, 30) << endl;
+	
+	Solution416 s416;
+	vector<int> hw1p2 = {1,5,11,5};
+	cout<<s416.canPartition(hw1p2)<<endl;
+	hw1p2 = {1,2,3,5};
+	cout<<s416.canPartition(hw1p2)<<endl;
 	return 0;
 }
 
