@@ -195,6 +195,41 @@ public:
     }
 };
 
+// https://leetcode.com/problems/house-robber/
+class Solution198 {
+	vector<int> m_nums;
+	int mem[101];
+public:
+	int rob(int idx) {
+		if (idx >= (int) m_nums.size())
+			return 0;
+
+		auto &ret = mem[idx];
+		if (ret != -1)
+			return ret;
+
+		int leave = rob(idx + 1);
+		int pick = m_nums[idx] + rob(idx + 2);
+
+		return ret = max(pick, leave);
+	}
+    int rob(vector<int>& nums) {
+        m_nums = nums;
+		memset(mem, -1, sizeof(mem));
+		
+		return rob(0);
+    }
+};
+
+// https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+class Solution309 {
+	vector<int>& m_prices;
+public:
+    int maxProfit(vector<int>& prices) {
+        m_prices = prices;
+    }
+};
+
 int main() 
 {
 	freopen("../data.txt", "rt", stdin);
@@ -232,11 +267,19 @@ int main()
 	hw1p1 = {3, 40, 4, 12, 5, 2};
 	cout << subset_sum(hw1p1, 30) << endl;
 	
+	// hw1 p2
 	Solution416 s416;
 	vector<int> hw1p2 = {1,5,11,5};
 	cout<<s416.canPartition(hw1p2)<<endl;
 	hw1p2 = {1,2,3,5};
 	cout<<s416.canPartition(hw1p2)<<endl;
+
+	// hw2 p1
+	Solution198 s198;
+	vector<int> hw2p1 = {1,2,3,1};
+	cout<<s198.rob(hw2p1)<<endl;
+	hw2p1 = {2,7,9,3,1};
+	cout<<s198.rob(hw2p1)<<endl;
 	return 0;
 }
 
