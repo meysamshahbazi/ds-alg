@@ -42,9 +42,30 @@ public:
 
 // https://leetcode.com/problems/integer-break/
 class Solution343 {
+    int mem[59];
 public:
-    int integerBreak(int n) {
+    int dp(int n)
+    {
+        if (n <= 2)
+            return 1;
         
+        auto &ret = mem[n];
+        if (ret != -1)
+            return ret;
+
+        // ret = 1;
+        int max = 1;
+        for ( int i = 1; i <= n ; i++) {
+            int candidate = i * dp(n - i);
+            if (candidate > max)
+                max = candidate;
+        }
+
+        return ret = max;
+    }
+    int integerBreak(int n) {
+        memset(mem, -1, sizeof(mem));
+        return dp(n);
     }
 };
 
@@ -57,5 +78,9 @@ int main()
     cout << s72.minDistance(word1, word2) << endl;
     word1 = "intention", word2 = "execution";
     cout << s72.minDistance(word1, word2) << endl;
+    Solution343 s343;
+    cout << s343.integerBreak(10) << endl;
+    cout << s343.integerBreak(2) << endl;
+    cout << s343.integerBreak(3) << endl;
     return 0;
 }
