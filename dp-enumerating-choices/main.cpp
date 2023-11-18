@@ -44,31 +44,83 @@ public:
 class Solution343 {
     int mem[59];
 public:
-    int dp(int n)
-    {
-        if (n <= 2)
-            return 1;
-        
-        auto &ret = mem[n];
+    int dp(int n) {   
+        int &ret = mem[n];
         if (ret != -1)
             return ret;
 
-        // ret = 1;
-        int max = 1;
+        ret = 1;
+
         for ( int i = 1; i <= n ; i++) {
             int candidate = i * dp(n - i);
-            if (candidate > max)
-                max = candidate;
+            if (candidate > ret)
+                ret = candidate;
+            candidate = i * (n-i);
+            if (candidate > ret)
+                ret = candidate;
         }
 
-        return ret = max;
+        return ret;
     }
     int integerBreak(int n) {
         memset(mem, -1, sizeof(mem));
+        mem[2] = 1;
+        mem[3] = 2;
         return dp(n);
     }
 };
 
+class Solution746 {
+    int mem[1001];
+    int *m_cost;
+    int sz;
+public:
+    int dp(int idx) {
+        if (idx >= sz)
+            return 0;
+        
+        auto &ret = mem[idx];
+        if (ret != -1)
+            return ret;
+
+        int choice1 = m_cost[idx] + dp(idx + 1);
+        int choice2 = m_cost[idx] + dp(idx + 2);
+
+        return ret = min(choice1, choice2);
+    }
+    int minCostClimbingStairs(vector<int>& cost) {
+        memset(mem, -1, sizeof(mem));
+        m_cost = cost.data();
+        sz = (int) cost.size();
+        return min(dp(0), dp(1));
+    }
+};
+
+// https://leetcode.com/problems/perfect-squares/
+class Solution279 {
+    int mem[10000+1];
+public:
+    int dp(int n) {
+        auto &ret = mem[n];
+        if (ret != -1)
+            return ret;
+        
+        ret = n;
+        for (int i = 1; i < n; i++) {
+            if (i * i > n)
+                break;
+            int candidate = 1 + dp(n - i * i);
+            if (candidate < ret)
+                ret = candidate;
+        }
+        return ret;
+    }
+    int numSquares(int n) {
+        memset(mem, -1, sizeof(mem));
+        mem[1] = 1;
+        return dp(n);
+    }
+};
 
 int main()
 {
@@ -82,5 +134,14 @@ int main()
     cout << s343.integerBreak(10) << endl;
     cout << s343.integerBreak(2) << endl;
     cout << s343.integerBreak(3) << endl;
+    cout << s343.integerBreak(5) << endl;
+    // hw1 p1 
+    Solution746 s746;
+    vector<int> hw1p1 = {10,15,20};
+    cout << s746.minCostClimbingStairs(hw1p1) << endl;
+    // hw1 p2
+    Solution279 s279;
+    cout << s279.numSquares(12) << endl;
+    cout << s279.numSquares(13) << endl;
     return 0;
 }
