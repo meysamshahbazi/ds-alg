@@ -42,11 +42,10 @@ public:
 int main()
 {
     Solution5 s5;
-    cout<<s5.longestPalindrome("0123babad")<<endl;
-    cout<<s5.longestPalindrome("cbbd")<<endl;
-    cout<<s5.longestPalindrome("a")<<endl;
-    cout<<s5.longestPalindrome("ac")<<endl;
-    string str = "0123456789";
-    // cout<<str.substr(0,4);
+    cout << s5.longestPalindrome("0123babad")<<endl;
+    cout << s5.longestPalindrome("cbbd")<<endl;
+    cout << s5.longestPalindrome("a")<<endl;
+    cout << s5.longestPalindrome("ac")<<endl;
+
     return 0;
 }
