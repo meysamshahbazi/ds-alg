@@ -26,6 +26,8 @@ const int MAX = 100;
 char grid[MAX][MAX];
 int rows, cols;
 int total_paths = 0;
+int best_path_so_far = INT32_MAX;
+int total_steps = 0;
 
 void print(char grid[MAX][MAX])
 {
@@ -68,6 +70,36 @@ void cntWays(int r, int c) {
     }
 }
 
+void cntWaysExt(int r, int c) {
+    if (r == rows -1 && c == cols - 1) {
+        if (best_path_so_far > total_steps) {
+            best_path_so_far = total_steps;
+            total_paths = 1;
+        }
+        else if (best_path_so_far == total_steps)
+            total_paths += 1;
+
+        return;
+    }
+
+    for (int dir = 0; dir < 4; dir++) {
+        int nr = r + dr[dir];
+        int nc = c + dc[dir];
+
+        if (!valid(nr, nc))
+            continue;
+        
+        total_steps += 1;
+        grid[nr][nc] = 'z';
+
+        cntWaysExt(nr, nc);
+
+        total_steps -= 1;
+        grid[nr][nc] = '.';
+    }
+}
+
+
 
 int main()
 {
@@ -90,7 +122,7 @@ int main()
     print(grid);
 	// mark first cell to not revisit
 	grid[0][0] = 'z';
-    cntWays(0, 0);
+    cntWaysExt(0, 0);
 	cout << total_paths << "\n";
     return 0;
 }
