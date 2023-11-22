@@ -99,6 +99,13 @@ void cntWaysExt(int r, int c) {
     }
 }
 
+// https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
+class Solution698 {
+public:
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        
+    }
+};
 
 
 int main()
