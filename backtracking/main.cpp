@@ -101,8 +101,45 @@ void cntWaysExt(int r, int c) {
 
 // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
 class Solution698 {
+    int sum{0};
+    vector<vector<int>> partions;
+    vector<int> sum_of_partions{0};
+    int k;
+    int partions_sum {0};
+    vector<int> nums;
 public:
+    bool backtrack(int idx) {
+        if (idx == nums.size() ) {
+            for (auto p : sum_of_partions)
+                if (p != partions_sum)
+                    return false;
+            
+            return true;
+        }
+        for (int i = 0; i < k; i++) {
+            if (sum_of_partions[i] + nums[idx] <= partions_sum) {
+                sum_of_partions[i] += nums[idx];
+
+                if ( backtrack(idx + 1) )
+                    return true;
+
+                sum_of_partions[i] -= nums[idx];
+            }
+        }
+        return false;
+    }
     bool canPartitionKSubsets(vector<int>& nums, int k) {
+        sum = accumulate(nums.begin(), nums.end(), 0);
+        if (sum % k != 0 || nums.size() < k)
+            return false;
+        
+        partions_sum = sum / k;
+        this->k = k;
+        this->nums = nums;
+        partions.resize(k);
+        sum_of_partions = vector<int>(k);
+
+        return backtrack(0);
         
     }
 };
@@ -131,6 +168,17 @@ int main()
 	grid[0][0] = 'z';
     cntWaysExt(0, 0);
 	cout << total_paths << "\n";
+
+    Solution698 s689;
+    vector<int> nums = {4,3,2,3,5,2,1};
+    int k = 4;
+    cout << s689.canPartitionKSubsets(nums, k) << endl;
+    nums = {1,2,3,4};
+    k = 3;
+    cout << s689.canPartitionKSubsets(nums, k) << endl;
+    nums = {960,3787,1951,5450,4813,752,1397,801,1990,1095,3643,8133,893,5306,8341,5246};
+    k = 6;
+    cout << s689.canPartitionKSubsets(nums, k) << endl;
     return 0;
 }
 
