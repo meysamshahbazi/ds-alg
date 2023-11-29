@@ -405,7 +405,6 @@ public:
                         backtrack();
                         board[i][j] = '.';
                     }
-
                 }
             }
     }
@@ -417,6 +416,9 @@ public:
     }
 };
 
+
+// for Tower of Hanoi
+// https://www.hackerearth.com/practice/algorithms/dynamic-programming/introduction-to-dynamic-programming-1/practice-problems/algorithm/tower-of-hanoi-17/?purpose=login&source=problem-page&update=google
 
 int main()
 {
