@@ -368,6 +368,7 @@ public:
     }
 };
 
+// https://leetcode.com/problems/sudoku-solver/
 class Solution37 {
     vector<vector<char>> board;
 public:
@@ -393,7 +394,16 @@ public:
         return true;
     }
 
-    void backtrack() { 
+    bool backtrack() { 
+        bool isFill = true;
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++) 
+                if(board[i][j] == '.') 
+                    isFill = false;
+
+        if (isFill)
+            return true;
+
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++) {
                 if (board[i][j] != '.') 
@@ -402,11 +412,14 @@ public:
                 for (char n = '1'; n <= '9'; n++) {
                     if (valid(n, i , j)) {
                         board[i][j] = n;
-                        backtrack();
+                        if (backtrack()) 
+                            return true;
                         board[i][j] = '.';
                     }
                 }
             }
+
+        return false;
     }
 
     void solveSudoku(vector<vector<char>>& board) {
@@ -416,7 +429,38 @@ public:
     }
 };
 
+// https://leetcode.com/problems/permutations/
+class Solution46 {
+    vector<vector<int>> permutions;
+    int n;
+    vector<int> nums;
+    vector<int> cur_per;
+    vector<bool> picked;
+public:
+    void backtrack(int idx) {
+        if (idx == n) {
+            permutions.push_back(cur_per);
+            return;
+        }
 
+        for (int i = 0; i < n; i++) {
+            if (!picked[i]) {
+                picked[i] = true;
+                cur_per.push_back(nums[i]);
+                backtrack(idx + 1);
+                cur_per.pop_back();
+                picked[i] = false;
+            }
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        this->nums = nums;
+        n = (int) nums.size();
+        picked = vector<bool>(n, false);
+        backtrack(0);
+        return permutions;
+    }
+};
 // for Tower of Hanoi
 // https://www.hackerearth.com/practice/algorithms/dynamic-programming/introduction-to-dynamic-programming-1/practice-problems/algorithm/tower-of-hanoi-17/?purpose=login&source=problem-page&update=google
 
@@ -510,11 +554,18 @@ int main()
     // cout << "\n";
     // print(board);
 
-    board = {{'5','3','.','6','7','8','9','1','2'},{'6','7','2','1','9','5','3','4','8'},{'1','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','3'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
-    print(board);
-    s37.solveSudoku(board);
-    cout << "\n";
-    print(board);
+    // board = {{'5','3','.','6','7','8','9','1','2'},{'6','7','2','1','9','5','3','4','8'},{'1','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','3'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
+    // print(board);
+    // s37.solveSudoku(board);
+    // cout << "\n";
+    // print(board);
+    cout << "===============\n";
+    Solution46 s46;
+    vector<int> hw1p4;
+    hw1p4 = {1,2,3};
+    auto hw1p4o = s46.permute(hw1p4);
+    print(hw1p4o);
+
     return 0;
 }
 
