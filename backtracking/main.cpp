@@ -4,6 +4,7 @@
 #include <climits>
 #include <bits/stdc++.h> 
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -287,6 +288,136 @@ public:
 };
 
 
+
+// https://leetcode.com/problems/n-queens/
+class Solution51 {
+    vector<vector<string>> all_sol;
+    vector<vector<int>> chess;
+    int n;
+public:
+    void IncAttack(int k, int l) {
+        for (int i = 0; i < n; i++){
+            chess[k][i]++;
+            chess[i][l]++;
+
+            if (k - i >= 0 && l - i >= 0) 
+                chess[k - i][l - i]++;
+            
+            if (k + i < n && l + i < n) 
+                chess[k + i][l + i]++;
+
+            if (k + i < n && l - i >= 0) 
+                chess[k + i][l - i]++;
+
+            if (k - i >= 0 && l + i < n) 
+                chess[k - i][l + i]++;
+        }
+    }
+
+    void DecAttack(int k, int l) {
+        for (int i = 0; i < n; i++){
+            chess[k][i]--;
+            chess[i][l]--;
+
+            if (k - i >= 0 && l - i >= 0) 
+                chess[k - i][l - i]--;
+            
+            if (k + i < n && l + i < n) 
+                chess[k + i][l + i]--;
+
+            if (k + i < n && l - i >= 0) 
+                chess[k + i][l - i]--;
+
+            if (k - i >= 0 && l + i < n) 
+                chess[k - i][l + i]--;
+        }
+    }
+
+    void backtrack(int q, vector<string> &cur_sol){
+        if (q == n ) {
+            auto it = find(all_sol.begin(), all_sol.end(), cur_sol);
+            if (it == all_sol.end())
+                all_sol.push_back(cur_sol);
+
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (cur_sol[i][j] == '.' && chess[i][j] == 0) {
+                    cur_sol[i][j] = 'Q';
+                    IncAttack(i, j);
+
+                    backtrack(q + 1, cur_sol);
+
+                    DecAttack(i, j);
+                    cur_sol[i][j] = '.';
+                }
+            }
+        }
+    }
+
+    vector<vector<string>> solveNQueens(int n) {
+        this->n = n;
+        // each chess[i][j] number indicate that cell is attacket by how many queens!
+        // so chess[i][j] = 0 means that no queens is currentlly attacks that cell
+        chess = vector<vector<int>>(n, vector<int>(n, 0));
+        all_sol.clear();
+        vector<string> cur_sol(n, string(n, '.'));
+        backtrack(0, cur_sol);
+        return all_sol;
+    }
+};
+
+class Solution37 {
+    vector<vector<char>> board;
+public:
+    bool valid(char val, int k, int l) {
+        for (int i = 0; i < 9; i++) {
+            if (/* i != l && */ board[k][i] == val)
+                return false;
+        }
+
+        for (int i = 0; i < 9; i++) {
+            if (/* i != k && */ board[i][l] == val)
+                return false;
+        }
+
+        int sub_r = k/3;
+        int sub_c = l/3;
+
+        for (int i = sub_r; i < sub_r + 3; i++)
+            for (int j = sub_c; j < sub_c + 3; j++)
+                if (/* i != k && j != l  && */ board[i][j] == val)
+                    return false;
+
+        return true;
+    }
+
+    void backtrack() { 
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') 
+                    continue;
+
+                for (char n = '1'; n <= '9'; n++) {
+                    if (valid(n, i , j)) {
+                        board[i][j] = n;
+                        backtrack();
+                        board[i][j] = '.';
+                    }
+
+                }
+            }
+    }
+
+    void solveSudoku(vector<vector<char>>& board) {
+        this->board = board;
+        backtrack();
+        board = this->board;
+    }
+};
+
+
 int main()
 {
     vector<string> data;
@@ -358,6 +489,30 @@ int main()
     hw1p1 = {{1,2},{3},{3},{}};
     hw1p1o = s797.allPathsSourceTarget(hw1p1);
     print(hw1p1o);
+    cout << "===============\n";
+    Solution51 s51;
+    vector<vector<string>> hw1p2;
+
+    // for ( int n = 1; n < 10; n ++){
+    //     cout << "for n : " << n << endl;
+    //     hw1p2 = s51.solveNQueens(n);
+    //     cout<<hw1p2.size()<<endl;
+    //     print(hw1p2);
+
+    // }
+    Solution37 s37;    
+    vector<vector<char>> board;
+    // board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+    // print(board);
+    // s37.solveSudoku(board);
+    // cout << "\n";
+    // print(board);
+
+    board = {{'5','3','.','6','7','8','9','1','2'},{'6','7','2','1','9','5','3','4','8'},{'1','9','8','3','4','2','5','6','7'},{'8','5','9','7','6','1','4','2','3'},{'4','2','6','8','5','3','7','9','1'},{'7','1','3','9','2','4','8','5','6'},{'9','6','1','5','3','7','2','8','4'},{'2','8','7','4','1','9','6','3','5'},{'3','4','5','2','8','6','1','7','9'}};
+    print(board);
+    s37.solveSudoku(board);
+    cout << "\n";
+    print(board);
     return 0;
 }
 
