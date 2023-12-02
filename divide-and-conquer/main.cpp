@@ -67,8 +67,6 @@ int make_pivot(vector<int> &vec, int start, int end) {
 	int pivot_idx = start + count;
 	swap(vec[pivot_idx], vec[mid]);
 
-	// pivot =  vec[pivot_idx];
-
 	for (int s = start, e = end; s < pivot_idx && pivot_idx < e; s += 1, e -= 1) {
 		while (vec[s] < pivot)
 			s += 1;
