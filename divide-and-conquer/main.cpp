@@ -56,6 +56,46 @@ void merge_sort(vector<int> &arr) {
 	merge_sort(arr, 0, (int) arr.size() - 1);
 }
 
+int make_pivot(vector<int> &vec, int start, int end) {
+	int mid = start + (end - start) / 2;
+	int pivot = vec[mid];
+	int count = 0;
+	for (int i = start; i <= end; i++)
+		if (vec[i] < pivot)
+			count += 1;
+
+	int pivot_idx = start + count;
+	swap(vec[pivot_idx], vec[mid]);
+
+	// pivot =  vec[pivot_idx];
+
+	for (int s = start, e = end; s < pivot_idx && pivot_idx < e; s += 1, e -= 1) {
+		while (vec[s] < pivot)
+			s += 1;
+		
+		while (vec[e] > pivot )
+			e -= 1;
+		
+		if (s < pivot_idx && pivot_idx < e)
+			swap(vec[s], vec[e]);
+	}
+
+	return pivot_idx;
+}
+
+void quicksort(vector<int> &vec, int start, int end) {
+	if (start >= end)
+		return;
+
+	int pivot_idx = make_pivot(vec, start, end);
+	quicksort(vec, start, pivot_idx - 1);
+	quicksort(vec, pivot_idx + 1, end);
+}
+
+void quicksort(vector<int> &vec) {
+	quicksort(vec, 0, (int) vec.size() - 1);
+}
+
 int main()
 {
     vector<int> arr = {12, 26, 35, 87, 7, 9, 28};
@@ -67,5 +107,8 @@ int main()
 	print(lst);
 	merge_sort(lst);
 	print(lst);
+	vector<int>  arr2 = {12, 26, 35, 87, 7, 9, 28};
+	quicksort(arr2);
+	print(arr2);
     return 0;
 }
