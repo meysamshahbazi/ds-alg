@@ -21,7 +21,7 @@ public:
     {
         sort(nums.begin(),nums.end());
         int left = 0;
-        int right = nums.size()-1;
+        int right = nums.size() - 1;
         while (left < right)
         {
             if(nums.at(left)+nums.at(right) == target)
