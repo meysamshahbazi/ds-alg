@@ -287,6 +287,7 @@ ListNode* push_back(ListNode* list, ListNode* other){
 	return list;
 }
 
+
 // https://leetcode.com/problems/merge-k-sorted-lists/
 class Solution23 {
 public:
@@ -312,6 +313,37 @@ public:
 			head2 = mergeKLists(lists2);
 		}
 
+		ListNode* res = nullptr;
+
+		while (head1 || head2) {
+			if (!head1) {
+				res = push_back(res, head2);
+				head2 = head2->next;
+			}
+			else if (!head2) {
+				res = push_back(res, head1);
+				head1 = head1->next;
+			}
+			else if (head1->val < head2->val) {
+				res = push_back(res, head1);
+				head1 = head1->next;
+			}
+			else {
+				res = push_back(res, head2);
+				head2 = head2->next;
+			}
+		}
+		return res;
+    }
+};
+
+// https://leetcode.com/problems/merge-two-sorted-lists/description/
+class Solution21 {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+		ListNode *head1, *head2;
+        head1 = list1;
+		head2 = list2;
 		ListNode* res = nullptr;
 
 		while (head1 || head2) {
@@ -378,6 +410,6 @@ int main()
 	hw1p52 = "abab";
 	cout << isEquivalent(hw1p51, hw1p52) << endl;
 
-	
+
     return 0;
 }
