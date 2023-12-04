@@ -53,9 +53,9 @@ void printAdj(const vector<vector<int>> &adjMatrix) {
 	for (int i = 0; i < n; ++i) {
 		for (int j = 0; j < n; ++j) {
 			if (adjMatrix[i][j] >= OO)
-				cout << "OO" << " ";
+				cout << "OO" << "\t";
 			else
-				cout << adjMatrix[i][j] << " ";
+				cout << adjMatrix[i][j] << "\t";
 		}
 		cout << "\n";
 	}
@@ -80,10 +80,16 @@ void floyd(vector<vector<int>> &adjMatrix) {
 
 }
 
+// https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/
+class Solution {
+public:
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        
+    }
+};
 
 int main() 
 {
-
 	auto adjMatrix = read_graph("../data.txt");
 	floyd(adjMatrix);
 
