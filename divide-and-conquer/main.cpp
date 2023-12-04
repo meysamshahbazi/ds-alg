@@ -159,6 +159,7 @@ public:
     }
 };
 
+// https://leetcode.com/problems/powx-n/
 class Solution50 {
 public:
     double myPow(double x, int n) {
@@ -179,31 +180,161 @@ public:
     }
 };
 
-
+// https://leetcode.com/problems/largest-rectangle-in-histogram/
 class Solution84 {
+	static const int MAXN = 100; //100002;
+	typedef long long ll;
+	int Log[MAXN];
+	ll stable[MAXN][17];
+	ll arr[MAXN];
+	int n;
 public:
-	int largestRectangleArea(vector<int>& heights, int start, int end) {
+	void build() {
+		int cnt = -1;
+		for (int i = 0; i < n; i++) {
+			if (!((i + 1) & i))
+				cnt++;
+			stable[i][0] = i;
+			Log[i + 1] = cnt;
+		}
+		for (int j = 1; (1 << j) <= n; j++) {
+			for (int i = 0; (i + (1 << j)) <= n; i++) {
+				int a = stable[i][j - 1];
+				int b = stable[i + (1 << (j - 1))][j - 1];
+				stable[i][j] = ((arr[a] < arr[b]) ? a : b);
+			}
+		}
+	}
 
+	int getMinIdx(int st, int en) {
+		int L = Log[en - st + 1];
+		int a = stable[st][L], b = stable[en - (1 << L) + 1][L];
+		return ((arr[a] < arr[b]) ? a : b);
+	}
+
+	void prepare(vector<int> &heights) {
+		n = heights.size();
+		for (int i = 0; i < n; ++i)
+			arr[i] = heights[i];
+
+		build();
+	}
+
+	int largestRectangleArea(vector<int>& heights, int start, int end) {
 		if (start > end )
 			return 0;
 
 		if (end == start)
 			return heights[start];
 		
-		auto min_idx = min_element(heights.begin() + start, heights.begin() + end + 1);
-		int divide_idx = min_idx - heights.begin();
+		int min_idx = getMinIdx(start, end);
 
-		
-		for ( int i = start; i <= end; i++ )
-			heights[i] -= *min_idx;
-			 
-		return  *min_idx +  max( largestRectangleArea(heights, start, divide_idx - 1), largestRectangleArea(heights, divide_idx + 1, end) );
+		int area_with_min = heights[min_idx] * (end - start + 1);
+		int left_area = largestRectangleArea(heights, start, min_idx - 1);
+		int right_area = largestRectangleArea(heights, min_idx + 1, end); 
+		return  max(max(left_area, right_area), area_with_min);
 	}
     int largestRectangleArea(vector<int>& heights) {
-        return largestRectangleArea(heights, 0, (int)heights.size() - 1);
+		prepare(heights);
+        return largestRectangleArea(heights, 0, (int) heights.size() - 1);
     }
 };
 
+// https://codeforces.com/contest/560/problem/D
+string canonical(string str) {
+	int n = str.size();
+
+	if (n % 2 == 1)
+		return str;
+	
+	string s1 = str.substr(0, n / 2);
+	string s2 = str.substr(n / 2, n / 2);
+
+	s1 = canonical(s1);
+	s2 = canonical(s2);
+
+	if (s1 < s2)
+		return s1 + s2;
+
+	return s2 + s1;
+}
+
+bool isEquivalent(string str1, string str2) {
+	return canonical(str1) == canonical(str2);
+}
+
+
+// Definition for singly-linked list.
+struct ListNode {
+	int val;
+	ListNode *next;
+	ListNode() : val(0), next(nullptr) {}
+	ListNode(int x) : val(x), next(nullptr) {}
+	ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+ListNode* push_back(ListNode* list, ListNode* other){
+	if (!list) 
+		return  new ListNode(other->val);
+
+	ListNode *head = list;
+	while (head->next) {
+		head = head->next;
+	}
+
+	head->next = new ListNode(other->val);
+	
+	return list;
+}
+
+// https://leetcode.com/problems/merge-k-sorted-lists/
+class Solution23 {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+		int sz = (int) lists.size();
+		
+		if ( sz == 0)
+			return nullptr;
+
+		if (sz == 1) 
+			return lists[0];
+
+		ListNode *head1, *head2;
+
+		if (sz == 2) {
+			head1 = lists[0];
+			head2 = lists[1]; 
+		}
+		else { // divide it for more than two linkedlists
+			vector<ListNode*> lists1(lists.begin(), lists.begin() + sz / 2 + 1);
+			vector<ListNode*> lists2(lists.begin() + sz / 2 + 1, lists.end());
+			head1 = mergeKLists(lists1);
+			head2 = mergeKLists(lists2);
+		}
+
+		ListNode* res = nullptr;
+
+		while (head1 || head2) {
+			if (!head1) {
+				res = push_back(res, head2);
+				head2 = head2->next;
+			}
+			else if (!head2) {
+				res = push_back(res, head1);
+				head1 = head1->next;
+			}
+			else if (head1->val < head2->val) {
+				res = push_back(res, head1);
+				head1 = head1->next;
+			}
+			else {
+				res = push_back(res, head2);
+				head2 = head2->next;
+			}
+		}
+		return res;
+    }
+};
 
 int main()
 {
@@ -212,7 +343,7 @@ int main()
 	tmp = arr;
 	merge_sorted_subarrays(arr, 0, 3, 6);
 	print(arr);
-	vector<int> lst { 12, 35, 87, 26, 9, 28, 7 };
+	vector<int> lst{ 12, 35, 87, 26, 9, 28, 7 };
 	print(lst);
 	merge_sort(lst);
 	print(lst);
@@ -238,5 +369,15 @@ int main()
 
 	cout << s84.largestRectangleArea(hw1p4) << endl;
 
+	string hw1p51, hw1p52;
+	hw1p51 = "aaba";
+	hw1p52 = "abaa";
+	cout << isEquivalent(hw1p51, hw1p52) << endl;
+
+	hw1p51 = "aabb";
+	hw1p52 = "abab";
+	cout << isEquivalent(hw1p51, hw1p52) << endl;
+
+	
     return 0;
 }
