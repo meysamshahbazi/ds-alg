@@ -25,7 +25,7 @@ void print(vector<vector<T>> &vec){
 		print(v);
 }
 
-vector<vector<int>> read_graph(string path) {
+vector<vector<int>> createAdjMat(string path) {
 	freopen(path.c_str(), "rt", stdin);
 	int n, m;	// nodes and edges;
 	cin >> n >> m;
@@ -47,6 +47,23 @@ vector<vector<int>> read_graph(string path) {
 	return adjMatrix;
 }
 
+vector<vector<int>> createPathMat(string path) {
+	freopen(path.c_str(), "rt", stdin);
+	int n, m;	// nodes and edges;
+	cin >> n >> m;
+
+	// Initialize all to 0
+	vector<vector<int>> pathMat = vector<vector<int>>(n, vector<int>(n, 0));
+
+	for (int i = 0; i < m; ++i) {
+		int from, to;
+		cin >> from >> to;	// 0-based
+		pathMat[from][to] += 1;	// add one more path
+	}
+
+	return pathMat;
+}
+
 void printAdj(const vector<vector<int>> &adjMatrix) {
 	int n = adjMatrix.size();
 
@@ -65,19 +82,18 @@ void printAdj(const vector<vector<int>> &adjMatrix) {
 void floyd(vector<vector<int>> &adjMatrix) {
 	int n = adjMatrix.size();
 
-	printAdj(adjMatrix);
+	// printAdj(adjMatrix);
 
 	for (int k = 0; k < n; k++) {
 		for (int from = 0; from < n; from++) {
 			for (int to = 0; to < n; to++) {
 				int relax = adjMatrix[from][k] + adjMatrix[k][to];
-				adjMatrix[from][to] = min (adjMatrix[from][to], relax);
+				adjMatrix[from][to] = min(adjMatrix[from][to], relax);
 			}
 		}
-		cout<<"After relaxing with "<<k<<"\n";
-		printAdj(adjMatrix);
+		// cout << "After relaxing with " << k << "\n";
+		// printAdj(adjMatrix);
 	}
-
 }
 
 // https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/
@@ -88,11 +104,100 @@ public:
     }
 };
 
+void print_path(vector<vector<int>> &adjMatrix) {
+	int n = adjMatrix.size();
+
+	// printAdj(adjMatrix);
+
+	vector<vector<vector<int>>> shortest_paths(n, vector<vector<int>>(n));
+
+	for (int from = 0; from < n; from++) {
+		for (int to = 0; to < n; to++) {
+			if (adjMatrix[from][to] < OO) 
+				shortest_paths[from][to].push_back(to);
+		}
+	}
+
+	for (int k = 0; k < n; k++) {
+		for (int from = 0; from < n; from++) {
+			for (int to = 0; to < n; to++) {
+				int relax = adjMatrix[from][k] + adjMatrix[k][to];
+				if (relax < adjMatrix[from][to]) {
+					shortest_paths[from][to] = shortest_paths[from][k];
+					shortest_paths[from][to].insert(shortest_paths[from][to].end() , shortest_paths[k][to].begin(), shortest_paths[k][to].end());
+					adjMatrix[from][to] = relax;
+				}
+			}
+		}
+	}
+
+	for (int from = 0; from < n; from++) {
+		for (int to = 0; to < n; to++) {
+			cout << "Path from: "<< from<<" to: "<<to <<": ";
+			print(shortest_paths[from][to]);
+		}
+	}
+
+	// cout << "After relaxing\n";
+	printAdj(adjMatrix);
+}
+
+// https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=475
+void compute_min_max(vector<vector<int>> &graph) {
+	int n = graph.size();
+
+	for (int k = 0; k < n; k++) {
+		for (int from = 0; from < n; from++) {
+			for (int to = 0; to < n; to++) {
+				int relax = max(graph[from][k], graph[k][to]);
+				graph[from][to] = min(graph[from][to], relax);
+			}
+		}
+		// cout << "After relaxing with " << k << "\n";
+	}
+	printAdj(graph);
+}
+
+// https://onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=61
+void count_paths(vector<vector<int>> &graph)
+{
+	int n = graph.size();
+
+	for (int k = 0; k < n; k++) {
+		for (int from = 0; from < n; from++) {
+			for (int to = 0; to < n; to++) {
+				graph[from][to] += graph[from][k] * graph[k][to];
+			}
+		}
+	}
+
+	for (int k = 0; k < n; k++)
+		if (graph[k][k])	// cycle
+			for (int i = 0; i < n; i++)
+				for (int j = 0; j < n; j++)
+					// if i-j path with k, then infinite paths
+					if (graph[i][k] && graph[k][j])
+						graph[i][j] = -1;
+
+
+	printAdj(graph);
+}
+
 int main() 
 {
-	auto adjMatrix = read_graph("../data.txt");
-	floyd(adjMatrix);
+	auto adjMatrix = createAdjMat("../data.txt");
+	floyd(adjMatrix);	
+	printAdj(adjMatrix);
+	// hw1 p1 
+	auto hw1p1 = createAdjMat("../hw1p1.txt");
+	print_path(hw1p1);
+	// hw1 p2
+	auto hw1p2 = createAdjMat("../hw1p2.txt");
+	compute_min_max(hw1p2);
 
-    return 0;
+	auto hw1p3 = createPathMat("../hw1p3.txt");
+	count_paths(hw1p3);
+
+	return 0;
 }
 
