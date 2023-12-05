@@ -183,6 +183,14 @@ void count_paths(vector<vector<int>> &graph)
 	printAdj(graph);
 }
 
+// https://leetcode.com/problems/network-delay-time/ : bellman ford
+class Solution743 {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        
+    }
+};
+
 int main() 
 {
 	auto adjMatrix = createAdjMat("../data.txt");
