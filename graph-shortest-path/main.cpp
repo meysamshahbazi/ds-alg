@@ -183,6 +183,38 @@ void count_paths(vector<vector<int>> &graph)
 	printAdj(graph);
 }
 
+struct edge {
+	int from, w;
+
+	edge(int from, int w) :
+			from(from), w(w) {
+	}
+};
+
+vector<int> BellmanFord(vector<vector<edge>> &fromGraph, int n, int src) {
+	vector<vector<int>> dist(n, vector<int>(n, OO)); // used_edge * dsts
+
+	for (int used_edges = 0; used_edges < n; ++used_edges)
+		dist[used_edges][src] = 0;
+
+	for (int used_edges = 1; used_edges < n; used_edges++) {
+		for (int to = 0; to < n; to++) {
+			int ans = dist[used_edges - 1][to];
+			for (auto &edge : fromGraph[to]) {
+				if (ans > dist[used_edges - 1][edge.from] + edge.w)
+					ans = dist[used_edges - 1][edge.from] + edge.w;
+			}
+			dist[used_edges][to] = ans;
+		}
+	}
+
+	vector<int> ret(n);
+	for (int node = 0; node < n; ++node)
+		ret[node] = dist[n - 1][node];
+
+	return ret;
+}
+
 // https://leetcode.com/problems/network-delay-time/ : bellman ford
 class Solution743 {
 public:
@@ -205,6 +237,21 @@ int main()
 
 	auto hw1p3 = createPathMat("../hw1p3.txt");
 	count_paths(hw1p3);
+
+	
+	int n = 6;
+
+	vector<vector<edge>> fromGraph(n);
+	fromGraph[1] = { { 0, 1 } };
+	fromGraph[2] = { { 1, 99 }, { 4, 3 } };
+	fromGraph[3] = { { 2, 5 }, { 5, 7 } };
+	fromGraph[4] = { { 1, 1 } };
+	fromGraph[5] = { { 4, 6 } };
+
+	vector<int> sp = BellmanFord(fromGraph, n, 0);
+
+	for (int i = 0; i < (int) sp.size(); ++i)
+		cout << i << " " << sp[i] << "\n";
 
 	return 0;
 }
