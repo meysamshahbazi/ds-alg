@@ -9,53 +9,66 @@
 
 using namespace std;
 
-struct Node{
+struct Node {
     int data;
-    Node * next;
-
+    Node* next;
     Node(int data):data(data){} 
-
 };
 
 void print1(Node *head)
 {
-    while (head != nullptr)
-    {
-        cout<<head->data<<" ";
+    while (head != nullptr) {
+        cout << head->data << " ";
         head = head->next;
     }
     cout<<endl; 
 }
+
+void print11(Node *head)
+{
+    for (Node* cur = head; cur != nullptr; cur = cur->next)
+        cout << cur->data << " ";
+    cout<<endl; 
+}
+
 void print2(Node *head)
 {
-    if(head != nullptr)
-    {
-        cout<<head->data<<" ";
-        print2(head->next);
-    }
-    else
-    {
-        cout<<endl;
+    if (head == nullptr) {
+        cout << endl;
         return;
     }
+
+    cout << head->data << " ";
+    print2(head->next);
 }
+
 void print_reversed(Node *head)
 {
-    if(head != nullptr)
-    {
-        
-        print_reversed(head->next);
-        cout<<head->data<<" ";
-
+    if (head == nullptr) {
+        cout << endl;
+        return;
     }
-    
-    return;
+
+    print_reversed(head->next);
+    cout << head->data << " ";
 }
+
+Node* find(Node* head,int value) 
+{
+    if (head == nullptr)
+        return nullptr;
+    
+    if (head->data == value)
+        return head;
+    
+    return find(head->next, value);
+}
+
 class LinkedList
 {
 private:
-    Node *head {nullptr};
-    Node *tail {nullptr};
+    Node* head {nullptr};
+    Node* tail {nullptr};
 #ifdef DEBUG    
     int length {0};
 
@@ -73,31 +86,23 @@ private:
 	}
 #endif
 public:
-    LinkedList() {}
-    // ~LinkedList()
-    // {
-    //     Node * cur = head;
-    //     Node * temp;
-    //     while(cur)
-    //     {
-    //         temp = cur->next;
-    //         delete cur;
-    //         cur = temp;
-    //     }     
-    // }
-    ~LinkedList()
+    LinkedList() 
     {
-        Node * cur = head;
-        while (head)
-        {
+
+    }
+
+    ~LinkedList() // hw1 p1
+    {
+        Node* cur = head;
+        while (head) {
             cur = head->next;
             delete head;
             head = cur;
         }
-        
     }
+
     LinkedList (const LinkedList& ) = delete;
-    LinkedList &operator=(const LinkedList& another) = delete;
+    LinkedList& operator=(const LinkedList& another) = delete;
 #ifdef DEBUG
     void debug_print_address() 
     {
@@ -137,69 +142,58 @@ public:
 #endif
     void print()
     {
-        Node * temp_head = head;
-        while (temp_head != nullptr)
-        {
-            cout<<temp_head->data<<" ";
-            temp_head = temp_head->next;
+        Node* cur = head;
+        while (cur != nullptr) {
+            cout << cur->data << " ";
+            cur = cur->next;
         }
         cout<<endl;   
     }
+
     void print_for()
     {
-        for(Node * cur = head;cur; cur= cur->next)
-        {
-            cout<<cur->data<<" ";
+        for(Node* cur = head; cur; cur = cur->next) {
+            cout << cur->data << " ";
         }
         cout<<endl;
     }
+
     void insert_end(int value)
     {
-        Node * node = new Node(value);
+        Node* node = new Node(value);
         node->next = nullptr;
-        if (head == nullptr)
-        {
+
+        if (head == nullptr) {
             head = node;
             tail = node;
         }
-        else
-        {
+        else {
             tail->next = node;
             tail = node;
         }
     }
-    void insert_front(int value)
+
+    void insert_front(int value) // hw1 p2
     {
-        Node * new_head = new Node(value);
-        
-        if(head == nullptr)
-        {
-            head = new_head;
+        Node* new_head = new Node(value);
+        new_head->next = head;
+        head = new_head;
+
+        if (head->next == nullptr)
             tail = new_head;
-        }
-        else 
-        {
-            new_head->next = head;
-            head = new_head;    
-        }
     }
-    void delete_front()
+
+    void delete_front() // hw1 p3
     {
         if(head == nullptr)
             return;
 
-        else if (tail == nullptr)
-        {
-            head = nullptr;
-            return;
-        }
-        else
-        {
-            Node * new_head = head->next;
-            delete head;
-            head = new_head;
-        }
-            
+        Node* new_head = head->next;
+        delete head;
+        head = new_head;
+
+        if (head == nullptr || head->next == nullptr) // len is 0 or len is 1
+            tail = head;    
     }
     void  delete_first()
     {
@@ -256,49 +250,48 @@ public:
         delete nth;
     }
 
-    Node * get_nth(int n)
+    Node* get_nth(int n) // 0-based indexing
     {
         int cnt = 0;
-        for(Node * cur = head;cur; cur= cur->next)
-            if(cnt++ == n)
+        for (Node* cur = head; cur; cur = cur->next)
+            if (cnt++ == n)
                 return cur;
         
         return nullptr;
     }
-    Node * get_nth_back(int n)
+
+    Node* get_nth_back(int n) // hw1 p4
     {
         int cnt = 0;
         int len = get_lenght();
-
-        // for(Node *cur = head; cur; cur = cur->next)
-        //     if(cnt++ == (len-n-1))
-        //         return cur;
-        return get_nth(len-n-1);
+        return get_nth(len - n - 1);
     }
+
     int get_lenght() const
     {
         int len = 0;
-        for(Node *cur = head; cur; cur = cur->next)
+        for(Node* cur = head; cur; cur = cur->next)
             len++;
-            
-        return len;
         
+        return len;
     }
+
     int search(int value)
     {
         int cnt {0};
-        for(Node * cur = head;cur; cur= cur->next,cnt++)
-            if(cur->data == value)
+        for (Node* cur = head; cur; cur = cur->next, cnt++)
+            if (cur->data == value)
                 return cnt;
         return -1;
     }
-    bool is_same(const LinkedList & another)
+
+    bool is_same(const LinkedList & another) // hw1 p5
     {
         int alen = another.get_lenght();
-        if(this->get_lenght() != alen)
+        if (this->get_lenght() != alen)
             return false;
 
-        for(Node *cur=head,*acur=another.head;cur; cur= cur->next,acur=acur->next)
+        for(Node *cur=head,*acur = another.head; cur; cur = cur->next, acur = acur->next)
             if (cur->data != acur->data)
                 return false;
             
@@ -306,16 +299,14 @@ public:
     }
     int improved_search(int value)
     {
-        //the idea of this function is swapping nodes by changing the next attr
+        // the idea of this function is swapping nodes by changing the next attr
         // it goes pretty long so best practice is doing by changing data
         // but for huge data it may be usefull 
         int cnt {0};
-        Node * cur = head;
-        Node * perv = head;
-        Node * perv2 = nullptr;
-        while (cur)
-        {
-            
+        Node* cur = head;
+        Node* perv = head;
+        Node* perv2 = nullptr;
+        while (cur) {
             if(cur->data == value)
             {
                 if(cnt > 1)
@@ -340,43 +331,21 @@ public:
         }
         return -1;
     }
+
     int improved_search1(int value)
     {
         int cnt {0};
-        Node * perv = nullptr;
-        for(Node * cur = head;cur; cur= cur->next,cnt++)
-        {
-            if(cur->data == value)
-            {
-                if(!perv)
-                {
+        Node* perv = nullptr;
+        for(Node* cur = head; cur;cur=cur->next,cnt++) {
+            if(cur->data == value) {
+                if(!perv) {
                     return cnt;
                 }
-                int temp = cur->data;
-                cur->data = perv->data;
-                perv->data = temp;
-                return cnt-1;
+                swap(perv->data, cur->data);
+                return cnt - 1;
             }
             perv = cur;
         }
-        return -1;
-    }
-
-    int improved_search2(int value)
-    {
-        int cnt {0};
-        for(Node * cur = head,*perv = nullptr;cur;perv=cur,cur=cur->next,cnt++)
-            if(cur->data == value)
-            {
-                if(!perv)
-                {
-                    return cnt;
-                }
-                int temp = cur->data;
-                cur->data = perv->data;
-                perv->data = temp;
-                return cnt-1;
-            }
         return -1;
     }
 
@@ -695,7 +664,7 @@ public:
                 int val_to_del = cur->data;
                 
                 // remove all of node with value of cur->data;
-                while (improved_search2(val_to_del) != -1)
+                while (improved_search1(val_to_del) != -1)
                 {
                     delete_with_key(val_to_del);
                     nb_rm++;
@@ -751,23 +720,55 @@ public:
 #endif
 };
 
+// hw1 p6
+class LinkedList2 {
+private:
+	Node *head { };
+public:
+    void print() {
+        for(Node* cur = head; cur; cur = cur->next)
+            cout << cur->data << " ";
+        cout << endl;
+    }
+    void push_back(int value) {
+        Node* node = new Node(value);
+        node->next = nullptr;
+        Node* tail = get_tail();
+        tail->next = node;
+    }
+
+    void push_front(int value) {
+        Node* node = new Node(value);
+        node->next = head;
+        head = node;
+    }
+
+    Node* get_tail() {
+        Node* cur;
+        for ( ; cur; cur = cur->next);
+        return cur;
+    }
+};
+
 int main()
-{
-    /*
-    Node * node1 = new Node(5);
-    Node * node2 = new Node(8);
-    Node * node3 = new Node(4);
-    Node * node4 = new Node(1);
+{   
+    /* Node* node1 = new Node(5);
+    Node* node2 = new Node(8);
+    Node* node3 = new Node(4);
+    Node* node4 = new Node(1);
 
     node1->next = node2;
     node2->next = node3;
     node3->next = node4;
     node4->next = nullptr;
 
-
     print1(node1);
+    print11(node1);
     print2(node1);
     print_reversed(node1);
+    cout << endl;
+    cout << find(node1, 4) << " " << find(node1, 44) << endl; */
+    
     cout<<"\n";
     LinkedList list;
     list.insert_end(4);
@@ -788,10 +789,11 @@ int main()
     list.print();
     cout<<list.improved_search1(2)<<endl;
     list.print();
-    cout<<list.improved_search2(4)<<endl;
+    cout<<list.improved_search1(4)<<endl;
     list.print();
-    cout<<list.improved_search2(1)<<endl;
+    cout<<list.improved_search1(1)<<endl;
     list.print();
+    /*
     list.insert_front(5);
     list.print();
     list.insert_front(6);
