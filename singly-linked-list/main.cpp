@@ -185,7 +185,7 @@ public:
 
     void delete_front() // hw1 p3
     {
-        if(head == nullptr)
+        if (head == nullptr)
             return;
 
         Node* new_head = head->next;
@@ -195,58 +195,47 @@ public:
         if (head == nullptr || head->next == nullptr) // len is 0 or len is 1
             tail = head;    
     }
-    void  delete_first()
+
+    void delete_first()
     {
-        if(head)
-        {
-            Node * cur = head;
+        if(head) {
+            Node* cur = head;
             head = head->next;
             delete cur;
-            if(!head) 
-            {
+            if (!head) 
                 tail = nullptr;
-            }
         }
     }
+
     void delete_last()
     {
-        if(tail)
-        {
+        if (tail) {
             int len = get_lenght();
-            if (len > 1)
-            {
-                // in case we have at least 2 Nodes
-                Node * befor_last = get_nth_back(1);
-                // delete befor_last->next;
-                delete tail;
-                befor_last->next = nullptr;
-                tail = befor_last;
+            if (len <= 1) {
+                delete_first();
                 return;
             }
-            // where we have just one Node 
+            // in case we have at least 2 Nodes
+            Node* befor_last = get_nth_back(1);
+            // delete befor_last->next;
             delete tail;
-            head = nullptr;
-            tail = nullptr;        
+            befor_last->next = nullptr;
+            tail = befor_last;
         }
     }
+
     void delete_nth(int n)
     {
         int len = get_lenght();
-        if (len == 1 || n == len-1)
-        {
-            delete_last();
-            return;
-        }
-        
-        if ( n==0 )
-        {
+
+        if (n == 1) {
             delete_first();
             return;
         }
 
-        Node * perv = get_nth(n-1); // perv node befor we delete
-        Node * nth = perv->next;
-        perv->next = perv->next->next;
+        Node* perv = get_nth(n-1); // perv node befor we delete
+        Node* nth = perv->next;
+        perv->next = nth->next;
         delete nth;
     }
 
@@ -348,7 +337,7 @@ public:
         }
         return -1;
     }
-
+    // hw2 p1
     void delete_with_key(int value)
     {
         int k = improved_search1(value);
@@ -356,19 +345,17 @@ public:
             delete_nth(k);
     }
 
+    // hw2 p2
     void swap_pairs()
     {
-        for(Node* cur=head;cur && cur->next ;cur=cur->next->next)
-        {
-            std::swap(cur->data,cur->next->data);
-        }
-        
+        for(Node* cur = head; cur && cur->next; cur = cur->next->next)
+            std::swap(cur->data,cur->next->data);        
     }
+    
     void reverse()
     {
         int len = get_lenght();
-        for (int i=len-1; i>0; i--)
-        {
+        for (int i=len-1; i>0; i--) {
             Node *cur = get_nth(i);
             Node *perv = get_nth(i-1); 
             cur->next = perv;

@@ -38,9 +38,10 @@ public:
     int maximumDifference(vector<int>& nums) {
         int min_so_far = nums.front();
         int dif = -1;
-        for (int i = 1; i < nums.size(); i++) {
-            dif = max(dif, nums[i] - min_so_far);
-            min_so_far = min(min_so_far, nums[i]);
+        // for (int i = 1; i < nums.size(); i++) {
+        for (auto &n : nums) {
+            dif = max(dif, n - min_so_far);
+            min_so_far = min(min_so_far, n);
         }
 
         if (dif == 0)
@@ -50,6 +51,21 @@ public:
     }
 };
 
+// https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/
+class Solution121 {
+public:
+    int maxProfit(vector<int>& prices) {
+        int min_so_far = prices.front();
+        int dif = 0;
+
+        for (auto &n : prices) {
+            dif = max(dif, n - min_so_far);
+            min_so_far = min(min_so_far, n);
+        }
+
+        return dif;
+    }
+};
 
 
 int main() {
