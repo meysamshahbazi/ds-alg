@@ -1,8 +1,11 @@
 
-## Sprint 1: 
-Arrays: Prefix Sum Section - Tutorial - Array Problems [x]
+# Sprints
 
-Arrays: Prefix Sum Section - Tutorial - Prefix Sum
+## Sprint 1
+
+- [x] Arrays: Prefix Sum Section - Tutorial - Array Problems
+
+- [x] Arrays: Prefix Sum Section - Tutorial - Prefix Sum
 
 - [x] LeetCode 2016 - Max difference 2 elements
 
@@ -28,7 +31,8 @@ LeetCode 918 - maximum-sum-circular-subarray
 
 LeetCode 155 - Min Stack
 
-## Sprint 2:
+## Sprint 2
+
 Arrays: 2-Pointers Section - Tutorial - 2-Pointers
 
 LeetCode 283 - Move Zeroes
@@ -53,7 +57,7 @@ LeetCode 973 - K Closest Points to Origin
 
 LeetCode 86 - Partition List
 
-## Sprint 3: 
+## Sprint 3
 
 LeetCode 11 - Container With Most Water
 
@@ -75,7 +79,8 @@ LeetCode 503 - Next Greater Element II
 
 LeetCode 205 - Isomorphic Strings
 
-## Sprint 4 
+## Sprint 4
+
 LeetCode 628 - Maximum Product of 3 Numbers
 
 LeetCode 31 - Next Permutation
@@ -96,7 +101,8 @@ LeetCode 953 - Verifying an Alien Dictionary
 
 LeetCode 1353 - Maximum Number of Events
 
-## Sprint 5 
+## Sprint 5
+
 LeetCode 304 - Range Sum Query 2D
 
 LeetCode 128 - Longest Consecutive Sequence
@@ -117,7 +123,8 @@ LeetCode 1727 - Largest Submatrix With Rearrangements
 
 LeetCode 221 - Maximal Square
 
-# Sprint 6 
+# Sprint 6
+
 LeetCode 173 - Binary Search Tree Iterator
 
 LeetCode 380 - Insert Delete GetRandom O(1)
@@ -138,15 +145,18 @@ LeetCode 32 - Longest Valid Parentheses
 
 LeetCode 138 - Copy List with Random Pointer
 
-## Sprint 7 
+## Sprint 7
+
 LeetCode 1499 - Max Value of Equation
 
 LeetCode 124 - Binary Tree Maximum Path Sum
 
 LeetCode 295 - Find Median from Data Stream
 
-# After Course Sprints:
-## Sorint 1
+# After Course Sprints
+
+## after sprint 1
+
 LeetCode 238. Product of Array Except Self
 
 LeetCode 253 - Meeting Rooms II
@@ -167,7 +177,8 @@ LeetCode 347 - Top K Frequent Elements
 
 LeetCode 244 - Shortest Word Distance II
 
-## Sprint 2 
+## after sprint 2
+
 LeetCode 76 - Minimum Window Substring
 
 LeetCode 811 - Subdomain Visit Count
@@ -188,7 +199,8 @@ LeetCode 359 - Logger Rate Limiter
 
 LeetCode 394 - Decode String
 
-## Sprint 3 
+## after sprint 3
+
 LeetCode 206 - Reverse Linked List
 
 LeetCode 41 - First Missing Positive
@@ -207,9 +219,9 @@ LeetCode 1481 - Least Number of Unique Integers after K Removals
 
 LeetCode 114 - Flatten Binary Tree to Linked List
 
-LeetCode 986 - Interval List Intersections       
+LeetCode 986 - Interval List Intersections
 
-## Sprint 4 
+## after sprint 4
 
 LeetCode 387 - First Unique Character in a String
 
