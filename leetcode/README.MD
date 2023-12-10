@@ -1,10 +1,10 @@
 
 ## Sprint 1: 
-Arrays: Prefix Sum Section - Tutorial - Array Problems
+Arrays: Prefix Sum Section - Tutorial - Array Problems [c]
 
 Arrays: Prefix Sum Section - Tutorial - Prefix Sum
 
-LeetCode 2016 - Max difference 2 elements
+- [x] LeetCode 2016 - Max difference 2 elements
 
 Arrays: Sliding Window Section - Tutorial - Fixed-size Sliding Window
 
