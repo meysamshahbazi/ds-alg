@@ -1,6 +1,6 @@
 
 ## Sprint 1: 
-Arrays: Prefix Sum Section - Tutorial - Array Problems [c]
+Arrays: Prefix Sum Section - Tutorial - Array Problems [x]
 
 Arrays: Prefix Sum Section - Tutorial - Prefix Sum
 
