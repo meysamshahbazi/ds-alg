@@ -7,8 +7,7 @@
 using namespace std;
 
 // 1 <= nums[i] <= 10^9
-class Solution {
-    
+class Solution2016 {
 public:
     int maximumDifference1(vector<int>& nums) { // O(n^2)
         int dif = -1;
@@ -19,17 +18,35 @@ public:
         
         return dif;
     }
+
+    int maximumDifference2(vector<int>& nums) {
+        vector<int> mins(nums); 
+
+        for (int i = 1; i < (int)nums.size(); i++)
+            mins[i] = min(mins[i - 1], nums[i]);
+
+        int dif = -1;
+        for (int i = (int) nums.size() - 1; i > 0; i--)
+            dif = max(dif, nums[i] - mins[i - 1]);
+
+        if (dif == 0)
+            return -1;
+
+        return dif;
+    }
+
     int maximumDifference(vector<int>& nums) {
-        vector<pair<int,int>> nums_idx;
-        
-        for (int i = 0; i < nums.size(); i++)
-            nums_idx.push_back({nums[i], i});
+        int min_so_far = nums.front();
+        int dif = -1;
+        for (int i = 1; i < nums.size(); i++) {
+            dif = max(dif, nums[i] - min_so_far);
+            min_so_far = min(min_so_far, nums[i]);
+        }
 
-        sort(nums_idx.begin(), nums_idx.end());
-        
-        
+        if (dif == 0)
+            return -1;
 
-        return -1;
+        return dif;
     }
 };
 
@@ -37,9 +54,15 @@ public:
 
 int main() {
 
-    Solution s;
+    Solution2016 s;
     vector<int> nums;
     
     nums = {7,1,5,4};
-    s.maximumDifference(nums);
+    cout << s.maximumDifference(nums) << endl;
+
+    nums = {87,68,91,86,58,63,43,98,6,40};
+    cout << s.maximumDifference(nums) << endl;
+
+    return -1;
 }
+
