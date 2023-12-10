@@ -5,6 +5,10 @@
 
 using namespace std;
 
+/**
+ * @brief https://leetcode.com/problems/two-sum/
+ * 
+ */
 class Solution {
 public:
     vector<int> twoSum1(vector<int>& nums,int target)
