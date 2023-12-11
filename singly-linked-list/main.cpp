@@ -296,16 +296,13 @@ public:
         Node* perv = head;
         Node* perv2 = nullptr;
         while (cur) {
-            if(cur->data == value)
-            {
-                if(cnt > 1)
-                {
+            if (cur->data == value) {
+                if (cnt > 1) {
                     perv2->next = cur;
                     perv->next = cur->next;
                     cur->next= perv;
                 }
-                else if(cnt ==1 )
-                {
+                else if (cnt == 1) {
                     perv->next = cur->next;
                     head = cur;
                     head->next = perv;
@@ -325,9 +322,9 @@ public:
     {
         int cnt {0};
         Node* perv = nullptr;
-        for(Node* cur = head; cur;cur=cur->next,cnt++) {
-            if(cur->data == value) {
-                if(!perv) {
+        for (Node* cur = head; cur; cur = cur->next, cnt++) {
+            if (cur->data == value) {
+                if (!perv) {
                     return cnt;
                 }
                 swap(perv->data, cur->data);
@@ -351,18 +348,22 @@ public:
         for(Node* cur = head; cur && cur->next; cur = cur->next->next)
             std::swap(cur->data,cur->next->data);        
     }
-    
+    // hw2 p3
     void reverse()
     {
         int len = get_lenght();
-        for (int i=len-1; i>0; i--) {
+        for (int i = len -1 ; i > 0; i--) {
             Node *cur = get_nth(i);
-            Node *perv = get_nth(i-1); 
+            Node *perv = get_nth(i - 1); 
             cur->next = perv;
         }
 
         head->next = nullptr;
         std::swap(head,tail);
+    }
+
+    void reverse2() {
+
     }
     
     void delete_even_positions()
