@@ -243,6 +243,8 @@ LeetCode 116 - Populating Next Right Pointers in Each Node
 
 LeetrCode 117 - Populating Next Right Pointers in Each Node II
 
+## also see https://neetcode.io/practice 
+
 # 100 Problems
 
 1 - Search Insert Position

@@ -346,15 +346,15 @@ public:
     void swap_pairs()
     {
         for(Node* cur = head; cur && cur->next; cur = cur->next->next)
-            std::swap(cur->data,cur->next->data);        
+            std::swap(cur->data, cur->next->data);        
     }
     // hw2 p3
     void reverse()
     {
         int len = get_lenght();
         for (int i = len -1 ; i > 0; i--) {
-            Node *cur = get_nth(i);
-            Node *perv = get_nth(i - 1); 
+            Node* cur = get_nth(i);
+            Node* perv = get_nth(i - 1); 
             cur->next = perv;
         }
 
@@ -363,7 +363,16 @@ public:
     }
 
     void reverse2() {
+        Node* cur = head;
+        Node* next_ = cur->next;
+        while (cur) {
+            Node* next_next = next_->next;
+            next_->next = cur;
 
+
+            
+        }
+        
     }
     
     void delete_even_positions()
@@ -394,13 +403,12 @@ public:
     void insert_sorted(int value)
     {
         int len = get_lenght();
-        if (len == 0)
-        { 
+        if (len == 0) { 
             insert_front(value);
             return;
         }
         // otherwise we are here and we assume the list is already sorted
-        Node * perv;
+        Node* perv;
         for(Node * cur=head;cur && cur->next;cur=cur->next)
         {
             if(value >= cur->data && value <cur->next->data)
