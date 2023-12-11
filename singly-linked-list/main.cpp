@@ -361,7 +361,7 @@ public:
         head->next = nullptr;
         std::swap(head,tail);
     }
-
+    // leetcode
     void reverse2() {
         Node* cur = head;
         Node* next_ = cur->next;
