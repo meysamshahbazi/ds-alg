@@ -64,6 +64,20 @@ Node* find(Node* head,int value)
     return find(head->next, value);
 }
 
+// https://leetcode.com/problems/reverse-linked-list/
+typedef Node ListNode;
+ListNode* reverseList(ListNode* head)
+{
+    if (!head || !head->next)
+        return head;
+    
+    ListNode* head_next = head->next;
+    ListNode* rhead = reverseList(head->next);
+    head_next->next = head;
+    head->next = nullptr;
+    return rhead;
+}
+
 class LinkedList
 {
 private:
@@ -361,7 +375,7 @@ public:
         head->next = nullptr;
         std::swap(head,tail);
     }
-    // leetcode
+    
     void reverse2() {
         Node* cur = head;
         Node* next_ = cur->next;
@@ -399,8 +413,17 @@ public:
                 return;            
         }
     }
+    // hw2 p5
+    void insert_sorted(int value) {
+        int len = get_lenght();
+        if (len == 0) { 
+            insert_front(value);
+            return;
+        }
+        
 
-    void insert_sorted(int value)
+    }
+    void insert_sorted1(int value)
     {
         int len = get_lenght();
         if (len == 0) { 
@@ -413,7 +436,7 @@ public:
         {
             if(value >= cur->data && value <cur->next->data)
             {
-                Node * n_ptr = new Node(value);
+                Node* n_ptr = new Node(value);
                 n_ptr->next = cur->next;
                 cur->next = n_ptr;
                 return;
@@ -748,7 +771,7 @@ public:
 
 int main()
 {   
-    /* Node* node1 = new Node(5);
+    Node* node1 = new Node(5);
     Node* node2 = new Node(8);
     Node* node3 = new Node(4);
     Node* node4 = new Node(1);
@@ -763,8 +786,11 @@ int main()
     print2(node1);
     print_reversed(node1);
     cout << endl;
-    cout << find(node1, 4) << " " << find(node1, 44) << endl; */
-    
+    cout << find(node1, 4) << " " << find(node1, 44) << endl; 
+    print1(node1);
+    ListNode* rnode1 = reverseList(node1);
+    print1(rnode1);
+    /*
     cout<<"\n";
     LinkedList list;
     list.insert_end(4);
@@ -789,6 +815,8 @@ int main()
     list.print();
     cout<<list.improved_search1(1)<<endl;
     list.print();
+    */
+
     /*
     list.insert_front(5);
     list.print();
