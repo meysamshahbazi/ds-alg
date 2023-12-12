@@ -136,6 +136,7 @@ ListNode* insertionSortList(ListNode* head) {
     return sorted;
     
 }
+
 // https://leetcode.com/problems/delete-node-in-a-linked-list/
 void deleteNode(ListNode* node) {
     for (ListNode* cur = node, *prv = nullptr; cur; prv = cur, cur = cur->next) {
@@ -149,12 +150,93 @@ void deleteNode(ListNode* node) {
     }
 }
 
+// https://leetcode.com/problems/remove-linked-list-elements/
+ListNode* removeElements(ListNode* head, int val) {
+    if (!head)
+        return head;
+    
+    if (head->val == val) {
+        ListNode* next = head->next;
+        delete head;
+        return removeElements(next, val); 
+    }   
+    ListNode* next = removeElements(head->next, val);
+    head->next = next;
+    return head;
+}
+
 // https://leetcode.com/problems/swap-nodes-in-pairs/
 ListNode* swapPairs(ListNode* head) {
     for(ListNode* cur = head; cur && cur->next; cur = cur->next->next)
         std::swap(cur->val, cur->next->val);        
 
     return head;
+}
+// https://leetcode.com/problems/swapping-nodes-in-a-linked-list/
+ListNode* swapNodes(ListNode* head, int k) {
+    int i = 0;
+    int n = 0;
+    ListNode* tail, *prv_tail;
+    for(ListNode* cur = head, *prv = nullptr; cur; prv = cur, cur = cur->next) {
+        tail = cur;
+        prv_tail = prv;
+        n++;
+    }
+
+    if (n == 1)
+        return head;
+
+    if (k == 1 || k == n) {
+        if (n == 2 ){
+            tail->next = head;
+            head->next = nullptr;
+            return tail;
+        }
+        ListNode* next = head->next;
+        prv_tail->next = head;
+        head->next = nullptr;
+        tail->next = next;
+        return tail;
+
+    }
+
+    ListNode* prv_k, *prv_n_k;
+    k = min(k , n - k + 1);
+    if (k == n - k) {
+        for(ListNode* cur = head; cur; cur = cur->next) {
+            i++;
+            if(i == k - 1)
+                prv_k = cur;
+        }
+        ListNode* node_k = prv_k->next;
+        ListNode* next_k = node_k->next;
+        ListNode* next_next_k = next_k->next;
+        prv_k->next = next_k;
+        next_k->next = node_k;
+        node_k->next = next_next_k;
+        return head;
+    }
+
+    for(ListNode* cur = head; cur; cur = cur->next) {
+        i++;
+        if (i == k - 1)
+            prv_k = cur;
+        if (i == n - k )
+            prv_n_k = cur;
+    }
+    ListNode* node_k = prv_k->next;
+    ListNode* node_n_k = prv_n_k->next;
+    ListNode* next_k = prv_k->next->next;
+    ListNode* next_n_k = prv_n_k->next->next;
+    cout << node_k->val << " " << node_n_k->val << endl;
+
+    prv_k->next = node_n_k;
+    node_n_k->next = next_k;
+    prv_n_k->next = node_k;
+    node_k->next = next_n_k;
+    
+    return head;
+    
 }
 
 // https://leetcode.com/problems/odd-even-linked-list/
@@ -894,29 +976,50 @@ public:
     }
 };
 
+ListNode* fromVector(vector<int> vec) {
+    ListNode* head, *cur;
+    head = new ListNode(vec[0]);
+    cur = head;
+    for (int i = 1; i < (int)vec.size(); i++) {
+        cur->next = new ListNode(vec[i]);
+        cur = cur->next;
+    }
+    return head;
+}
+
 int main()
 {   
-    Node* node1 = new Node(5);
-    Node* node2 = new Node(8);
-    Node* node3 = new Node(4);
-    Node* node4 = new Node(1);
+    Node* node1 = new Node(1);
+    Node* node2 = new Node(2);
+    Node* node3 = new Node(3);
+    Node* node4 = new Node(4);
+    Node* node5 = new Node(5);
+
+    
 
     node1->next = node2;
     node2->next = node3;
     node3->next = node4;
-    node4->next = nullptr;
+    node4->next = node5;
+    node5->next = nullptr;
 
     print1(node1);
-    print11(node1);
-    print2(node1);
-    print_reversed(node1);
-    cout << endl;
-    cout << find(node1, 4) << " " << find(node1, 44) << endl; 
-    print1(node1);
-    ListNode* rnode1 = reverseList(node1);
-    print1(rnode1);
-    ListNode* r2node = rotateRight(node1, 2);
-    print1(r2node);
+    ListNode* head1721 = fromVector({1,2});
+    // {7,9,6,6,7,8,3,0,9,5}
+    print1(head1721);
+    auto nswaped = swapNodes(head1721, 1);
+    print1(nswaped);
+    // print1(node1);
+    // print11(node1);
+    // print2(node1);
+    // print_reversed(node1);
+    // cout << endl;
+    // cout << find(node1, 4) << " " << find(node1, 44) << endl; 
+    // print1(node1);
+    // ListNode* rnode1 = reverseList(node1);
+    // print1(rnode1);
+    // ListNode* r2node = rotateRight(node1, 2);
+    // print1(r2node);
     /*
     cout<<"\n";
     LinkedList list;
