@@ -159,12 +159,39 @@ ListNode* swapPairs(ListNode* head) {
 
 // https://leetcode.com/problems/odd-even-linked-list/
 ListNode* oddEvenList(ListNode* head) {
+    
 
+    
 }
 
 // https://leetcode.com/problems/rotate-list/
 ListNode* rotateRight(ListNode* head, int k) {
-    
+    int len = 0;
+    ListNode* tail;
+    for (ListNode* cur = head; cur; cur = cur->next) {
+        len++;
+        tail = cur;
+    }
+
+    if (len <= 1)
+        return head;
+
+    int k_ = k % len;
+
+    if (k_ == 0)
+        return head;
+
+    int i = 0;
+    ListNode* rkhead = nullptr;
+    for (ListNode* cur = head; cur; cur = cur->next) {
+        if (++i == len - k_){
+            rkhead = cur->next;
+            cur->next = nullptr;
+            tail->next = head;
+            break;
+        }
+    }
+    return rkhead;
 }
 
 class LinkedList
@@ -601,7 +628,7 @@ public:
         tail->next = nullptr;
         head = nth;
     }
-
+    // https://leetcode.com/problems/remove-duplicates-from-an-unsorted-linked-list/
     void remove_duplicates()
     {
         Node * perv;
@@ -888,8 +915,9 @@ int main()
     print1(node1);
     ListNode* rnode1 = reverseList(node1);
     print1(rnode1);
-    
-    
+    ListNode* r2node = rotateRight(node1, 2);
+    print1(r2node);
+    /*
     cout<<"\n";
     LinkedList list;
     list.insert_end(4);
