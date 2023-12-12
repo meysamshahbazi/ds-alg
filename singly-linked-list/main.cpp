@@ -10,15 +10,15 @@
 using namespace std;
 
 struct Node {
-    int data;
+    int val;
     Node* next;
-    Node(int data):data(data){} 
+    Node(int val):val(val){} 
 };
 
 void print1(Node *head)
 {
     while (head != nullptr) {
-        cout << head->data << " ";
+        cout << head->val << " ";
         head = head->next;
     }
     cout<<endl; 
@@ -27,7 +27,7 @@ void print1(Node *head)
 void print11(Node *head)
 {
     for (Node* cur = head; cur != nullptr; cur = cur->next)
-        cout << cur->data << " ";
+        cout << cur->val << " ";
     cout<<endl; 
 }
 
@@ -38,7 +38,7 @@ void print2(Node *head)
         return;
     }
 
-    cout << head->data << " ";
+    cout << head->val << " ";
     print2(head->next);
 }
 
@@ -50,7 +50,7 @@ void print_reversed(Node *head)
     }
 
     print_reversed(head->next);
-    cout << head->data << " ";
+    cout << head->val << " ";
 }
 
 Node* find(Node* head,int value) 
@@ -58,7 +58,7 @@ Node* find(Node* head,int value)
     if (head == nullptr)
         return nullptr;
     
-    if (head->data == value)
+    if (head->val == value)
         return head;
     
     return find(head->next, value);
@@ -66,16 +66,105 @@ Node* find(Node* head,int value)
 
 // https://leetcode.com/problems/reverse-linked-list/
 typedef Node ListNode;
-ListNode* reverseList(ListNode* head)
+ListNode* reverseList1(ListNode* head) // recursive!
 {
     if (!head || !head->next)
         return head;
     
     ListNode* head_next = head->next;
-    ListNode* rhead = reverseList(head->next);
+    ListNode* rhead = reverseList1(head->next);
     head_next->next = head;
     head->next = nullptr;
     return rhead;
+}
+
+ListNode* reverseList(ListNode* head) // iterative!
+{
+    if (!head || !head->next)
+        return head;
+    
+    ListNode* prv = head;
+    ListNode* cur = head->next;
+
+    while (cur) {
+        ListNode* next = cur->next;
+        cur->next = prv;
+        prv = cur;
+        cur = next;
+    }
+    head->next = nullptr;
+    return prv;
+}
+
+// https://leetcode.com/problems/insertion-sort-list/
+ListNode* insertionSortList(ListNode* head) {
+    ListNode* sorted = nullptr;
+
+    ListNode* cur = head;
+    
+    while (cur) {
+        ListNode* next_step = cur->next;
+
+        if (!sorted) {
+            sorted = cur;
+            cur->next = nullptr;
+            cur = next_step;
+            continue;
+        }
+
+        ListNode* scur = sorted, *prv = nullptr;
+        for (scur = sorted, prv = nullptr; scur; prv = scur, scur = scur->next) 
+            if (cur->val <= scur->val) 
+                break; 
+
+        if (!scur) {
+            prv->next = cur;
+            cur->next = nullptr;
+        }
+        if (!prv) {
+            cur->next = sorted;
+            sorted = cur;
+        }
+        else {
+            prv->next = cur;
+            cur->next = scur;
+        }
+
+        cur = next_step;
+    }
+
+    return sorted;
+    
+}
+// https://leetcode.com/problems/delete-node-in-a-linked-list/
+void deleteNode(ListNode* node) {
+    for (ListNode* cur = node, *prv = nullptr; cur; prv = cur, cur = cur->next) {
+        if (cur->next)
+            cur->val = cur->next->val;
+        else {
+            delete cur;
+            prv->next = nullptr;
+            return;
+        } 
+    }
+}
+
+// https://leetcode.com/problems/swap-nodes-in-pairs/
+ListNode* swapPairs(ListNode* head) {
+    for(ListNode* cur = head; cur && cur->next; cur = cur->next->next)
+        std::swap(cur->val, cur->next->val);        
+
+    return head;
+}
+
+// https://leetcode.com/problems/odd-even-linked-list/
+ListNode* oddEvenList(ListNode* head) {
+
+}
+
+// https://leetcode.com/problems/rotate-list/
+ListNode* rotateRight(ListNode* head, int k) {
+    
 }
 
 class LinkedList
@@ -121,7 +210,7 @@ public:
     void debug_print_address() 
     {
 		for (Node* cur = head; cur; cur = cur->next)
-			cout << cur << "," << cur->data << "\t";
+			cout << cur << "," << cur->val << "\t";
 		cout << "\n";
 	}
 
@@ -132,11 +221,11 @@ public:
 			cout << "nullptr\n";
 			return;
 		}
-		cout << node->data << " ";
+		cout << node->val << " ";
 		if (node->next == nullptr)
 			cout << "X ";
 		else
-			cout << node->next->data << " ";
+			cout << node->next->val << " ";
 
 		if (node == head)
 			cout << "head\n";
@@ -158,7 +247,7 @@ public:
     {
         Node* cur = head;
         while (cur != nullptr) {
-            cout << cur->data << " ";
+            cout << cur->val << " ";
             cur = cur->next;
         }
         cout<<endl;   
@@ -167,7 +256,7 @@ public:
     void print_for()
     {
         for(Node* cur = head; cur; cur = cur->next) {
-            cout << cur->data << " ";
+            cout << cur->val << " ";
         }
         cout<<endl;
     }
@@ -283,7 +372,7 @@ public:
     {
         int cnt {0};
         for (Node* cur = head; cur; cur = cur->next, cnt++)
-            if (cur->data == value)
+            if (cur->val == value)
                 return cnt;
         return -1;
     }
@@ -295,7 +384,7 @@ public:
             return false;
 
         for(Node *cur=head,*acur = another.head; cur; cur = cur->next, acur = acur->next)
-            if (cur->data != acur->data)
+            if (cur->val != acur->val)
                 return false;
             
         return true;
@@ -303,14 +392,14 @@ public:
     int improved_search(int value)
     {
         // the idea of this function is swapping nodes by changing the next attr
-        // it goes pretty long so best practice is doing by changing data
-        // but for huge data it may be usefull 
+        // it goes pretty long so best practice is doing by changing val
+        // but for huge val it may be usefull 
         int cnt {0};
         Node* cur = head;
         Node* perv = head;
         Node* perv2 = nullptr;
         while (cur) {
-            if (cur->data == value) {
+            if (cur->val == value) {
                 if (cnt > 1) {
                     perv2->next = cur;
                     perv->next = cur->next;
@@ -337,11 +426,11 @@ public:
         int cnt {0};
         Node* perv = nullptr;
         for (Node* cur = head; cur; cur = cur->next, cnt++) {
-            if (cur->data == value) {
+            if (cur->val == value) {
                 if (!perv) {
                     return cnt;
                 }
-                swap(perv->data, cur->data);
+                swap(perv->val, cur->val);
                 return cnt - 1;
             }
             perv = cur;
@@ -349,18 +438,41 @@ public:
         return -1;
     }
     // hw2 p1
+    void delete_next_node(Node* node) {
+		Node* to_delete = node->next;
+		bool is_tail = to_delete == tail;
+		// node->next in middle to delete
+		node->next = node->next->next;
+		delete to_delete;
+        // delete_node(to_delete);
+
+		if(is_tail)
+			tail = node;
+	}
+    // hw2 p1
     void delete_with_key(int value)
     {
-        int k = improved_search1(value);
-        if( k != -1)
-            delete_nth(k);
+        if (!head)
+            return;
+        if (head->val == value) {
+            delete_first();
+            return;
+        }
+
+        for (Node* cur = head, *prv = nullptr; cur; prv = cur, cur = cur->next) {
+            if (cur->val == value) {
+                delete_next_node(prv);
+                return;
+            }
+        }
+        
     }
 
     // hw2 p2
     void swap_pairs()
     {
         for(Node* cur = head; cur && cur->next; cur = cur->next->next)
-            std::swap(cur->data, cur->next->data);        
+            std::swap(cur->val, cur->next->val);        
     }
     // hw2 p3
     void reverse()
@@ -377,35 +489,23 @@ public:
     }
     
     void reverse2() {
-        Node* cur = head;
-        Node* next_ = cur->next;
-        while (cur) {
-            Node* next_next = next_->next;
-            next_->next = cur;
-
-
-            
-        }
-        
+        tail = head;
+        head = reverseList1(head);
     }
-    
+    // hw2 p4
     void delete_even_positions()
     {
         Node *perv = head;
         Node *cur = head->next;
-        // take care of tail!!
-        while (cur)
-        {
+
+        while (cur) {
             perv->next = cur->next;
-            if(cur==tail)
-            {
+            if (cur == tail){
                 tail = perv;
                 tail->next = nullptr;
             }
             delete cur;
-            
-            if(perv->next)
-            {
+            if (perv->next) {
                 cur = perv->next->next;
                 perv = perv->next;
             }
@@ -414,7 +514,7 @@ public:
         }
     }
     // hw2 p5
-    void insert_sorted(int value) {
+    void insert_sorted1(int value) {
         int len = get_lenght();
         if (len == 0) { 
             insert_front(value);
@@ -423,7 +523,7 @@ public:
         
 
     }
-    void insert_sorted1(int value)
+    void insert_sorted(int value)
     {
         int len = get_lenght();
         if (len == 0) { 
@@ -432,10 +532,8 @@ public:
         }
         // otherwise we are here and we assume the list is already sorted
         Node* perv;
-        for(Node * cur=head;cur && cur->next;cur=cur->next)
-        {
-            if(value >= cur->data && value <cur->next->data)
-            {
+        for (Node* cur = head; cur && cur->next; cur = cur->next){
+            if (value >= cur->val && value <cur->next->val) {
                 Node* n_ptr = new Node(value);
                 n_ptr->next = cur->next;
                 cur->next = n_ptr;
@@ -445,16 +543,16 @@ public:
         // if the above condition if FOR dosnt met 
         // it means that the given value is larger than all of the list 
         // elements so we should put it on the back of list:
-        if (value <= head->data)
+        if (value <= head->val)
             insert_front(value);
         else
             insert_end(value);
 
         return;
     }
+    // hw3 p1
     void swap_head_tail()
     {
-        // Node *head_next = head->next;
         Node *perv_tail;
         // this one line FOR loop is intersting for me! I did some trick for that :P
         // also readble logic for doing so is the next commented FOR loop with an IF :))
@@ -509,12 +607,12 @@ public:
         Node * perv;
         for(Node *cur=head;cur;cur=cur->next)
         {
-            int value = cur->data;
+            int value = cur->val;
             perv = cur;
             while (perv)
             {
                 Node *nth = perv->next; 
-                if(nth && nth->data == value)
+                if(nth && nth->val == value)
                 {
                     if (nth->next == nullptr)
                     {
@@ -539,7 +637,7 @@ public:
         for(Node *cur=head;cur;cur=cur->next)
         {
             // we will find and record last occurance index of given key
-            if(key == cur->data)
+            if(key == cur->val)
                 n = i;
             i++;
         }
@@ -551,7 +649,7 @@ public:
         int nb_occ = 0;
         // at first we count all of key in list
         for(Node *cur=head;cur;cur=cur->next)
-            if(cur->data == key)
+            if(cur->val == key)
                 nb_occ++;
 
         // remove all of them and insert them in back 
@@ -600,7 +698,7 @@ public:
         {
             Node *cur_next = cur->next;
             // Node *acur_next = acur->next;
-            Node * acur_cpy = new Node(acur->data);
+            Node * acur_cpy = new Node(acur->val);
             cur->next = acur_cpy;
             acur_cpy->next = cur_next;
 
@@ -619,7 +717,7 @@ public:
 
         while (acur)
         {
-            Node * acur_cpy = new Node(acur->data);
+            Node * acur_cpy = new Node(acur->val);
             tail->next = acur_cpy;
             tail = acur_cpy;   
             acur = acur->next;
@@ -634,8 +732,8 @@ public:
         int carry = 0;
         while (cur && acur)
         {
-            int val = cur->data + acur->data + carry;
-            cur->data = val%10;
+            int val = cur->val + acur->val + carry;
+            cur->val = val%10;
             carry = val/10;
             cur = cur->next;
             acur = acur->next;
@@ -643,15 +741,15 @@ public:
 
         while (cur)
         {
-            int val = cur->data+carry;
-            cur->data = val%10;
+            int val = cur->val+carry;
+            cur->val = val%10;
             carry = val/10;
             cur = cur->next;
         }
         
         while (acur)
         {
-            int val = acur->data+carry;
+            int val = acur->val+carry;
             this->insert_end(val%10);
             carry = val/10;
             acur = acur->next;
@@ -668,21 +766,21 @@ public:
         {
             if(! cur->next)
                 return;
-            if(cur->next->data > cur->data)
+            if(cur->next->val > cur->val)
                 cur = cur->next;
             else 
             {
-                // find next non equal value to cur->data to use that as next itration value of cur
+                // find next non equal value to cur->val to use that as next itration value of cur
                 Node *cur2;
                 for(cur2=cur->next;cur2;cur2=cur2->next)
-                    if(cur2->data != cur->data)
+                    if(cur2->val != cur->val)
                         break;
                 
                 
 
-                int val_to_del = cur->data;
+                int val_to_del = cur->val;
                 
-                // remove all of node with value of cur->data;
+                // remove all of node with value of cur->val;
                 while (improved_search1(val_to_del) != -1)
                 {
                     delete_with_key(val_to_del);
@@ -730,7 +828,7 @@ public:
         ostringstream oss;
         for(Node * cur =head; cur; cur=cur->next)
         {
-            oss<<cur->data;
+            oss<<cur->val;
             if(cur->next)
                 oss<<" ";
         }
@@ -746,7 +844,7 @@ private:
 public:
     void print() {
         for(Node* cur = head; cur; cur = cur->next)
-            cout << cur->data << " ";
+            cout << cur->val << " ";
         cout << endl;
     }
     void push_back(int value) {
@@ -790,7 +888,8 @@ int main()
     print1(node1);
     ListNode* rnode1 = reverseList(node1);
     print1(rnode1);
-    /*
+    
+    
     cout<<"\n";
     LinkedList list;
     list.insert_end(4);
@@ -799,7 +898,7 @@ int main()
     list.insert_end(1);
     list.print();
     list.print_for();
-    cout<<list.get_nth(1)->data<<endl;
+    cout<<list.get_nth(1)->val<<endl;
     cout<<list.search(1)<<endl;
     cout<<list.search(5)<<endl;
     cout<<list.search(4)<<endl;
@@ -815,9 +914,9 @@ int main()
     list.print();
     cout<<list.improved_search1(1)<<endl;
     list.print();
-    */
+    
 
-    /*
+
     list.insert_front(5);
     list.print();
     list.insert_front(6);
@@ -828,7 +927,7 @@ int main()
     list.print();
     LinkedList list2;
     
-    cout<<list.get_nth_back(3)->data<<endl;
+    cout<<list.get_nth_back(3)->val<<endl;
     list2.insert_front(1);
     list2.print();
     list2.insert_front(2);
@@ -846,6 +945,7 @@ int main()
     l1.insert_end(1);
     l1.insert_end(2);
     l1.insert_end(3);
+    
     LinkedList l2;
     l2.insert_end(1);
     l2.insert_end(2);
@@ -930,6 +1030,7 @@ int main()
     ls.insert_sorted(9);
     ls.insert_sorted(5);
     ls.print();
+    /*
     cout<<"swap_head_tail ----------------------\n";
     ls.print();
     ls.swap_head_tail();
