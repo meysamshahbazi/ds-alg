@@ -4,7 +4,9 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-
+#include <iostream>
+#include <cassert>
+#include <climits>
 // #define DEBUG
 
 using namespace std;
@@ -238,12 +240,27 @@ ListNode* swapNodes(ListNode* head, int k) {
     return head;
     
 }
+// https://leetcode.com/problems/remove-duplicates-from-sorted-list/
+ListNode* deleteDuplicates(ListNode* head) {
+    if (!head || !head->next)
+        return head;
 
-// https://leetcode.com/problems/odd-even-linked-list/
-ListNode* oddEvenList(ListNode* head) {
-    
-
-    
+    int value = head->val;
+    ListNode* cur = head->next, *prv = head;
+    // for (, *prv = head; cur; prv = cur, cur = cur->next) {
+    while (cur) {
+        if (prv->val == cur->val) {
+            ListNode* next = cur->next;
+            prv->next = next;
+            delete cur;
+            cur = next;
+        }
+        else {
+            prv = cur;
+            cur = cur->next;
+        }
+    }
+    return head;
 }
 
 // https://leetcode.com/problems/rotate-list/
@@ -275,6 +292,52 @@ ListNode* rotateRight(ListNode* head, int k) {
     }
     return rkhead;
 }
+
+// https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+ListNode* removeNthFromEnd(ListNode* head, int n) {
+    if (!head)
+        return head;
+
+    int sz = 0;
+    for (ListNode* cur = head; cur; cur = cur->next)
+        sz++;
+    
+    if (n == sz) {
+        ListNode* next = head->next;
+        delete head;
+        return next;
+    }
+    if (n == 1) {
+        ListNode* prv;
+        for (ListNode* cur = head; cur->next; cur = cur->next)
+            prv = cur;
+        delete prv->next;
+        prv->next = nullptr;
+        return head;
+    }
+    int i = 0;
+    ListNode* prv;
+    for (ListNode* cur = head; cur; cur = cur->next)
+        if (++i == sz - n){
+            prv = cur;
+            break;
+        }
+    
+    ListNode* nth = prv->next;
+    prv->next = nth->next;
+    delete nth;
+    return head;
+}
+
+
+// https://leetcode.com/problems/odd-even-linked-list/ hw4p1
+ListNode* oddEvenList(ListNode* head) { 
+
+}
+
+// https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/ hw4p4
+
+// https://leetcode.com/problems/reverse-nodes-in-k-group/ hw4p5
 
 class LinkedList
 {
@@ -679,7 +742,7 @@ public:
         head->next = nullptr;
         std::swap(head,tail);
     }
-    
+    // hw3 p2
     void rotate_left_once()
     {
         tail->next = head;
@@ -710,11 +773,12 @@ public:
         tail->next = nullptr;
         head = nth;
     }
-    // https://leetcode.com/problems/remove-duplicates-from-an-unsorted-linked-list/
+    // https://leetcode.com/problems/remove-duplicates-from-an-unsorted-linked-list/ premium
+    // hw3 p 3
     void remove_duplicates()
     {
         Node * perv;
-        for(Node *cur=head;cur;cur=cur->next)
+        for(Node *cur=head; cur; cur=cur->next)
         {
             int value = cur->val;
             perv = cur;
@@ -753,6 +817,7 @@ public:
         if(n != -1)
             delete_nth(n);
     }
+
     void move_to_back(int key)
     {
         int nb_occ = 0;
@@ -782,6 +847,17 @@ public:
         cur->next = nullptr;
         tail = cur;
         return;
+    }
+    // hw3 p6
+    int max(Node* cur) 
+    {
+        if (!cur->next)
+            return cur->val;
+        return std::max(cur->val, max(cur->next));
+    }
+    int max() 
+    {
+        return max(head);
     }
 
     void arrange_odd_even()
