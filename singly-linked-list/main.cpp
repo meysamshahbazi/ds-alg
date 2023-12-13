@@ -331,7 +331,8 @@ ListNode* removeNthFromEnd(ListNode* head, int n) {
 
 // https://leetcode.com/problems/odd-even-linked-list/ hw4p1
 ListNode* oddEvenList(ListNode* head) { 
-
+    ListNode *odd = head;
+    odd->next = nullptr;
 }
 
 // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/ hw4p4
