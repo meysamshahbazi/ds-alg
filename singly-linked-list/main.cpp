@@ -247,7 +247,6 @@ ListNode* deleteDuplicates(ListNode* head) {
 
     int value = head->val;
     ListNode* cur = head->next, *prv = head;
-    // for (, *prv = head; cur; prv = cur, cur = cur->next) {
     while (cur) {
         if (prv->val == cur->val) {
             ListNode* next = cur->next;
@@ -751,17 +750,16 @@ public:
         tail = head;
         head = after_head;
     }
-
+    // hw3 p2
     void rotate_left(int k)
     {
         // this is my own solution
         int len = get_lenght();
-        k = k%len;
+        k = k % len;
         for(int i=0;i<k;i++)
             rotate_left_once();
-
     }
-
+    // hw3 p2
     void rotate_left2(int k)
     {
         // this is idea from video!
@@ -774,65 +772,86 @@ public:
         head = nth;
     }
     // https://leetcode.com/problems/remove-duplicates-from-an-unsorted-linked-list/ premium
-    // hw3 p 3
-    void remove_duplicates()
+    void remove_duplicates() // not sorted! hw3 p3
     {
-        Node * perv;
-        for(Node *cur=head; cur; cur=cur->next)
-        {
-            int value = cur->val;
-            perv = cur;
-            while (perv)
-            {
-                Node *nth = perv->next; 
-                if(nth && nth->val == value)
-                {
-                    if (nth->next == nullptr)
-                    {
-                        delete_last();
-                    }
-                    else 
-                    {
-                        perv->next = perv->next->next;
-                        delete nth;
-                    }
+        if (!head || !head->next)
+            return;
+
+        for (Node* cur1 = head;cur1; cur1 = cur1->next) {
+            for (Node* cur2 = cur1->next, *prv = cur1; cur2;) { // no steppeing statement 
+                if (cur1->val == cur2->val) {
+                    delete_next_node(prv);
+                    cur2 = prv->next;
                 }
-                else // this is very important that we MUST go to next node just when we dont have duplicate value
-                    perv = perv->next;
-                
+                else {
+                    prv = cur2;
+                    cur2 = cur2->next;
+                }
             }
         }
     }
+    // hw3 p4
     void remove_last_occurance(int key)
     {
+        // a little diffrence from orginal problem but its Ok...
         int n = -1;
-        int i =0;
-        for(Node *cur=head;cur;cur=cur->next)
-        {
+        int i = 0;
+        bool seen = false;
+        for (Node* cur = head; cur; cur = cur->next) {
             // we will find and record last occurance index of given key
-            if(key == cur->val)
+            if (key == cur->val || !seen) {
+                seen = true;
+                i++;
+                continue;
+            }
+            if (seen && key == cur->val) 
                 n = i;
             i++;
         }
         if(n != -1)
             delete_nth(n);
     }
-
+    // hw3 p5
     void move_to_back(int key)
     {
         int nb_occ = 0;
         // at first we count all of key in list
-        for(Node *cur=head;cur;cur=cur->next)
+        for(Node* cur = head; cur; cur=cur->next)
             if(cur->val == key)
                 nb_occ++;
 
         // remove all of them and insert them in back 
-        for(int i =0;i<nb_occ;i++)
-        {
+        for(int i = 0; i < nb_occ; i++) {
             delete_with_key(key);
             insert_end(key);
-        }    
+        }
     }
+
+    // hw3 p5
+    void move_key_occurance_to_end(int key) 
+    {
+        int len = get_lenght();
+        for(Node* cur = head, *prv = nullptr; len--;) {
+            if (key == cur->val)
+                cur = move_to_end(cur, prv);
+            else 
+                prv = cur, cur = cur->next;
+        }        
+    }
+
+    Node* move_to_end(Node* cur, Node* prv) {
+		Node* next = cur->next;
+		tail->next = cur;
+
+		if (prv)
+			prv->next = next;
+		else
+			head = next;	// cur was head
+
+		tail = cur;
+		tail->next = nullptr;
+		return next;
+	}
 
     void push_node_to_back(Node * prv)
     {
