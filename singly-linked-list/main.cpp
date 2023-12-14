@@ -331,13 +331,62 @@ ListNode* removeNthFromEnd(ListNode* head, int n) {
 
 // https://leetcode.com/problems/odd-even-linked-list/ hw4p1
 ListNode* oddEvenList(ListNode* head) { 
-    ListNode *odd = head;
-    odd->next = nullptr;
+    if (!head || !head->next || !head->next->next)
+        return head;
+
+    ListNode *odd_head = head;
+    ListNode *even_tail = head->next;
+
+    ListNode* cur = head;
+    while (cur) {
+        ListNode* next = cur->next;
+        if(!next)
+            break;
+        cur->next = cur->next->next;
+        cur = next; 
+    }
+    ListNode* odd_tail;
+    for (odd_tail = head;odd_tail->next;odd_tail = odd_tail->next);
+    odd_tail->next = even_tail;
+    return odd_head;
 }
 
 // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/ hw4p4
+ListNode* deleteDuplicates(ListNode* head) {
+    if (!head || !head->next)
+        return head;
+    
+    for (ListNode* cur = head->next, *prv = head,*prv2 = nullptr; cur; ) {
+        if (prv->val == cur->val) {
+            int val = prv->val;
+            ListNode* next;
+            for(next = prv; next && next->val == val; next = next->next);
+            if (!prv2) {
+                head = next;
+                prv = head;
+            }
+            else {
+                prv2->next = next;
+                prv = next;
+            }
+
+            if (!next)
+                return head;
+            cur = next->next;
+        }
+        else {
+            prv2 = prv;
+            prv = cur;
+            cur = cur->next;
+        }
+    }
+    return head;
+}
 
 // https://leetcode.com/problems/reverse-nodes-in-k-group/ hw4p5
+ListNode* reverseKGroup(ListNode* head, int k) {
+     
+}
 
 class LinkedList
 {
@@ -879,22 +928,23 @@ public:
     {
         return max(head);
     }
-
+    
+    // leetcode oddEvenList hw4 p1
     void arrange_odd_even()
     {
         int len = this->get_lenght();
 
         int nb_pushed = 0;
 
-        Node * prv=head;
-        while (nb_pushed < len/2)
-        {
+        Node* prv = head;
+        while (nb_pushed < len / 2) {
             push_node_to_back(prv);
             prv = prv->next;
             nb_pushed++;
         }
     }
 
+    // hw4 p2
     void insert_alternate(LinkedList &another)
     {
         Node *cur=head;
@@ -930,6 +980,7 @@ public:
         // at the end we need to close the chain by ending with nullptr
         tail->next = nullptr;
     }
+    // hw4 p3
     void add_num(LinkedList &another)
     {
         Node *cur = head;
@@ -960,7 +1011,7 @@ public:
             acur = acur->next;
         }
     }
-
+    // hw4 p4 leetcode
     void remove_all_repeated()
     {
         // assume given list is sorted!
@@ -995,7 +1046,7 @@ public:
             }
         }
     }   
-
+    // hw4 p5 leetcode
     void reverse_chains(int k)
     {
         // TODO: 
@@ -1105,6 +1156,11 @@ int main()
     print1(head1721);
     auto nswaped = swapNodes(head1721, 1);
     print1(nswaped);
+
+    auto head328 = fromVector({1,2,3,4,5,6});
+    print1(head328);
+    head328 = oddEvenList(head328);
+    print1(head328);
     // print1(node1);
     // print11(node1);
     // print2(node1);
@@ -1339,21 +1395,21 @@ int main()
     l10.insert_end(9);l10.insert_end(2);l10.insert_end(3);
     l9.add_num(l10);
     l9.print();*/
-    /*
+    
     LinkedList l11;l11.insert_sorted(1);
-    l11.insert_sorted(1);l11.insert_sorted(1);l11.insert_sorted(1);
-    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(4);l11.insert_sorted(4);l11.insert_sorted(4);
+    l11.insert_sorted(8);l11.insert_sorted(1);l11.insert_sorted(1);
+    l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(2);l11.insert_sorted(4);l11.insert_sorted(4);l11.insert_sorted(4);l11.insert_sorted(5);
     l11.print();
     l11.remove_all_repeated();
     cout<<l11.get_lenght()<<endl;
     l11.print();
 
-    LinkedList l12;
-    l12.insert_front(0);
-    l12.print();
-    l12.delete_first();
-    l12.print();
-    */
+    // LinkedList l12;
+    // l12.insert_front(0);
+    // l12.print();
+    // l12.delete_first();
+    // l12.print();
+    
 
 
 #ifdef DEBUG    
