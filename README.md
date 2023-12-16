@@ -4,9 +4,39 @@ Data Structures and Algorithms in C/C++ and python
 
 This repo contains my practices for data structures and algorithms in God programming languege (c++) and human programming langueage (python).
 
-## Reminder
+## Data Structures
 
-- [ ] 6. Project Sparse Array and Matrix
+- [x] Vector
+
+- [x] Singly Linked List
+
+- [x] Doubly Linked List
+
+- [ ] Project Sparse Array and Matrix
+
+- [ ] Stack
+
+- [ ] Queue
+
+- [ ] Binary Tree
+
+- [ ] Binary Search Tree
+
+- [ ] Binary Heap
+
+- [ ] AVL Tree
+
+- [ ] Letter Tree (Trie)
+
+- [ ] Hash Table
+
+- [ ] Review 1D Arrays Problem-Solving
+
+- [ ] Review Char Arrays Problem-Solving
+
+- [ ] Review Multidimensional Arrays Problem-Solving
+
+## Reminder
 
 - [ ] Stack: 3. Homework 1 problem 6
 
