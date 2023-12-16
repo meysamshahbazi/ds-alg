@@ -6,8 +6,6 @@ This repo contains my practices for data structures and algorithms in God progra
 
 ## Reminder
 
-- [ ] Singly Linked List: Homework 4 problem 5
-
 - [ ] 6. Project Sparse Array and Matrix
 
 - [ ] Stack: 3. Homework 1 problem 6

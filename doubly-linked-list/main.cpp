@@ -9,11 +9,11 @@ using namespace std;
 
 struct Node
 {
-    int data{};
+    int val{};
     Node* next{nullptr};
     Node* prev{nullptr};
 
-    Node(int data): data(data) {}
+    Node(int val): val(val) {}
 
     void set(Node *next,Node * prev)
     {
@@ -23,6 +23,93 @@ struct Node
     ~Node() {}
 };
 
+typedef Node ListNode;
+
+// https://leetcode.com/problems/middle-of-the-linked-list/
+ListNode* middleNode1(ListNode* head) {
+    if (!head || !head->next)
+        return head;
+
+    int len = 0;
+    for (ListNode* cur = head; cur; cur = cur->next)
+        len++;
+
+    int i = 0;
+    ListNode* ret;
+    for (ListNode* cur = head; cur; cur = cur->next) {
+        if (++i == len / 2 + 1) {
+            ret = cur;
+            break;
+        }
+    }
+    return ret;
+}
+
+ListNode* middleNode(ListNode* head) {
+    ListNode* cur = head;
+    ListNode* mid = head;
+    bool go_next = false;
+
+    while (cur) {
+        if (go_next) 
+            mid = mid->next;
+        go_next = !go_next;
+        cur = cur->next;
+    }
+    return mid;
+}
+
+
+
+// https://leetcode.com/problems/palindrome-linked-list/
+class Solution234 {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (!head || !head->next)
+            return head;
+        
+        ListNode* prv = head;
+        ListNode* cur = head->next;
+
+        while (cur) {
+            ListNode* next = cur->next;
+            cur->next = prv;
+            prv = cur;
+            cur = next;
+        }
+        head->next = nullptr;
+        return prv;
+    }
+    bool isPalindrome(ListNode* head) {
+        if (!head->next)
+            return true;
+
+        int len = 0;
+        for (ListNode* cur = head; cur; cur = cur->next)
+            len++;
+
+        int i = 0;
+        ListNode* mid;
+        for (ListNode* cur = head; cur; cur = cur->next) {
+            if (++i == len / 2 + 1) {
+                mid = cur;
+                break;
+            }
+        }
+
+        if (len % 2 == 1) {
+            mid = mid->next;
+        }
+
+        ListNode* rmid = reverseList(mid);
+
+        for(ListNode* rcur = rmid, *cur = head; rcur; cur = cur->next, rcur = rcur->next)
+            if (cur->val != rcur->val)
+                return false;
+
+        return true;
+    }
+};
 
 class LinkedList
 {
@@ -35,82 +122,78 @@ public:
     LinkedList(const LinkedList&) = delete;
     LinkedList &operator=(const LinkedList &) = delete;
 
-    void link(Node* first, Node* second)
-    {
-        if(first)
+    void link(Node* first, Node* second) {
+        if (first)
             first->next = second;
-        if(second)
+        if (second)
             second->prev = first;
     }
 
-    void insert_end(int value)
-    {
-        Node *item = new Node(value);
-        if(!head)
-            head = tail= item;
-        else
-        {
-            link(tail,item);
+    void insert_end(int value) {
+        Node* item = new Node(value);
+        if (!head)
+            head = tail = item;
+        else {
+            link(tail, item);
             tail = item;
         }
     }
-    void insert_front(int value)
-    {
-        Node *item = new Node(value);
-        if(!head)
-            head = tail= item;
-        else
-        {
-            link(item,head);
+    void insert_front(int value) {
+        Node* item = new Node(value);
+        if (!head)
+            head = tail = item;
+        else {
+            link(item, head);
             head = item;
         }
     }
-    void print()
-    {
-        for(Node *cur=head; cur; cur=cur->next)
-            cout<<cur->data<<" ";
+    void print() {
+        for(Node *cur = head; cur; cur = cur->next)
+            cout << cur->val << " ";
         cout<<endl;
     }
-    void embed_after(Node* befor,int value)
-    {
+    void print_reversed() {
+        for(Node *cur = tail; cur; cur = cur->prev)
+            cout << cur->val << " ";
+        cout<<endl;
+    }
+    void embed_after(Node* befor, int value) {
         Node* item = new Node(value);
-        if(befor->next)
-        {
-            Node * after = befor->next;
-            link(befor,item);
-            link(item,after);
+        if(befor->next) {
+            Node* after = befor->next;
+            link(befor, item);
+            link(item, after);
         }
-        else 
-        {
+        else {
             insert_end(value);
         }
     }
-    Node* get_head(){return head;}
-    Node* get_tail(){return tail;}
-    void insert_sorted(int value)
-    {
-        if(!head || value<= head->data)
-        {
+    Node* get_head() {
+        return head;
+    }
+    Node* get_tail() {
+        return tail;
+    }
+    void insert_sorted(int value) {
+        if (!head || value <= head->val) {
             insert_front(value);
             return;
         }
-        if(value >= tail->data)
-        {
+        if (value >= tail->val) {
             insert_end(value);
             return;
         }
-        for(Node *cur=head;cur;cur=cur->next)
-        {
-            if(value>=cur->data)
-                embed_after(cur->prev,value);
+        for(Node* cur = head; cur; cur = cur->next) {
+            if (value >= cur->val) {   
+                embed_after(cur->prev, value);
                 return;
+            }
         }
     }
-    void delete_front()
-    {
-        if(!head) return; // if we have no item in list just return
-        if(!head->next) // if there is just one item in list:
-        {
+    void delete_front() {
+        if (!head) 
+            return; // if we have no item in list just return
+        if (!head->next) { // if there is just one item in list:
             delete head;
             head = tail = nullptr;
             return;
@@ -121,11 +204,10 @@ public:
         head = new_head;
         new_head->prev = nullptr;
     }
-    void delete_end()
-    {
-        if(!head) return; // if we have no item in list just return
-        if(!head->next) // if there is just one item in list:
-        {
+    void delete_end() {
+        if (!head)
+            return; // if we have no item in list just return
+        if(!head->next) { // if there is just one item in list:
             delete head;
             head = tail = nullptr;
             return;
@@ -136,49 +218,42 @@ public:
         tail = new_tail;
         tail->next = nullptr;
     }
-    
-    Node* delete_and_link(Node* cur)
-    {
+    Node* delete_and_link(Node* cur) {
         Node* new_cur = cur->prev;
-        link(cur->prev,cur->next);
+        link(cur->prev, cur->next);
         delete cur;
         return new_cur;
     }
-    void delete_node_with_key(int val)
-    {
-        if(!head) return;
-        if(head->data == val) 
-        {
+    void delete_node_with_key(int val) {
+        if (!head) 
+            return;
+        if (head->val == val) {
             delete_front();
             return;
         }
-        for(Node* cur=head;cur;cur=cur->next)
-        {
-            if(cur->data==val)
-            {
-                delete_and_link(cur);
+        for (Node* cur = head; cur; cur = cur->next) {
+            if (cur->val == val) {
+                cur = delete_and_link(cur);
                 if(!cur->next)
                     tail = cur;
                 return;
             }
         }
     }
+    // hw1 p1 
     void delete_all_nodes_with_key(int val)
     {
-        if(!head) return;
+        if(!head) 
+            return;
         
-        Node* cur=head;
-        while (cur)
-        {
-            if(cur->data==val)
-            {
-                if(cur == head)
-                {
+        Node* cur = head;
+        while (cur) {
+            if(cur->val == val) {
+                if(cur == head) {
                     delete_front();
                     cur = head;
                 }
-                else
-                {
+                else {
                     cur = delete_and_link(cur);
 
                 }
@@ -187,40 +262,41 @@ public:
                 cur = cur->next;
         }
     }
-    void delete_even_positions()
-    {
-        if(!head->next) return; // return for one node
-        Node* cur=head->next;
-        while (cur)
-        {
+    // hw1 p2 
+    void delete_even_positions() {
+        if(!head || !head->next) 
+            return; // return for 0 and one node
+        Node* cur = head->next;
+        while (cur) {
             cur = delete_and_link(cur);
-            if(!cur->next || !cur->next->next) return;
+            if (!cur->next || !cur->next->next) 
+                return;
             cur = cur->next->next;
         }
     }
-
+    // hw1 p3
     void delete_odd_positions()
     {
-        // this function has bug!!!fix itS
-        if(!head->next)
-        {
-            delete_front();
-            return; // return for one node
-        }
         delete_front();
-        delete_even_positions();
+        Node* cur = head->next;
+        while (cur) {
+            cur = delete_and_link(cur);
+            if (!cur->next || !cur->next->next) 
+                return;
+            cur = cur->next->next;
+        }
     }
     bool is_palindrome()
     {
-        Node *cur=head;
-        Node *rcur=tail;
+        Node *cur = head;
+        Node *rcur = tail;
         while (cur && rcur)
         {
-            if(cur->data!=rcur->data)
+            if(cur->val!=rcur->val)
                 return false;
             
-            cur=cur->next;
-            rcur=rcur->prev;
+            cur = cur->next;
+            rcur = rcur->prev;
         }
         return true;
     }
@@ -241,15 +317,15 @@ public:
     Node* find_middle2()
     {
         // in this case we should use just next pointer
-        Node* cur=head;
-        Node* mid=head;
+        Node* cur = head;
+        Node* mid = head;
         bool go_next = false;
 
-        while (cur)
-        {
-            if(go_next) mid=mid->next;
+        while (cur) {
+            if(go_next) 
+                mid = mid->next;
             go_next = !go_next;
-            cur=cur->next;
+            cur = cur->next;
         }
         return mid;
     }
@@ -290,7 +366,7 @@ public:
         // we do it with the very simple idea :D
         // travers the list and swap prev and next
         // but pay attention for step in FOR loop is go to prev!!
-        for(Node*cur=head;cur;cur=cur->prev)
+        for(Node*cur = head; cur; cur = cur->prev)
         {
             std::swap(cur->next,cur->prev);
         }
@@ -302,12 +378,12 @@ public:
         Node *acur=another.head;
         while (cur)
         {
-            if(acur->data < cur->data)
+            if(acur->val < cur->val)
             {
                 if(cur==head)
-                    insert_front(acur->data);
+                    insert_front(acur->val);
                 else 
-                    embed_after(cur->prev,acur->data);
+                    embed_after(cur->prev,acur->val);
                 acur = acur->next;
                 if(!acur) // in this case all of another list nodes are inside of this list
                 {
@@ -322,7 +398,7 @@ public:
         
         while (acur)// if there was ant other of another list
         {
-            insert_end(acur->data);
+            insert_end(acur->val);
             acur=acur->next;
         }
         
@@ -332,9 +408,10 @@ public:
 int main()
 {       
     LinkedList l;
-    l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
-    l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);l.insert_end(9);
-    l.print();
+
+    // l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
+    // l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);l.insert_end(9);
+    // l.print();
 
     /*
     l.insert_end(1);l.insert_end(2);l.insert_end(3);
@@ -343,10 +420,10 @@ int main()
     l.print();
     l.embed_after(l.get_head(),111);
     l.print();
-    cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->data<<endl;
+    cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->val<<endl;
     l.embed_after(l.get_tail(),0);
     l.print();
-    cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->data<<endl;
+    cout<<"tail "<<l.get_tail()<<" |"<<l.get_tail()->val<<endl;
     */
 //    l.insert_end(0);
 
@@ -374,10 +451,10 @@ int main()
     /*
     Node * temp = l.get_head()->next->next;
     l.print();
-    cout<<temp->data<<endl;
+    cout<<temp->val<<endl;
     temp = l.delete_and_link(temp);
     l.print();
-    cout<<temp->data<<endl;*/
+    cout<<temp->val<<endl;*/
     /*
     l.print();
     l.delete_node_with_key(5);l.print();
@@ -397,13 +474,13 @@ int main()
     l.print();
     l.delete_even_positions();
     l.print();*/ 
-    /*
+    
     l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
     l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);
     l.print();
     l.delete_odd_positions();
     l.print();
-    */
+    
     /*
     l.insert_end(1);l.insert_end(3);l.insert_end(3);l.insert_end(1);
     l.print();
@@ -412,7 +489,7 @@ int main()
     l.insert_end(1);l.insert_end(2);l.insert_end(3);l.insert_end(4);
     l.insert_end(5);l.insert_end(6);l.insert_end(7);l.insert_end(8);l.insert_end(9);
     l.print();
-    cout<<l.find_middle2()->data<<endl;
+    cout<<l.find_middle2()->val<<endl;
     cout<<l.get_lenght()<<endl;*/
     /*
     l.swap_forward_backward(7);
