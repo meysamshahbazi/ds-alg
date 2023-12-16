@@ -226,6 +226,7 @@ ListNode* swapNodes(ListNode* head, int k) {
         if (i == n - k )
             prv_n_k = cur;
     }
+
     ListNode* node_k = prv_k->next;
     ListNode* node_n_k = prv_n_k->next;
     ListNode* next_k = prv_k->next->next;
@@ -238,8 +239,8 @@ ListNode* swapNodes(ListNode* head, int k) {
     node_k->next = next_n_k;
     
     return head;
-    
 }
+
 // https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 ListNode* deleteDuplicates(ListNode* head) {
     if (!head || !head->next)
@@ -289,6 +290,7 @@ ListNode* rotateRight(ListNode* head, int k) {
             break;
         }
     }
+
     return rkhead;
 }
 
@@ -352,40 +354,110 @@ ListNode* oddEvenList(ListNode* head) {
 }
 
 // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/ hw4p4
-ListNode* deleteDuplicates(ListNode* head) {
-    if (!head || !head->next)
-        return head;
-    
-    for (ListNode* cur = head->next, *prv = head,*prv2 = nullptr; cur; ) {
-        if (prv->val == cur->val) {
-            int val = prv->val;
-            ListNode* next;
-            for(next = prv; next && next->val == val; next = next->next);
-            if (!prv2) {
-                head = next;
-                prv = head;
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head || !head->next)
+            return head;
+        
+        for (ListNode* cur = head->next, *prv = head,*prv2 = nullptr; cur; ) {
+            if (prv->val == cur->val) {
+                int val = prv->val;
+                ListNode* next;
+                for(next = prv; next && next->val == val; next = next->next);
+                if (!prv2) {
+                    head = next;
+                    prv = head;
+                }
+                else {
+                    prv2->next = next;
+                    prv = next;
+                }
+
+                if (!next)
+                    return head;
+                cur = next->next;
             }
             else {
-                prv2->next = next;
-                prv = next;
+                prv2 = prv;
+                prv = cur;
+                cur = cur->next;
             }
-
-            if (!next)
-                return head;
-            cur = next->next;
         }
-        else {
-            prv2 = prv;
-            prv = cur;
-            cur = cur->next;
-        }
+        return head;
     }
-    return head;
-}
+};
+
+#include <stack>
 
 // https://leetcode.com/problems/reverse-nodes-in-k-group/ hw4p5
+ListNode* reverseKGroup1(ListNode* head, int k) {
+    if (!head || !head->next || k == 1)
+        return head;
+    
+    ListNode* cur = head;
+    stack<ListNode*> stk;
+
+    ListNode* rhead = nullptr, *rtail = nullptr;
+
+    while (cur) {
+        stk.push(cur);
+        cur = cur->next;
+        
+        if (stk.size() == k) {
+            while (!stk.empty()) {
+                if (!rhead) {
+                    rhead = rtail = stk.top();
+                }
+                else {
+                    rtail->next = stk.top();
+                    rtail = stk.top();
+                }
+                stk.pop();
+            }
+        }
+    }
+
+    if (stk.size() > 0) {
+        stack<ListNode*> stk2;
+        while (!stk.empty()) {
+            stk2.push(stk.top());
+            stk.pop();
+        }
+
+        while (!stk2.empty()) {
+            if (!rhead) {
+                rhead = rtail = stk2.top();
+            }
+            else {
+                rtail->next = stk2.top();
+                rtail = stk2.top();
+            }
+            stk2.pop();
+        }
+    }
+    rtail->next = nullptr;
+    return rhead;
+}
+
 ListNode* reverseKGroup(ListNode* head, int k) {
-     
+    // DO it witout stack!
+    if (!head || !head->next || k == 1)
+        return head;
+
+    ListNode* prv = head;
+    ListNode* cur = head->next;
+
+    int cnt = 0;
+    while (cur) {
+        if (cnt < k) {
+            ListNode* next = cur->next;
+            cur->next = prv;
+            prv = cur;
+            cur = next;
+        }
+    }
+    
 }
 
 class LinkedList
@@ -1161,6 +1233,12 @@ int main()
     print1(head328);
     head328 = oddEvenList(head328);
     print1(head328);
+
+    ListNode* head25;
+    head25 = fromVector({1,2});
+    auto res25 = reverseKGroup(head25, 2);
+    print1(res25);
+
     // print1(node1);
     // print11(node1);
     // print2(node1);
