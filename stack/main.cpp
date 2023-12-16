@@ -6,6 +6,51 @@
 // #include <ostream>
 
 using namespace std;
+// https://leetcode.com/problems/reverse-words-in-a-string/
+class Solution151 {
+public:
+    string reverseWords(string s) {
+        stack<string> stk;
+
+        queue<char> word;
+
+        for (auto c : s) {
+            if (c != ' ')
+                word.push(c);
+            else {
+                if (!word.empty()) {
+                    string w = "";
+                    while (!word.empty()) {
+                        w += word.front();
+                        word.pop();
+                    }
+                    stk.push(w);
+                }
+            }
+        }
+
+        if (!word.empty()) {
+            string w = "";
+            while (!word.empty()) {
+                w += word.front();
+                word.pop();
+            }
+            stk.push(w);
+        }
+
+        string res;
+        res = stk.top();
+        stk.pop();
+        
+        while (!stk.empty()) {
+            res += " ";
+            res += stk.top();
+            stk.pop();
+        }
+
+        return res;
+    }
+};
 
 template <class T>
 class Stack
@@ -151,46 +196,40 @@ public:
 
 };
 
-#define MAX_WORD_SIZE 10
+#define MAX_WORD_SIZE 10 // hw1 p2
 string reverse_subwords(string line)
 {
     string ret{""};
     Stack<char> word(MAX_WORD_SIZE);
-    for(char &c:line)
-    {
-        if(c!=' ')
-        {
+    for (char &c : line) {
+        if (c != ' ') {
             word.push(c);
         }
-        else
-        {
-            while (!word.is_empty())
-            {       
-                ret+=string{word.pop()};
+        else {
+            while (!word.is_empty()) {       
+                ret += string{word.pop()};
             }
             ret += " ";   
         }   
     }
-    while (!word.is_empty())
-    {       
+
+    while (!word.is_empty()) {       
         ret+=string{word.pop()};
     }
     return ret;
 }
-
+// hw1 p3
 int revers_num(int num)
 {
     Stack<int> stk{MAX_WORD_SIZE};
-    while (num>0)
-    {
-        stk.push(num%10);
-        num=num/10;
+    while (num > 0) {
+        stk.push(num % 10);
+        num = num / 10;
     }
-    int ret=0;
-    int d =1;
-    while (!stk.is_empty())
-    {
-     ret = ret+d*stk.pop();
+    int ret = 0;
+    int d = 1;
+    while (!stk.is_empty()) {
+     ret = ret + d * stk.pop();
      d *= 10;  
     }
     return ret;
@@ -217,8 +256,8 @@ bool isValid1(string str)
     }
     return opened.is_empty();
 }
-
-bool isValid(string s) //https://leetcode.com/problems/valid-parentheses/
+// https://leetcode.com/problems/valid-parentheses/ hw1 p4
+bool isValid(string s) 
 {
     std::stack<char> opened;
     for(const char &c:s)
@@ -241,25 +280,23 @@ bool isValid(string s) //https://leetcode.com/problems/valid-parentheses/
 string removeDuplicates1(string s)
 {
     Stack<char> stk(MAX_WORD_SIZE);
-    for(const char &c:s)
-    {
-        if(stk.is_empty() || c!=stk.peek() )
+    for (const char &c:s) {
+        if (stk.is_empty() || c != stk.peek() )
             stk.push(c);
         else 
             stk.pop();
     }
-    string ret (stk.get_top()+1, ' ' );
-    for(int i=ret.size()-1;i>=0;i--)
-        ret[i]=stk.pop();
+    string ret (stk.get_top() + 1, ' ' );
+    for(int i = ret.size() - 1; i >= 0; i--)
+        ret[i] = stk.pop();
     return ret;
 }
-
-string removeDuplicates(string s) //https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
+// https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/ hw1 p5
+string removeDuplicates(string s) 
 {
     std::stack<char> stk;
-    for(const char &c:s)
-    {
-        if(stk.empty() || c!=stk.top() )
+    for (const char &c : s) {
+        if (stk.empty() || c != stk.top())
             stk.push(c);
         else 
             stk.pop();      
@@ -271,22 +308,22 @@ string removeDuplicates(string s) //https://leetcode.com/problems/remove-all-adj
     //     stk.pop();
     // }
     string ret;
-    while (!stk.empty())
-    {
-        ret = stk.top()+ret;
+    while (!stk.empty()) {
+        ret = stk.top() + ret;
         stk.pop();
     }
     
     return ret;
 }
 
-vector<int> asteroidCollision(vector<int>& asteroids) { // https://leetcode.com/problems/asteroid-collision/
+// https://leetcode.com/problems/asteroid-collision/
+vector<int> asteroidCollision(vector<int>& asteroids) { 
     std::stack<int> stk;
     std::vector<int> res;
-    for(auto a:asteroids){
+    for (auto a : asteroids) {
         bool do_push = true;
-        while (!stk.empty()){
-            if (a <0 && stk.top() >0) {
+        while (!stk.empty()) {
+            if (a < 0 && stk.top() > 0) {
                 if(-a > stk.top()){
                     stk.pop();
                     do_push = true;
@@ -534,7 +571,7 @@ double evalaute_postfix(string postfix)
 
 char getSign(char a,char b)
 {
-    return a==b ? '+':'-';
+    return a == b ? '+' : '-';
 }
 string removeExpressionBrackets(string str)
 {
