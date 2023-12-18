@@ -97,7 +97,10 @@ public:
             std::cout<<array[i]<<" ";
         std::cout<<endl;
     }
-    int get_top() const {return top;}
+    int get_top() const {
+        return top;
+    }
+    // hw2 p2
     void insert_at_bottom(T x)
     {
         if(top ==-1){
@@ -110,6 +113,7 @@ public:
             push(t);
         }
     }
+    // hw2 p3
     void reverse()
     {
         if(top == 0){
@@ -291,7 +295,8 @@ string removeDuplicates1(string s)
         ret[i] = stk.pop();
     return ret;
 }
-// https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/ hw1 p5
+// hw1 p5
+// https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/ 
 string removeDuplicates(string s) 
 {
     std::stack<char> stk;
@@ -316,6 +321,7 @@ string removeDuplicates(string s)
     return ret;
 }
 
+// hw2 p1
 // https://leetcode.com/problems/asteroid-collision/
 vector<int> asteroidCollision(vector<int>& asteroids) { 
     std::stack<int> stk;
@@ -347,29 +353,27 @@ vector<int> asteroidCollision(vector<int>& asteroids) {
             stk.push(a);
     }
     stack<int> stk2;
-    while (!stk.empty())
-    {
+    while (!stk.empty()) {
         stk2.push(stk.top());
         stk.pop();
     }
-    while (!stk2.empty())
-    {
+    while (!stk2.empty()) {
         res.push_back(stk2.top());
         stk2.pop();
     }
     
     return res;
-
 }
-
+// hw2 p5
+// https://leetcode.com/problems/score-of-parentheses/
 int scoreOfParentheses(stack<char> s)
 {
     int closeness = 0;
     stack<char> stk;
-    if(s.empty()) return 0;
-    if(s.size() == 2 ){
+    if (s.empty()) 
+        return 0;
+    if (s.size() == 2)
         return  1;
-    }
 
     while (!s.empty()) {
         char c = s.top();
@@ -381,7 +385,7 @@ int scoreOfParentheses(stack<char> s)
         stk.push(c);
         s.pop();
 
-        if( closeness == 0 ){
+        if (closeness == 0) {
             return scoreOfParentheses(s)+scoreOfParentheses(stk);       
         }
 
@@ -398,7 +402,7 @@ int scoreOfParentheses(stack<char> s)
     return 0;
 }
 
-int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-parentheses/
+int scoreOfParentheses(string s) 
 {
     stack<char> stk;
     for(char c:s)
@@ -407,6 +411,7 @@ int scoreOfParentheses(string s) // https://leetcode.com/problems/score-of-paren
     return scoreOfParentheses(stk);
 }
 
+// hw2 p6
 // https://leetcode.com/problems/daily-temperatures/
 vector<int> dailyTemperatures(vector<int>& temperatures) 
 {    
@@ -438,7 +443,7 @@ vector<int> next_greater_num(vector<int>& temperatures)
     while (!stk.empty()) {
         int t = stk.top();
         
-        while (!greaters.empty() && t>greaters.top()) {
+        while (!greaters.empty() && t > greaters.top()) {
             greaters.pop();
         }
 
@@ -503,7 +508,7 @@ string infixToPostfix(string &infix)
                         }
                 }
             }
-            else{
+            else {
                 while (!operators.empty() && (OpOrder(c)<=OpOrder(operators.top()))
                      && operators.top() !='(' && c != '^'){
                         postfix += operators.top();
@@ -573,6 +578,7 @@ char getSign(char a,char b)
 {
     return a == b ? '+' : '-';
 }
+// hw3 p5
 string removeExpressionBrackets(string str)
 {
     string res = "";
