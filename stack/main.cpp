@@ -475,37 +475,38 @@ vector<int> next_greater_num(vector<int>& temperatures)
 
 int OpOrder(char op)
 {
-    if( op=='^' )
+    if (op == '^')
         return 3;
-    else if ( op=='*'|| op=='/')
+    if (op == '*' || op == '/')
         return 2;
-    else if ( op=='+'|| op=='-')
+    if (op== '+' || op == '-')
         return 1;
-    else return 0;
+    return 0;
 }
+
 // https://practice.geeksforgeeks.org/problems/infix-to-postfix-1587115620/1?category%5B%5D=Stack&category%5B%5D=Stack&page=2&query=category%5B%5DStackpage2category%5B%5DStack
 string infixToPostfix(string &infix)
 {
     stack<char> operators;
     string postfix;
-    for(char c:infix){
-        if(isdigit(c) || iswalnum(c)){
+    for (char c : infix) {
+        if (isdigit(c) || iswalnum(c)) {
             postfix += c;
         }
         else {
-            if(c == '(' ) {
+            if (c == '(' ) {
                 operators.push(c);
             }
-            else if(c == ')' ) {
+            else if (c == ')' ) {
                  while (!operators.empty() ){
-                        if(operators.top() != '('){
-                            postfix += operators.top();
-                            operators.pop();
-                        }
-                        else {
-                            operators.pop();
-                            break;
-                        }
+                    if (operators.top() != '(') {
+                        postfix += operators.top();
+                        operators.pop();
+                    }
+                    else {
+                        operators.pop(); // pop '('
+                        break;
+                    }
                 }
             }
             else {
@@ -513,19 +514,17 @@ string infixToPostfix(string &infix)
                      && operators.top() !='(' && c != '^'){
                         postfix += operators.top();
                         operators.pop();
-                        
                 }
                 operators.push(c);
             }
-            
         }
     }
+
     while (!operators.empty()) {
         char c = operators.top();
         postfix += c;
         operators.pop();
     }
-    
 
     return postfix;
 }
@@ -573,6 +572,22 @@ double evalaute_postfix(string postfix)
     }
     return stk.top();
 }
+
+// https://leetcode.com/problems/basic-calculator/
+class Solution224 {
+public:
+    int calculate(string s) {
+        
+    }
+};
+
+// https://leetcode.com/problems/parsing-a-boolean-expression/
+class Solution1106 {
+public:
+    bool parseBoolExpr(string expression) {
+        
+    }
+};
 
 char getSign(char a,char b)
 {
