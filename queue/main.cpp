@@ -67,7 +67,7 @@ public:
         cout<<"\n";
     }
 };
-
+// HW1 P!
 class Deque
 {
     int size{};
@@ -151,7 +151,7 @@ public:
         cout<<"\n";
     }
 };
-
+// HW1 P2
 class Stack
 {
 private:
@@ -192,7 +192,7 @@ public:
     }
     bool empty() { return q.empty();}
 };
-
+// hw1 p3
 class QueueHw1p3
 {
 private:
@@ -230,7 +230,7 @@ public:
         return val;
     }
 };
-
+// HW1 p4
 class QueueHw1p4
 {
 private:

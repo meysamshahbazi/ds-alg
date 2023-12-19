@@ -18,7 +18,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
   - [ ] HW3 P3
 
-- [ ] Queue
+- [x] Queue
 
 - [ ] Binary Tree
 
@@ -39,8 +39,6 @@ This repo contains my practices for data structures and algorithms in God progra
 - [ ] Review Multidimensional Arrays Problem-Solving
 
 ## Reminder
-
-- [ ] Stack: 3. Homework 1 problem 6
 
 - [ ] Binary Tree hw5
 
