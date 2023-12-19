@@ -511,7 +511,9 @@ string infixToPostfix(string &infix)
             }
             else {
                 while (!operators.empty() && (OpOrder(c)<=OpOrder(operators.top()))
-                     && operators.top() !='(' && c != '^'){
+                    && c != '^'){
+                        // there is minor change in code that has been submited !
+                        // the condition c != '^' is not needed in geeksforgeeks
                         postfix += operators.top();
                         operators.pop();
                 }
