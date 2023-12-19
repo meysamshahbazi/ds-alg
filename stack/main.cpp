@@ -551,7 +551,6 @@ double calc(double a,double b,char op)
         return a/b;
     if(op == '^')
         return pow(a,b);
-
 }
 
 double evalaute_postfix(string postfix)
@@ -576,8 +575,96 @@ double evalaute_postfix(string postfix)
 // https://leetcode.com/problems/basic-calculator/
 class Solution224 {
 public:
+    int OpOrder(char op) {
+        if (op == '^')
+            return 3;
+        if (op == '*' || op == '/')
+            return 2;
+        if (op== '+' || op == '-')
+            return 1;
+        return 0;
+    }
+    vector<string> infixToPostfix(string &infix) {
+        stack<char> operators;
+        vector<string> postfix;
+        string digit = "";
+        for (int i = 0; i < (int) infix.size(); i++) {
+            char c = infix[i];
+            if (c == ' ')
+                continue;
+            if (isdigit(c)) {
+                digit += c;
+                if (i == (int) infix.size() - 1 || !isdigit(infix[i + 1])) {
+                    postfix.push_back(digit);
+                    digit = "";
+                }
+            }
+            else {
+                if (c == '(' ) {
+                    operators.push(c);
+                }
+                else if (c == ')' ) {
+                    while (!operators.empty() ){
+                        if (operators.top() != '(') {
+                            string s_ = "";
+                            s_ += operators.top();
+                            postfix.push_back(s_);
+                            operators.pop();
+                        }
+                        else {
+                            operators.pop(); // pop '('
+                            break;
+                        }
+                    }
+                }
+                else {
+                    while (!operators.empty() && (OpOrder(c)<=OpOrder(operators.top())) ) {
+                        char c = operators.top();
+                        string s_ ;
+                        s_ += c;
+                        postfix.push_back(s_);
+                        operators.pop();
+                    }
+                    operators.push(c);
+                }
+            }
+        }
+
+        while (!operators.empty()) {
+            char c = operators.top();
+            string s_ ;
+            s_ += c;
+            postfix.push_back(s_);
+            operators.pop();
+        }
+
+        return postfix;
+    }
+
+    int calc(int a, int b, string op) {
+        if(op == "+")
+            return a+b;
+        if(op == "-")
+            return a-b;
+        return 0;
+    }
     int calculate(string s) {
-        
+        vector<string> postfix = infixToPostfix(s);
+        stack<int> stk;
+        if (postfix[0] == "-")
+            stk.push(0);
+        for (string c : postfix){
+            if (c == "+" || c == "-") {
+                int b = stk.top(); stk.pop();
+                int a = stk.top(); stk.pop();
+                int r = calc(a, b, c);
+                stk.push(r);
+            }
+            else {
+                stk.push(atoi(c.c_str()));
+            }
+        }
+        return stk.top();
     }
 };
 
@@ -604,7 +691,7 @@ string removeExpressionBrackets(string str)
     ops.push('+');
     for(char c:str){
         if(isdigit(c))
-            res +=c;
+            res += c;
         else if(c == '('){
             if(ops.top() == '-'){
                 prantesis.push(c);                
@@ -625,6 +712,10 @@ string removeExpressionBrackets(string str)
 
 int main() 
 {
+    Solution224 s224;
+    cout << s224.calculate("2-1 + 2") << endl;
+
+/* 
     Stack<int> stk(3);
 	stk.push(10);
 	stk.push(20);
@@ -738,7 +829,7 @@ int main()
     expr = "1-(2-3-(4+5))-6-(7-8)";
     expr = "1-(2-3-(4+5)+6-7)";
     expr = "1-(2-3-(4+5-(6-7)))";
-    cout<<removeExpressionBrackets(expr)<<endl;
+    cout<<removeExpressionBrackets(expr)<<endl; */
     return 0;
 }
 

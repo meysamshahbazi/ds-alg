@@ -14,7 +14,9 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [ ] Project Sparse Array and Matrix
 
-- [ ] Stack
+- [x] Stack
+
+  - [ ] HW3 P3
 
 - [ ] Queue
 
