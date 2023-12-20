@@ -21,9 +21,6 @@ struct Node
 
 void print_inorder(Node<char>* current)
 {
-    // cout<<current->left->data<<" ";
-    // cout<<current->data<<" ";
-    // cout<<current->right->data<<" ";
     if(!current)
         return;
 
@@ -62,6 +59,7 @@ public:
     {
         root = new Node<T>(root_value);
     }
+    // hw2 p5
     BinaryTree(string postfix)
     {
         stack<Node<char>*> stk;
@@ -147,6 +145,7 @@ public:
     {
         clear(root);
     }
+    // hw2 p1
     void clear(Node<T>* current)
     {
         if(!current)
@@ -159,11 +158,31 @@ public:
         delete current;
         current = nullptr;
     }
+    // hw2 p2
     void print_inorder_iterative() // without recursion
     {
-        stack<Node<T>*> stk;
-        Node<T>* cur = root;
-        
+        stack<pair<Node<T>*, bool> > nodes;
+        nodes.push(make_pair(root,false));
+
+        while (!nodes.empty()) {
+            Node<T>* cur = nodes.top().first;
+            bool is_done = nodes.top().second;
+            nodes.pop();
+
+            if (is_done)
+                cout << cur->data << " ";
+            else {
+                if (cur->right) 
+                    nodes.push(make_pair(cur->right, false));
+
+                nodes.push(make_pair(cur, true));
+
+                if (cur->left)
+                    nodes.push(make_pair(cur->left,false));
+            }
+        }
+        cout << "\n";
+
     }
     string parenthesize()
     {
@@ -187,12 +206,9 @@ public:
 
         return repr;
     }
-    bool is_symmetric()
-    {
+    bool is_symmetric() {
         return is_mirror(root->left,root->right);
     }
-    
-
     // https://leetcode.com/problems/symmetric-tree/
     bool is_mirror(Node<T>* first,Node<T>* second)
     {
@@ -271,16 +287,16 @@ public:
         else 
             cout<<"-1 ";
     }
-
+    // hw2 p3
     void traverse_left_boundry()
     {
         Node<T>* cur = root;
-        while(!isLeaf(cur)){
-            if(cur->left){
+        while (!isLeaf(cur)) {
+            if (cur->left){
                 cout<<cur->data<<" ";
                 cur = cur->left;
             }
-            else if(cur->right){
+            else if (cur->right){
                 cout<<cur->data<<" ";
                 cur = cur->right;
             }
@@ -324,36 +340,14 @@ public:
             }
         }
     }
-    T tree_max(Node<T>* node)
-    {
-        if(!node->right && !node->left)
-            return node->data;
-        else if(node->right && !node->left){
-            T max_sub = tree_max(node->right);
-            if(max_sub > node->data)
-                return max_sub;
-            else 
-                return node->data;
-        }
-        else if(!node->right && node->left){
-            T max_sub = tree_max(node->left);
-            if(max_sub > node->data)
-                return max_sub;
-            else 
-                return node->data;
-        }
-        else {
-            T max_right = tree_max(node->right);
-            T max_left = tree_max(node->left);
-            if(node->data >= max_right && node->data >= max_left)
-                return node->data;
-            if(max_right >= node->data && max_right >= max_left)
-                return max_right;
-            if(max_left >= max_right && max_left >= node->data)
-                return max_left;
-
-        }
-        
+    // hw1 p1
+    T tree_max(Node<T>* node) {
+        T mx = node->data;
+        if (node->left) 
+            mx = max(mx, tree_max(node->left));
+        if (node->right)
+            mx = max(mx, tree_max(node->right));
+        return mx;
     }
     int tree_max()
     {
@@ -363,54 +357,72 @@ public:
     {
         return !node->left && !node->right;
     }
-    int tree_height(Node<T> *node)
-    {
-        if(!node)
-            return 0;
-        else if( isLeaf(node) )
-            return 0;
-        else
-            return 1+max(tree_height(node->left),tree_height(node->right));
-
+    // hw1 p2
+    int tree_height(Node<T> *node) {
+        int h = 0;
+        if (node->left) 
+            h = 1 + tree_height(node->left);
+        if (node->right)
+            h = max(h, 1 + tree_height(node->right));
+        return h;
     }
+
     int tree_height()
     {
         return tree_height(root);
     }
-    int total_nodes(Node<T> *node)
+    int total_nodes1(Node<T> *node)
     {
         if(!node)
             return 0;
-        return 1 + total_nodes(node->left) + total_nodes(node->right);
+        return 1 + total_nodes1(node->left) + total_nodes(node->right);
+    }
+    // hw1 p3
+    int total_nodes(Node<T> *node) {
+        int n = 1;
+        if (node->left)
+            n += total_nodes(node->left);
+        if (node->right)
+            n += total_nodes(node->right);
+        return n;
     }
     int total_nodes()
     {
         return total_nodes(root);
     }
+    // hw1 p4
     int total_leaves(Node<T>* node)
     {
-        if(!node)
+        if (!node)
             return 0;
-        else if( isLeaf(node) )
+        else if (isLeaf(node))
             return 1;
-        return total_leaves(node->left)+total_leaves(node->right);
-
+        return total_leaves(node->left) + total_leaves(node->right);
     }
     int total_leaves()
     {
         return total_leaves(root);
     }
-    bool is_exists(int value,Node<T>* node)
+    bool is_exists1(int value, Node<T>* node)
     {
         if(!node)
             return false;
-        return is_exists(value,node->left) || is_exists(value,node->right) || (node->data==value);
-        
+        return is_exists1(value, node->left) || is_exists1(value,node->right) || (node->data==value);
+    }
+    // hw1 p5
+    bool is_exists(int value, Node<T>* node) {
+        bool res = node->data == value;
+        if (node->left)
+            res = res || is_exists(value, node->left);
+        if (node->right)
+            res = res || is_exists(value, node->right);
+        return res;
     }
     bool is_exists(T value)
     {
         return is_exists(value,root);
     }
+    // hw1 p6
     bool is_perfect(Node<T>* node)
     {
         if(!node) 
@@ -418,12 +430,12 @@ public:
         else if( (!node->left && node->right) || (node->left && !node->right) )
             return false;
         return is_perfect(node->right) && is_perfect(node->left);
-
     }
     bool is_perfect()
     {
         return is_perfect(root);
     }
+    // hw2 p4
     // https://leetcode.com/problems/diameter-of-binary-tree/
     int get_diameter()
     {
@@ -432,20 +444,18 @@ public:
     int get_diameter(Node<T>* node)
     {
         int left_dim = 0;
-        
         int right_dim = 0;
-        
         int hieght_sum = 0;
+
         if(node->left){
             left_dim = get_diameter(node->left);
-            hieght_sum += 1+tree_height(node->left);
+            hieght_sum += 1 + tree_height(node->left);
         }
         if(node->right){
             right_dim = get_diameter(node->right);
-            hieght_sum += 1+tree_height(node->right);
+            hieght_sum += 1 + tree_height(node->right);
         }
-        return max(hieght_sum,max(left_dim,right_dim));
-
+        return max(hieght_sum, max(left_dim, right_dim));
     }
     void level_order_traversal1()
     {
@@ -618,14 +628,90 @@ TreeNode* createFromString(string str)
         string s = nodes.front();
         nodes.pop();
         TreeNode* cur{nullptr};
-        if(s!="null"){
+        if (s != "null"){
             cur = new TreeNode(atoi(s.c_str()));
     
         }
     }
-    
 }
- 
+
+// https://leetcode.com/problems/binary-tree-level-order-traversal/
+class Solution102 {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        queue<TreeNode*> q;
+        if(root)
+            q.push(root);
+        vector<vector<int>> levels;
+        while (!q.empty()) {
+            int sz = q.size();
+            vector<int> level;
+            while (sz--) {
+                TreeNode* cur = q.front();
+                q.pop();
+                level.push_back(cur->val);
+               
+                if (cur->left)
+                    q.push(cur->left);
+
+                if (cur->right)
+                    q.push(cur->right);
+            }
+            levels.push_back(level);
+        }
+        return levels;
+    }
+};
+
+// https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+class Solution103 {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        deque<TreeNode*> q;
+        if (root)
+            q.push_front(root);
+
+        vector<vector<int>> levels;
+        int level = 0;
+        while(!q.empty()){
+            int sz = q.size();
+            vector<int> cur_level;
+            if (level % 2 == 0){
+                while(sz--){
+                    TreeNode* cur = q.front();
+                    q.pop_front();
+                    cur_level.push_back(cur->val);
+                    if(cur->left)
+                        q.push_back(cur->left);
+                    if(cur->right)
+                        q.push_back(cur->right);
+                }
+            }
+            else {
+                while(sz--){
+                    TreeNode* cur = q.back();
+                    q.pop_back();
+                    cur_level.push_back(cur->val);
+                    if(cur->right)
+                        q.push_front(cur->right);
+                    if(cur->left)
+                        q.push_front(cur->left);
+                }
+            }
+            level++;
+            levels.push_back(cur_level);
+        }
+        return levels;
+    }
+};
+
+// https://leetcode.com/problems/minimum-depth-of-binary-tree/
+class Solution111 {
+public:
+    int minDepth(TreeNode* root) {
+        
+    }
+};
 
 int main()
 {
@@ -702,7 +788,6 @@ int main()
     tree.print_inorder_iterative();
     // hw2 p3
     tree.traverse_left_boundry();
-
     //hw2 p4 
     cout<<tree.get_diameter()<<endl;
     //hw2 p5
@@ -711,8 +796,10 @@ int main()
     postfix = "51+2/";
     postfix = "534*2^+";
     BinaryTree<char> exp_tree(postfix);
+    // hw2 p6
     exp_tree.print_inorder();
     // 
+    /* 
     tree.level_order_traversal1();
     tree.level_order_traversal2();
     // hw 3 p2
@@ -754,7 +841,7 @@ int main()
     cout<<tree1.is_symmetric()<<endl;
     cout<<tree2.is_symmetric()<<endl;
     // hw5 p2
-    cout<<tree.is_flip_equiv(&tree1)<<endl;
+    cout<<tree.is_flip_equiv(&tree1)<<endl; */
     return 0;
 }
 
