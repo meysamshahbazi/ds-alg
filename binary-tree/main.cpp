@@ -708,11 +708,115 @@ public:
 // https://leetcode.com/problems/minimum-depth-of-binary-tree/
 class Solution111 {
 public:
+    bool isLeaf(TreeNode* node){
+        return !node->left && !node->right;
+    }
     int minDepth(TreeNode* root) {
-        
+        queue<TreeNode*> q;
+        int level = 0;
+        if(root)
+            q.push(root);
+        vector<vector<int>> levels;
+        while (!q.empty()) {
+            int sz = q.size();
+            level++;
+            while (sz--) {
+                TreeNode* cur = q.front();
+                q.pop();
+                if (isLeaf(cur))
+                    return level;
+               
+                if (cur->left)
+                    q.push(cur->left);
+
+                if (cur->right)
+                    q.push(cur->right);
+            }
+        }
+        return level;
     }
 };
 
+// https://leetcode.com/problems/maximum-depth-of-binary-tree/
+class Solution104 {
+public:
+    int maxDepth(TreeNode* root) {
+        if (!root)
+            return 0;
+        int res = 1;
+        if (root->left)
+            res = max(res, 1 + maxDepth(root->left));
+        if (root->right)
+            res = max(res, 1 + maxDepth(root->right));
+        return res;
+    }
+};
+
+// https://leetcode.com/problems/binary-tree-preorder-traversal/
+class Solution {
+    vector<int> pre;
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        if (!root)
+            return pre;
+        pre.push_back(root->val);
+        preorderTraversal(root->left);
+        preorderTraversal(root->right);
+        return pre;
+    }
+};
+
+// https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+class Solution105 {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        deque<int> preorder_dq;
+        deque<int> inorder_dq;
+        for(int i = 0; i < (int)preorder.size(); i++){
+            preorder_dq.push_back(preorder[i]);
+            inorder_dq.push_back(inorder[i]);
+        }
+        return generateNode(preorder_dq, inorder_dq);
+    }
+    TreeNode* generateNode(deque<int> &preorder, deque<int> &inorder)
+    {
+        if(preorder.size() == 0) 
+            return nullptr;
+
+        int value = preorder.front();
+        preorder.pop_front();
+        TreeNode* node = new TreeNode(value);
+        deque<int> left_inorder;
+        deque<int> right_inorder;
+        deque<int> left_preorder;
+        deque<int> right_preorder;
+        while (inorder.front() != value) {
+            left_inorder.push_back(inorder.front());
+            left_preorder.push_back(preorder.front());
+            inorder.pop_front();
+            preorder.pop_front();
+        }
+
+        while (inorder.back() != value) {
+            right_inorder.push_front(inorder.back());
+            right_preorder.push_front(preorder.back());
+            inorder.pop_back();
+            preorder.pop_back();
+        }
+        inorder.pop_back();
+        node->left = generateNode(left_preorder, left_inorder);
+        node->right = generateNode(right_preorder, right_inorder);
+        return node;
+    }
+};
+
+// https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+class Solution106 {
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        
+    }
+};
 int main()
 {
     // Create Nodes
