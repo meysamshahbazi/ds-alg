@@ -447,11 +447,11 @@ public:
         int right_dim = 0;
         int hieght_sum = 0;
 
-        if(node->left){
+        if (node->left){
             left_dim = get_diameter(node->left);
             hieght_sum += 1 + tree_height(node->left);
         }
-        if(node->right){
+        if (node->right){
             right_dim = get_diameter(node->right);
             hieght_sum += 1 + tree_height(node->right);
         }
@@ -478,9 +478,9 @@ public:
         queue<Node<T>*> q;
         q.push(root);
         int level = 0;
-        while(!q.empty()){
+        while (!q.empty()){
             int sz = q.size();
-            cout<<"levle "<<level<<": ";
+            cout << "level " << level << ": ";
 
             while(sz--){
                 Node<T>* cur = q.front();
@@ -495,10 +495,28 @@ public:
             }
             level++;
             cout<<"\n";
-            
         }
         cout<<endl;
     }
+    // hw3 p1
+    void level_order_traversal_recursive()
+    {
+        int h = tree_height();
+        for (int level = 0; level <= h; level++)
+            level_order_traversal_recursive(root, level);
+    }
+    void level_order_traversal_recursive(Node<T>* node, int level)
+    {
+        if (level == 0)
+            cout << node->data << " ";
+        else if (level) {
+            if (node->left)
+                level_order_traversal_recursive(node->left, level - 1);
+            if (node->right)
+                level_order_traversal_recursive(node->right, level - 1);
+        }
+    }
+    // hw3 p2
     // https://leetcode.com/problems/check-completeness-of-a-binary-tree/
     bool is_complete()
     {
@@ -540,6 +558,7 @@ public:
         }
         return true;
     }
+    // hw3 p3
     void level_order_traversal_spiral()
     {
         deque<Node<T>*> q;
@@ -581,14 +600,7 @@ public:
         }
         cout<<endl;
     }
-    void level_order_traversal_recursive()
-    {
-        level_order_traversal_recursive(root);
-    }
-    void level_order_traversal_recursive(Node<T>* node)
-    {
-        
-    }
+    
 
 };
 
@@ -903,13 +915,16 @@ int main()
     // hw2 p6
     exp_tree.print_inorder();
     // 
-    /* 
+    cout << "hw3:-----------------------------------------\n";
     tree.level_order_traversal1();
     tree.level_order_traversal2();
+    // hw3 p1
+    tree.level_order_traversal_recursive(); cout << endl;
     // hw 3 p2
     tree.level_order_traversal_spiral();
     // hw 3 p3
     cout<<tree.is_complete()<<endl;
+    /*
     // hw4 p1
     vector<int> pre_vec {1,2,4,7,8,5,9,3,6,10};
     deque<int> preorder;
