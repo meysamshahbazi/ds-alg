@@ -76,11 +76,11 @@ public:
         }
         root = stk.top();
     }
+    // hw4 p1
     BinaryTree(deque<int> &preorder, deque<int> &inorder)
     {
         root = generateNode(preorder, inorder);
     }
-    
     Node<T>* generateNode(deque<int> &preorder, deque<int> &inorder)
     {
         if(preorder.size() == 0) 
@@ -113,18 +113,15 @@ public:
         
         return node;
     }
-    /**
-     * @brief Construct a new Binary Tree object
-     * 
-     * @param preorder_queue 
-     */
+    // HW4 p2
     BinaryTree(queue<pair<int, int>> &preorder_queue)
     {
         root = generateNode(preorder_queue);
     }
     Node<T>* generateNode(queue<pair<int, int>> &preorder_queue)
     {
-
+        if (preorder_queue.empty())
+            return nullptr;
         pair<int,int> top_pair = preorder_queue.front();
         preorder_queue.pop();
         Node<T>* node = new Node<T>(top_pair.first);
@@ -134,6 +131,7 @@ public:
         
         node->left = generateNode(preorder_queue);
         node->right = generateNode(preorder_queue);
+
         return node;
     }
 
@@ -192,7 +190,7 @@ public:
     {
         string repr = "(" + to_string(node->data);
         
-        if(node->left)
+        if (node->left)
             repr += parenthesize(node->left);
         else 
             repr += "()";
@@ -304,21 +302,57 @@ public:
         cout<<cur->data<<" \n";
     }
 
-    void print_inorder(Node<T>* current)
+    void print_inorder1(Node<T>* current)
     {
         if(!current)
             return;
         if(current->left) cout<<"(";
-        print_inorder(current->left);
+        print_inorder1(current->left);
         cout<<current->data<<" ";
-        print_inorder(current->right);
+        print_inorder1(current->right);
         if(current->right) cout<<")";
     }
-    void print_inorder()
-    {
+    // -------------------------------------------------
+    void print_inorder(Node<T>* node) {
+		if (node->left)
+			print_inorder(node->left);
+		cout << node->data << " ";
+		if (node->right)
+			print_inorder(node->right);
+	}
+    void print_inorder() {
+        cout << "in: \t";
         print_inorder(root);
         cout<<"\n";
     }
+    // -------------------------------------------------
+	void print_preorder(Node<T>* node) {
+		cout << node->data << " ";
+		// traversal.push_back(data);
+		if (node->left)
+			print_preorder(node->left);
+		if (node->right)
+			print_preorder(node->right);
+	}
+    void print_preorder() {
+        cout << "pre: \t";
+        print_preorder(root);
+        cout << endl;
+    }
+    // -------------------------------------------------
+	void print_postorder(Node<T>* node) {
+		if (node->left)
+			print_postorder(node->left);
+		if (node->right)
+			print_postorder(node->right);
+		cout << node->data << " ";
+	}
+    void print_postorder() {
+        cout << "post: \t";
+        print_postorder(root);
+        cout << endl;
+    }
+    // -------------------------------------------------
     void add(vector<T> values,vector<char> direction)
     {
         assert(values.size()==direction.size());
@@ -826,9 +860,212 @@ public:
 class Solution106 {
 public:
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        
+        return generateNode(postorder, inorder);
+    }
+    TreeNode* generateNode(vector<int>& postorder, vector<int>& inorder, int in_start = 0, int in_end = -1) {
+        if (in_end == -1)
+            in_end = (int) inorder.size() - 1;
+
+        int value = postorder.back();
+        postorder.pop_back();
+
+        TreeNode* node = new TreeNode(value);
+
+        for (int split = in_start; split <= in_end; split++) {
+            if (inorder[split] == value) {
+                if (split < in_end)
+                    node->right = generateNode(postorder, inorder, split + 1, in_end);
+                if (in_start < split)
+                    node->left = generateNode(postorder, inorder, in_start, split - 1);
+                break;
+            }
+        }
+        return node;
     }
 };
+
+// https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
+class Codec297 {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (!root)
+            return "()";
+    
+        string repr = "(" + to_string(root->val);
+        
+        if (root->left)
+            repr += serialize(root->left);
+        else 
+            repr += "()";
+        
+        if (root->right)
+            repr += serialize(root->right);
+        else 
+            repr += "()";
+
+        repr += ")";
+
+        return repr;
+    }
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        string str = data.substr(1, (int) data.size() - 2);
+        return deserialize_(str);
+    }
+    TreeNode* deserialize_(string data) {
+        if (data.size() == 0)
+            return nullptr;
+        
+        cout << data << endl;
+        int start = 0;
+        int val;
+        for (int split = 0; split < data.size(); split++) {
+            if (data[split] == '(') {
+                start = split;
+                break;
+            }
+        }
+
+        
+        string str = data.substr(0, start);
+        int value = atoi(str.c_str());
+        TreeNode* node = new TreeNode(value);
+
+        int closeness = 0; // ( +1, ) -1
+        for (int split = start; split < data.size(); split++) {
+            if (data[split] == '(') 
+                closeness++;
+            if (data[split] == ')')
+                closeness--;
+            if (closeness == 0) {
+                node->left = deserialize_(data.substr(start + 1, split - start - 1));
+                node->right = deserialize_(data.substr(split + 2, data.size() - split - 3));
+                break;
+            }
+        }
+        return node;
+    }
+};
+
+// https://leetcode.com/problems/find-duplicate-subtrees/
+class Solution652_1 {
+public:
+    bool isEqual(TreeNode* node1, TreeNode* node2) {
+        if (!node1 && !node2)
+            return true;
+
+        if (!node1 && node2 || node1 && !node2)
+            return false;
+
+        if (node1->val != node2->val)
+            return false;
+        
+        return isEqual(node1->left, node2->left) && isEqual(node1->right, node2->right);
+    }
+    void traverse(TreeNode* node, vector<TreeNode*> &vec) {
+        vec.push_back(node);
+        if (node->left)
+            traverse(node->left, vec);
+        if (node->right)
+            traverse(node->right, vec);
+    }
+    void traverse(TreeNode* node, vector<TreeNode*> &st, vector<TreeNode*> &dupl) {
+        bool found = false;
+        for (auto n : st) {
+            if (isEqual(n, node)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            bool exist = false;
+            for (auto n: dupl)
+                if (isEqual(n, node)) {
+                    exist = true;
+                    break;
+                    }
+            if (!exist)
+                dupl.push_back(node);
+        }
+
+        st.push_back(node);
+
+        if (node->left)
+            traverse(node->left, st, dupl);
+
+        if (node->right)
+            traverse(node->right, st, dupl);
+    }
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        vector<TreeNode*> st;
+        vector<TreeNode*> duples;
+        traverse(root, st, duples);
+        // vector<TreeNode*> duplicates;
+        // for (auto n : duples)
+        //     duplicates.push_back(n);
+
+        return duples;
+    }
+    vector<TreeNode*> findDuplicateSubtrees1(TreeNode* root) {
+        vector<TreeNode*> allNodes;
+        vector<TreeNode*> duplicates;
+        traverse(root, allNodes);
+        for (int i = 0; i < allNodes.size(); i++) {
+            for(int j = i + 1; j < allNodes.size(); j++) {
+                if (isEqual(allNodes[i], allNodes[j])) {
+                    duplicates.push_back(allNodes[i]);
+                    break;
+                }
+            }
+        }
+        
+        return duplicates;
+    }
+};
+
+// class Solution652 {
+// public:
+//     string serialize(TreeNode* root) {
+//         if (!root)
+//             return "()";
+    
+//         string repr = "(" + to_string(root->val);
+        
+//         if (root->left)
+//             repr += serialize(root->left);
+//         else 
+//             repr += "()";
+        
+//         if (root->right)
+//             repr += serialize(root->right);
+//         else 
+//             repr += "()";
+
+//         repr += ")";
+
+//         return repr;
+//     }
+    
+//     void traverse(TreeNode* node) {
+//         unordered_map<TreeNode*, string> mp;
+//         mp[node] = serialize(node);
+//     }
+//     vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+//         vector<TreeNode*> duples;
+//         unordered_map<TreeNode*, string> mp;
+//         for(auto it = mp.begin(); it != mp.end(); it++) {
+//             for (auto it2 = it; it2 != mp.end(); it2++)
+//                 if (it2 != it && (*it).second == (*it2).second) {
+//                     duples.push_back((*it).first);
+//                     mp.erase((*it).first);
+//                 }
+
+//     }
+// };
+
 int main()
 {
     // Create Nodes
@@ -924,7 +1161,7 @@ int main()
     tree.level_order_traversal_spiral();
     // hw 3 p3
     cout<<tree.is_complete()<<endl;
-    /*
+    cout << "hw4:-----------------------------------------\n";
     // hw4 p1
     vector<int> pre_vec {1,2,4,7,8,5,9,3,6,10};
     deque<int> preorder;
@@ -937,8 +1174,12 @@ int main()
         inorder.push_back(p);
 
     BinaryTree<int> tree1(preorder, inorder);
-    tree1.level_order_traversal2();
+    // tree1.level_order_traversal2();
     tree1.print_inorder();
+    // tree1.print_preorder();
+    tree1.print_postorder();
+    // tree1.print();
+    
     // hw4 p2
     cout<<"----------------------\n";
     queue<pair<int, int>> preorder_queue;
@@ -948,11 +1189,15 @@ int main()
     BinaryTree<int> tree2(preorder_queue);
     tree2.level_order_traversal2();
     tree2.print_inorder();
-    cout<<"----------------------\n";
+    cout << "hw5:-----------------------------------------\n";
     // TODO: solve this!
-    // https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
-    tree.print_preorder_complete();
+    
+
+    tree2.print_preorder_complete();
     cout<<tree2.parenthesize()<<endl;
+    Codec297 c297;
+    auto tree297 = c297.deserialize("(1(2()())(3()()))");
+    
     cout<<tree.parenthesize()<<endl;
     cout<<tree.parenthesize_canonical()<<endl;
     // hw5 p1
@@ -960,7 +1205,7 @@ int main()
     cout<<tree1.is_symmetric()<<endl;
     cout<<tree2.is_symmetric()<<endl;
     // hw5 p2
-    cout<<tree.is_flip_equiv(&tree1)<<endl; */
+    cout<<tree.is_flip_equiv(&tree1)<<endl; 
     return 0;
 }
 
