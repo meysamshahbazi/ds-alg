@@ -40,8 +40,6 @@ This repo contains my practices for data structures and algorithms in God progra
 
 ## Reminder
 
-- [ ] <https://leetcode.com/problems/serialize-and-deserialize-binary-tree/>
-
 - [ ] binary search tree hw2 p2 , hw3 and hw4!
 
 - [ ] heap hw1 p5, hw2 p2,3

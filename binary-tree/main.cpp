@@ -204,6 +204,7 @@ public:
 
         return repr;
     }
+    // hw5 p1
     bool is_symmetric() {
         return is_mirror(root->left,root->right);
     }
@@ -219,6 +220,7 @@ public:
         
         return is_mirror(first->left,second->right) && is_mirror(first->right,second->left);
     }
+    // hw5 p2 
     bool is_flip_equiv(BinaryTree<T>* other)
     {
         return flipEquiv(this->root,other->root);
@@ -238,6 +240,7 @@ public:
         return  ( flipEquiv(root1->left,root2->left) && flipEquiv(root1->right,root2->right) ) ||
                 ( flipEquiv(root1->left,root2->right) && flipEquiv(root1->right,root2->left) );
     }
+    //hw 5 p3 is donde with Solution652!
     string parenthesize_canonical()
     {
         return parenthesize_canonical(root);
@@ -950,121 +953,48 @@ public:
 };
 
 // https://leetcode.com/problems/find-duplicate-subtrees/
-class Solution652_1 {
+class Solution652 {
+    set<string> dupls;
 public:
-    bool isEqual(TreeNode* node1, TreeNode* node2) {
-        if (!node1 && !node2)
-            return true;
-
-        if (!node1 && node2 || node1 && !node2)
-            return false;
-
-        if (node1->val != node2->val)
-            return false;
+    string serialize(TreeNode* root, unordered_map<string, TreeNode*> &mp) {
+        if (!root)
+            return "()";
+    
+        string repr = "(" + to_string(root->val);
         
-        return isEqual(node1->left, node2->left) && isEqual(node1->right, node2->right);
-    }
-    void traverse(TreeNode* node, vector<TreeNode*> &vec) {
-        vec.push_back(node);
-        if (node->left)
-            traverse(node->left, vec);
-        if (node->right)
-            traverse(node->right, vec);
-    }
-    void traverse(TreeNode* node, vector<TreeNode*> &st, vector<TreeNode*> &dupl) {
-        bool found = false;
-        for (auto n : st) {
-            if (isEqual(n, node)) {
-                found = true;
-                break;
-            }
+        if (root->left){
+            string left_repr = serialize(root->left, mp);
+            if (mp.count(left_repr))
+                dupls.insert(left_repr);
+            mp[left_repr] = root->left;
+            repr += left_repr;
         }
-
-        if (found) {
-            bool exist = false;
-            for (auto n: dupl)
-                if (isEqual(n, node)) {
-                    exist = true;
-                    break;
-                    }
-            if (!exist)
-                dupl.push_back(node);
+        else 
+            repr += "()";
+        
+        if (root->right) {
+            string right_repr = serialize(root->right, mp);
+            if (mp.count(right_repr))
+                dupls.insert(right_repr);
+            mp[right_repr] = root->right;
+            repr += right_repr;
         }
+        else 
+            repr += "()";
 
-        st.push_back(node);
+        repr += ")";
 
-        if (node->left)
-            traverse(node->left, st, dupl);
-
-        if (node->right)
-            traverse(node->right, st, dupl);
+        return repr;
     }
     vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
-        vector<TreeNode*> st;
-        vector<TreeNode*> duples;
-        traverse(root, st, duples);
-        // vector<TreeNode*> duplicates;
-        // for (auto n : duples)
-        //     duplicates.push_back(n);
-
-        return duples;
-    }
-    vector<TreeNode*> findDuplicateSubtrees1(TreeNode* root) {
-        vector<TreeNode*> allNodes;
+        unordered_map<string, TreeNode*> mp;
+        serialize(root, mp);
         vector<TreeNode*> duplicates;
-        traverse(root, allNodes);
-        for (int i = 0; i < allNodes.size(); i++) {
-            for(int j = i + 1; j < allNodes.size(); j++) {
-                if (isEqual(allNodes[i], allNodes[j])) {
-                    duplicates.push_back(allNodes[i]);
-                    break;
-                }
-            }
-        }
-        
+        for (auto s: dupls)
+            duplicates.push_back(mp[s]);
         return duplicates;
     }
 };
-
-// class Solution652 {
-// public:
-//     string serialize(TreeNode* root) {
-//         if (!root)
-//             return "()";
-    
-//         string repr = "(" + to_string(root->val);
-        
-//         if (root->left)
-//             repr += serialize(root->left);
-//         else 
-//             repr += "()";
-        
-//         if (root->right)
-//             repr += serialize(root->right);
-//         else 
-//             repr += "()";
-
-//         repr += ")";
-
-//         return repr;
-//     }
-    
-//     void traverse(TreeNode* node) {
-//         unordered_map<TreeNode*, string> mp;
-//         mp[node] = serialize(node);
-//     }
-//     vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
-//         vector<TreeNode*> duples;
-//         unordered_map<TreeNode*, string> mp;
-//         for(auto it = mp.begin(); it != mp.end(); it++) {
-//             for (auto it2 = it; it2 != mp.end(); it2++)
-//                 if (it2 != it && (*it).second == (*it2).second) {
-//                     duples.push_back((*it).first);
-//                     mp.erase((*it).first);
-//                 }
-
-//     }
-// };
 
 int main()
 {
@@ -1190,8 +1120,6 @@ int main()
     tree2.level_order_traversal2();
     tree2.print_inorder();
     cout << "hw5:-----------------------------------------\n";
-    // TODO: solve this!
-    
 
     tree2.print_preorder_complete();
     cout<<tree2.parenthesize()<<endl;
