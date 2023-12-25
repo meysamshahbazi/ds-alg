@@ -8,7 +8,7 @@
 #include <utility>
 using namespace std;
 
- class BinarySearchTree {
+class BinarySearchTree {
 private:
     int data;
     BinarySearchTree *left {};
@@ -40,25 +40,25 @@ public:
 
         return right && right->search(target);
     }
+    // hw1 p1
     bool search_iterative(int target)
     {
         BinarySearchTree* cur = this;
-        while (cur)
-        {
-            if (target==cur->data)
+        while (cur) {
+            if (target == cur->data)
                 return true;
-            else if (target < cur->data)
+            
+            if (target < cur->data)
                 cur = cur->left;
             else 
                 cur = cur->right;
         }
         return false;
-        
     }
     void insert(int target)
     {
         if (target < data) {
-            if(!left)
+            if (!left)
                 left = new BinarySearchTree(target);
             else 
                 left->insert(target);
@@ -91,6 +91,7 @@ public:
         }
         // otherwise target == data and already exist!
     }
+    // hw1 p2
     bool is_bst()
     {
         if (!left && !right)
@@ -107,6 +108,7 @@ public:
 
         return left->is_bst() && right->is_bst();
     }
+    // hw1 p3
     static BinarySearchTree* build_balanced_bst_tree(vector<int> &values)
     {
         vector<int> values_left;
@@ -137,6 +139,7 @@ public:
     int total_nodes() {
         return total_nodes(this);
     }
+    // hw1 p4
     int kth_smallest(int k)
     {
         int total_nodes_on_left = total_nodes(left);
@@ -278,6 +281,135 @@ public:
         return true;
     }
  };
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+// https://leetcode.com/problems/validate-binary-search-tree/
+class Solution98 {
+public:
+    bool isBst(TreeNode* node, int mn = INT32_MIN, int mx = INT32_MAX) {
+        bool status = mn < node->val && node->val < mx;
+        if (!status)
+            return false;
+
+        status = !node->left || isBst(node->left, mn, node->val);
+        
+        if (!status)
+            return false;
+
+        return !node->right || isBst(node->right, node->val, mx);
+    }
+    bool isValidBST(TreeNode* root) {
+        return isBst(root);
+    }
+};
+
+// https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+class Solution108 {
+public:
+    TreeNode* build_balanced_bst_tree(vector<int> &values, int start = 0, int end = -10) {
+        if (end == -10)
+            end = (int) values.size() - 1;
+
+        if (start > end)
+            return nullptr;
+
+        int mid = (start + end) / 2;
+        TreeNode *left = build_balanced_bst_tree(values, start, mid - 1);
+        TreeNode *right = build_balanced_bst_tree(values, mid + 1, end);
+        TreeNode *root = new TreeNode(values[mid], left, right);
+
+        return root;
+    }
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return build_balanced_bst_tree(nums);
+    }
+};
+
+// https://leetcode.com/problems/find-mode-in-binary-search-tree/
+class Solution501 {
+public:
+    vector<int> findMode(TreeNode* root) {
+
+    }
+};
+
+// https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+class Solution235 {
+public:
+    TreeNode* lca(TreeNode* root, int m, int n) {
+        if (root->val == m || root->val == n)
+            return root;
+
+        if (root->val > m && root->val < n)
+            return root;
+        
+        if (m > root->val)
+            return lca(root->right, m, n);
+        return lca(root->left, m, n);
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        int m = min(p->val, q->val);
+        int n = max(p->val, q->val);
+        return lca(root, m, n);
+    }
+};
+
+// https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+class Solution230_1 {
+        vector<int> nums;
+        int k;
+public:
+    void traverse(TreeNode* node) {
+        if (!node)
+            return;
+        
+        if (nums.size() > k)
+            return;
+            
+        traverse(node->left);
+        nums.push_back(node->val);
+        traverse(node->right);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        this->k = k;
+        traverse(root);
+        return nums[k-1];
+    }
+};
+
+class Solution230 {
+        int k;
+        int cnt = 0;
+        int num;
+public:
+    void traverse(TreeNode* node) {
+        if (!node)
+            return;
+        
+        if (cnt > k)
+            return;
+            
+        traverse(node->left);
+        cnt++;
+        if (cnt == k)
+            num = node->val;
+        traverse(node->right);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        this->k = k;
+        traverse(root);
+        return num;
+    }
+};
 
 
 int main()

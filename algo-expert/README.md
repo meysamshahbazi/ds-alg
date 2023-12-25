@@ -1,3 +1,33 @@
+# Topics
+
+- array
+
+- bstree
+
+- btree
+
+- dynpr
+
+- famous
+
+- greedy
+
+- heaps
+
+- llist
+
+- recursion
+
+- search
+
+- sort
+
+- stacks
+
+- strings
+
+- tries
+
 # All problems in random order
 
 - [ ] Sorted Squared Array

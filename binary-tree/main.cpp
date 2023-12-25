@@ -996,6 +996,23 @@ public:
     }
 };
 
+// https://leetcode.com/problems/binary-tree-inorder-traversal/
+class Solution94 {
+    vector<int> inorder;
+public:
+    void traverse(TreeNode* root) {
+        if (!root)
+            return;
+        traverse(root->left);
+        inorder.push_back(root->val);
+        traverse(root->right);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        traverse(root);
+        return inorder;
+    }
+};
+
 int main()
 {
     // Create Nodes

@@ -1,0 +1,199 @@
+array-easy Non-Constructible Change.mp4
+array-easy Sorted Squared Array.mp4
+array-easy Tournament Winner.mp4
+array-easy Two Number Sum.mp4
+array-easy Validate Subsequence.mp4
+array-hard Four Number Sum.mp4
+array-hard Largest Range.mp4
+array-hard Min Rewards.mp4
+array-hard Subarray Sort.mp4
+array-hard Zigzag Traverse.mp4
+array-med Array Of Products.mp4
+array-med First Duplicate Value.mp4
+array-med Longest Peak.mp4
+array-med Merge Overlapping Intervals.mp4
+array-med Monotonic Arrays.mp4
+array-med Move Element To End.mp4
+array-med Smallest Difference.mp4
+array-med Spiral Traverse.mp4
+array-med Three Number Sum.mp4
+array-vhard Apartment Hunting.mp4
+array-vhard Calendar Matching.mp4
+array-vhard Line Through Points.mp4
+array-vhard Minimum Area Rectangle.mp4
+array-vhard Waterfall Streams.mp4
+bstree-easy Find Closest Value In BST.mp4
+bstree-hard Same BSTs.mp4
+bstree-med BST Construction.mp4
+bstree-med BST Traversal.mp4
+bstree-med Find Kth Largest Value In BST.mp4
+bstree-med Min Height BST.mp4
+bstree-med Reconstruct BST.mp4
+bstree-med Validate BST.mp4
+bstree-vhard Right Smaller Than.mp4
+bstree-vhard Validate Three Nodes.mp4
+btree-easy Branch Sums.mp4
+btree-easy Node Depths.mp4
+btree-hard Find Nodes Distance K.mp4
+btree-hard Max Path Sum.mp4
+btree-med Binary Tree Diameter.mp4
+btree-med Find Successor.mp4
+btree-med Height Balanced Binary Tree.mp4
+btree-med Invert Binary Tree.mp4
+btree-vhard All Kinds Of Node Depths.mp4
+btree-vhard Compare Leaf Traversal.mp4
+btree-vhard Flatten Binary Tree.mp4
+btree-vhard Iterative In-order Traversal.mp4
+btree-vhard Right Sibling Tree.mp4
+dynpr-hard Disk Stacking.mp4
+dynpr-hard Knapsack Problem.mp4
+dynpr-hard Longest Common Subsequence.mp4
+dynpr-hard Maximize Expression.mp4
+dynpr-hard Maximum Sum Submatrix.mp4
+dynpr-hard Max Sum Increasing Subsequence.mp4
+dynpr-hard Min Number Of Jumps.mp4
+dynpr-hard Numbers In Pi.mp4
+dynpr-hard Water Area.mp4
+dynpr-med Levenshtein Distance.mp4
+dynpr-med Max Subset Sum No Adjacent.mp4
+dynpr-med Min Number Of Coins For Change.mp4
+dynpr-med Number Of Ways To Make Change.mp4
+dynpr-med Number Of Ways To Traverse Graph.mp4
+dynpr-vhard Longest Increasing Subsequence.mp4
+dynpr-vhard Longest String Chain.mp4
+dynpr-vhard Max Profit With K Transactions.mp4
+dynpr-vhard Palindrome Partitioning Min Cuts.mp4
+dynpr-vhard Square Of Zeroes.mp4
+famous-hard Dijkstras Algorithm.mp4
+famous-hard Topological Sort.mp4
+famous-med Kadanes Algorithm.mp4
+famous-vhard A-star Algorithm.mp4
+famous-vhard Knuth–Morris–Pratt.mp4
+graphs-easy Depth-first Search.mp4
+graphs-hard Boggle Board.mp4
+graphs-med Breadth-first Search.mp4
+graphs-med Cycle In Graph.mp4
+graphs-med Minimum Passes of Matrix.mp4
+graphs-med Remove Islands.mp4
+graphs-med River Sizes.mp4
+graphs-med Single Cycle Check.mp4
+graphs-med Youngest Common Ancestor.mp4
+graphs-vhard Airport Connections.mp4
+graphs-vhard Detect Arbitrage.mp4
+graphs-vhard Rectangle Mania.mp4
+graphs-vhard Two Edge Connected Graph.mp4
+greedy-easy Class Photos.mp4
+greedy-easy Minimum Waiting Time.mp4
+greedy-easy Tandem Bicycle.mp4
+greedy-med Task Assignment.mp4
+greedy-med Valid Starting City.mp4
+heaps-hard Continuous Median.mp4
+heaps-hard Laptop Rentals.mp4
+heaps-hard Sort K-Sorted Array.mp4
+heaps-med Min Heap Construction.mp4
+heaps-vhard Merge Sorted Arrays.mp4
+llist-easy Linked List Construction.mp4
+llist-easy Remove Duplicates From Linked List.mp4
+llist-hard Find Loop.mp4
+llist-hard Merge Linked Lists.mp4
+llist-hard Reverse Linked List.mp4
+llist-hard Shift Linked List.mp4
+llist-med Remove Nth Node From End.mp4
+llist-med Sum Of Linked Lists.mp4
+llist-vhard Linked List Palindrome.mp4
+llist-vhard LRU Cache.mp4
+llist-vhard Node Swap.mp4
+llist-vhard Rearrange Linked List.mp4
+llist-vhard Zip Linked List.mp4
+recursion-easy Nth Fibonacci.mp4
+recursion-easy Product Sum.mp4
+recursion-hard Ambiguous Measurements.mp4
+recursion-hard Generate Div Tags.mp4
+recursion-hard Interweaving Strings.mp4
+recursion-hard Lowest Common Manager.mp4
+recursion-hard Solve Sudoku.mp4
+recursion-med Permutations.mp4
+recursion-med Phone Number Mnemonics.mp4
+recursion-med Powerset.mp4
+recursion-med Staircase Traversal.mp4
+recursion-vhard Non-Attacking Queens.mp4
+recursion-vhard Number Of Binary Tree Topologies.mp4
+search-easy Binary Search.mp4
+search-easy Find Three Largest Numbers.mp4
+search-hard Index Equals Value.mp4
+search-hard Quickselect.mp4
+search-hard Search For Range.mp4
+search-hard Shifted Binary Search.mp4
+search-med Search In Sorted Matrix.mp4
+sort-easy Bubble Sort.mp4
+sort-easy Insertion Sort.mp4
+sort-easy Selection Sort.mp4
+sort-hard Heap Sort.mp4
+sort-hard Quick Sort.mp4
+sort-hard Radix Sort.mp4
+sort-med Three Number Sort.mp4
+sort-vhard Count Inversions.mp4
+sort-vhard Merge Sort.mp4
+stacks-hard Largest Rectangle Under Skyline.mp4
+stacks-hard Shorten Path.mp4
+stacks-med Balanced Brackets.mp4
+stacks-med Min Max Stack Construction.mp4
+stacks-med Next Greater Element.mp4
+stacks-med Sort Stack.mp4
+stacks-med Sunset Views.mp4
+strings-easy Caesar Cipher Encryptor.mp4
+strings-easy First Non-Repeating Character.mp4
+strings-easy Generate Document.mp4
+strings-easy Palindrome Check.mp4
+strings-easy Run-Length Encoding.mp4
+strings-hard Longest Substring Without Duplication.mp4
+strings-hard Pattern Matcher.mp4
+strings-hard Underscorify Substring.mp4
+strings-med Group Anagrams.mp4
+strings-med Longest Palindromic Substring.mp4
+strings-med Minimum Characters for Words.mp4
+strings-med Reverse Words In String.mp4
+strings-med Valid IP Addresses.mp4
+strings-vhard Longest Balanced Substring.mp4
+strings-vhard Smallest Substring Containing.mp4
+tries-hard Multi String Search.mp4
+tries-med Suffix Trie Construction.mp4
+
+Easy/:
+01 Transpose Matrix
+02 Evaluate Expression Tree
+03 Middle Node
+04 Common Characters
+05 Semordnilap
+
+Hard/:
+01 Four Number Sum
+02 Largest Range
+03 Longest Subarray With Sum
+04 Knight Connection
+05 Count Squares
+06 Repair BST
+07 Juice Bottling
+08 Kruskals Algorithm
+09 Largest Island
+
+Medium/:
+01 Best Seat
+02 Zero Sum Subarray
+03 Missing Numbers
+04 Majority Element
+05 Sweet And Savory
+06 Merge Binary Trees
+07 Symmetrical Tree
+08 Split Binary Tree
+09 Stable internships
+10 Union Find
+11 Two-Colorable
+12 Merging Linked Lists
+13 Blackjack Probability
+14 Reveal Minesweeper
+15 Best Digits
+16 Reverse Polish Notation
+17 Colliding Asteroids
+18 One Edit
+
