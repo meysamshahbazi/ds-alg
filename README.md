@@ -20,7 +20,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] Queue
 
-- [ ] Binary Tree
+- [x] Binary Tree
 
 - [ ] Binary Search Tree
 
