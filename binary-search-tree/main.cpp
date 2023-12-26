@@ -153,35 +153,39 @@ public:
             return right->kth_smallest(k-total_nodes_on_left-1);
         return -1234;
     }
+    // hw1 p5
     int lowest_common_ancestor(int n1, int n2)
     {
         if (n1 <= data && n2 >=data)
             return data;
-        if(n1<data && n2 <data)
-            return left->lowest_common_ancestor(n1,n2);
-        if(n1>data && n2>data)
-            return right->lowest_common_ancestor(n1,n2);
+        if (n1 < data && n2 < data)
+            return left->lowest_common_ancestor(n1, n2);
+        if (n1 > data && n2 > data)
+            return right->lowest_common_ancestor(n1, n2);
     }
+    // ----------------------------------------
     int min_value()
     {
         BinarySearchTree* cur = this;
-        while(cur && cur->left)
+        while (cur && cur->left)
             cur = cur->left;
         return cur->data;
     }
     bool find_chain(vector<BinarySearchTree*> &ancestors, int target)
     {
         ancestors.push_back(this);
-        if(target == data)
+        
+        if (target == data)
             return true;
+        
         if (target < data)
-            return  left && left->find_chain(ancestors, target);
+            return left && left->find_chain(ancestors, target);
         
         return right && right->find_chain(ancestors, target);
     }
     BinarySearchTree* get_next(vector<BinarySearchTree*> &ancestors)
     {
-        if(ancestors.size() == 0)
+        if (ancestors.size() == 0)
             return nullptr;
         BinarySearchTree* node = ancestors.back();
         ancestors.pop_back();
@@ -191,7 +195,7 @@ public:
     {
         vector<BinarySearchTree*> ancestors;
 
-        if(!find_chain(ancestors, target))
+        if (!find_chain(ancestors, target))
             return make_pair(false,-1);
 
         BinarySearchTree* child = get_next(ancestors);
