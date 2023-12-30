@@ -417,7 +417,7 @@ vector<int> dailyTemperatures(vector<int>& temperatures)
 {    
     stack<int> greaters_index;
     vector<int> answer(temperatures.size());
-    for(int i=temperatures.size()-1;i>=0;i--){      
+    for (int i = temperatures.size() - 1; i >= 0; i--){      
         while (!greaters_index.empty() && temperatures[i]>=temperatures[greaters_index.top()]) {
             greaters_index.pop();
         }

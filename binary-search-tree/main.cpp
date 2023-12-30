@@ -8,6 +8,22 @@
 #include <utility>
 using namespace std;
 
+template<class T>
+void print(vector<T> &v)
+{
+    for (int i = 0; i < (int) v.size(); ++i) {
+		cout << v[i] << " ";
+	}
+    cout<<endl;
+}
+
+template<class T>
+void print(vector<vector<T>> &vec){
+	for(auto &v : vec)
+		print(v);
+}
+
+
 class BinarySearchTree {
 private:
     int data;
@@ -325,6 +341,132 @@ public:
         }
         return true;
     }
+    // hw3 p1
+    BinarySearchTree(deque<int> &preorder, int start = 0, int end = -1) {
+		if (end == -1)
+			end = (int) preorder.size() - 1;
+
+		// next preorder is the current root
+		data = preorder[start];
+
+		for (int split = start+1; split <= end+1; ++split) {
+			if (split == end+1 || preorder[split] > data) {
+				if (start+1 <= split-1)	// there is a left tree
+					left = new BinarySearchTree(preorder, start+1, split - 1);
+				if (split <= end)
+					right = new BinarySearchTree(preorder, split, end);
+				break;
+			}
+		}
+	}
+    // hw3 p2
+    vector<int> next_greater_idx(vector<int>& vec) {   
+        stack<int> greaters_index;
+        vector<int> answer(vec.size());
+        for (int i = (int) vec.size() - 1; i >= 0; i--) {      
+            while (!greaters_index.empty() && vec[i] >= vec[greaters_index.top()]) {
+                greaters_index.pop();
+            }
+
+            if (greaters_index.empty())
+                answer[i] = 0;
+            else 
+                answer[i] = greaters_index.top() - i;
+
+            greaters_index.push(i);
+        }
+        return answer;
+    }
+    BinarySearchTree(deque<int> &preorder, const vector<int> &next_greater, int start = 0, int end = -1) {
+		if (end == -1)
+			end = (int) preorder.size() - 1;
+
+		// next preorder is the current root
+		data = preorder[start];
+
+		int split = next_greater[start];
+
+		if(split > end)	// next is after our end OR doesn't exist, reset our split end
+			split = end + 1;
+
+		if (start + 1 <= split - 1)	// there is a left tree
+			left = new BinarySearchTree(preorder, next_greater, start + 1, split - 1);
+		if (split <= end)
+			right = new BinarySearchTree(preorder, next_greater, split, end);
+	}
+
+    // hw3 p3
+    bool next_between(deque<int> &preorder, int min, int max) {
+		if (preorder.empty())
+			return false;
+		return min < preorder[0] && preorder[0] < max;
+	}
+    BinarySearchTree(deque<int> &preorder, int min = 0, int max = 1001)  {
+        if (preorder.empty())
+            return;
+
+        data = preorder.front();
+        preorder.pop_front();
+        if (next_between(preorder, min, data))
+            left = new BinarySearchTree(preorder, min, data);
+        if (next_between(preorder, data, max))
+            right = new BinarySearchTree(preorder, data, max);
+    }
+    // hw3 p4
+    BinarySearchTree(deque<int> level_order) {
+        
+    }
+
+    BinarySearchTree* buildFromLevelOrder(deque<int> level_order) {
+        if (level_order.empty())
+            return nullptr;
+        
+        BinarySearchTree* root = new BinarySearchTree(level_order.front());
+        
+        while (!level_order.empty()) {
+            
+        }
+    }
+    void BinarySearchTree1(deque<int> &preorder) { // O(n^2) tree from preorder+inorder
+        deque<int> inorder = preorder;
+        sort(inorder.begin(), inorder.end());
+        BinarySearchTree * thiz =  generateNode(preorder, inorder);
+        this->left = thiz->left;
+        this->right = thiz->right;
+        this->data = thiz->data;
+    }
+    BinarySearchTree* generateNode(deque<int> &preorder, deque<int> &inorder)
+    {
+        if (preorder.size() == 0) 
+            return nullptr;
+
+        int value = preorder.front();
+        preorder.pop_front();
+        BinarySearchTree* node = new BinarySearchTree(value);
+        deque<int> left_inorder;
+        deque<int> right_inorder;
+        deque<int> left_preorder;
+        deque<int> right_preorder;
+        while (inorder.front() != value) {
+            left_inorder.push_back(inorder.front());
+            left_preorder.push_back(preorder.front());
+            inorder.pop_front();
+            preorder.pop_front();
+        }
+
+        while (inorder.back() != value) {
+            right_inorder.push_front(inorder.back());
+            right_preorder.push_front(preorder.back());
+            inorder.pop_back();
+            preorder.pop_back();
+        }
+        inorder.pop_back();
+        assert(inorder.empty());
+        node->left = generateNode(left_preorder, left_inorder);
+        node->right = generateNode(right_preorder, right_inorder);
+        
+        return node;
+    }
  };
 
 // Definition for a binary tree node.
@@ -416,7 +558,7 @@ public:
     void traverse(TreeNode* node) {
         if (!node)
             return;
-        
+
         if (nums.size() > k)
             return;
             
@@ -455,6 +597,152 @@ public:
         return num;
     }
 };
+
+// https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/
+class Solution1008 {
+public:
+    bool next_between(deque<int> &preorder, int min, int max) {
+		if (preorder.empty())
+			return false;
+		return min < preorder[0] && preorder[0] < max;
+	}
+
+    TreeNode* bstFromPreorder(deque<int>& preorder, int mn, int mx) {
+        int value = preorder.front();
+        TreeNode* root = new TreeNode(value);
+        preorder.pop_front();
+
+        if (next_between(preorder, mn, value))
+            root->left = bstFromPreorder(preorder, mn, value);
+        if (next_between(preorder, value, mx))
+            root->right = bstFromPreorder(preorder, value, mx);
+        return root;
+    }
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        deque<int> dq;
+        for (auto p : preorder)
+            dq.push_back(p);
+
+        return bstFromPreorder(dq, 0, 1001);
+    }
+};
+
+class Solution1008_3 {
+    vector<int> next_greaters;
+public:
+    void next_greater_idx(vector<int>& vec) {   
+        stack<int> greaters_index;
+        next_greaters = vector<int>(vec.size());
+        for (int i = (int) vec.size() - 1; i >= 0; i--) {      
+            while (!greaters_index.empty() && vec[i] >= vec[greaters_index.top()]) {
+                greaters_index.pop();
+            }
+
+            if (greaters_index.empty())
+                next_greaters[i] = -1;
+            else 
+                next_greaters[i] = greaters_index.top();
+
+            greaters_index.push(i);
+        }
+    }
+    TreeNode* bstFromPreorder(vector<int>& preorder, int start, int end) {
+        if (end == -1)
+            end = (int) preorder.size() - 1;
+        
+        TreeNode* root = new TreeNode(preorder[start]);
+        
+        int split = next_greaters[start];
+        
+        if (split == -1 && start + 1 <= end)
+            root->left = bstFromPreorder(preorder, start + 1, end);
+        if (split != -1 && start + 1 <= split - 1)
+            root->left = bstFromPreorder(preorder, start + 1, split - 1);
+        if (split != -1 && split <= end)
+            root->right= bstFromPreorder(preorder, split, end);
+        
+        return root;
+    }
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        next_greater_idx(preorder);
+        return bstFromPreorder(preorder, 0,  -1);
+    }
+};
+
+class Solution1008_2 {
+public:
+    TreeNode* bstFromPreorder(vector<int>& preorder, int start, int end) {
+        TreeNode* root = new TreeNode(preorder[start]);
+
+        int split = start + 1;
+        for (int split = start + 1; split <= end + 1; split++) {
+            if (split == end + 1 || preorder[split] > preorder[start]) {
+                if (start + 1 <= split - 1)
+                    root->left = bstFromPreorder(preorder, start + 1, split - 1);
+                if (split <= end)
+                    root->right= bstFromPreorder(preorder, split, end);
+                break;
+            }
+        }
+        return root;
+    }
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        int end = (int) preorder.size() - 1;
+        return bstFromPreorder(preorder, 0, end);
+    }
+};
+
+class Solution1008_1 {
+public:
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        vector<int> inorder = preorder;
+        sort(inorder.begin(), inorder.end());
+        deque<int> preorder_dq, inorder_dq;
+        for (int i = 0; i < (int) inorder.size(); i++) {
+            preorder_dq.push_back(preorder[i]);
+            inorder_dq.push_back(inorder[i]);
+        }
+        return generateNode(preorder_dq, inorder_dq);
+    }
+    TreeNode* generateNode(deque<int> &preorder, deque<int> &inorder)
+    {
+        if(preorder.size() == 0) 
+            return nullptr;
+
+        int value = preorder.front();
+        preorder.pop_front();
+        TreeNode* node = new TreeNode(value);
+        deque<int> left_inorder;
+        deque<int> right_inorder;
+        deque<int> left_preorder;
+        deque<int> right_preorder;
+        while (inorder.front() != value) {
+            left_inorder.push_back(inorder.front());
+            left_preorder.push_back(preorder.front());
+            inorder.pop_front();
+            preorder.pop_front();
+        }
+
+        while (inorder.back() != value) {
+            right_inorder.push_front(inorder.back());
+            right_preorder.push_front(preorder.back());
+            inorder.pop_back();
+            preorder.pop_back();
+        }
+        inorder.pop_back();
+        
+        node->left = generateNode(left_preorder, left_inorder);
+        node->right = generateNode(right_preorder, right_inorder);
+        
+        return node;
+    }
+};
+
+// https://leetcode.com/problems/recover-binary-search-tree/
+
+// https://leetcode.com/problems/balance-a-binary-search-tree/
+
 
 
 int main()
@@ -539,7 +827,13 @@ int main()
     cout<<tree.is_degenerate(preorder)<<endl;
     preorder = {500, 400, 300, 200 , 250 , 275, 260, 280};
     cout<<tree.is_degenerate(preorder)<<endl;
-    
+    //
+    cout << "--------------------\n";
+    // vector<int> v1008 = {8,5,1,7,10,12};
+    vector<int> v1008 = {4, 2};
+    Solution1008 s1008;
+    auto n1008 = s1008.bstFromPreorder(v1008);
+
     return 0;
 }
 
