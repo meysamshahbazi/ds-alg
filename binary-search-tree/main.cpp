@@ -229,6 +229,7 @@ public:
             return nullptr;
         return right->find_Node(target);
     }
+    // hw2 p1
     pair<bool, int> successor2(int target)
     {
         BinarySearchTree* cur_child = find_Node(target);
@@ -252,14 +253,56 @@ public:
         
         return make_pair(false, -1);
     }
-    bool is_degenerate(vector<int> &preorder)
+    // hw2 p2
+    void queries_of_ancestors(deque<int> &q, vector<int> &answer, vector<int> &traversal) {
+        if (q.empty())
+            return;
+
+        if (left && q.front() < data) {
+            left->queries_of_ancestors(q, answer, traversal);
+
+            if (q.empty())
+                return;
+        }
+
+        if (!traversal.empty() && traversal.back() == q.front()) {
+            answer.push_back(data);
+            q.pop_front();
+
+            if (q.empty())
+                return;
+        }
+        traversal.push_back(data);
+
+        if (right && q.front() >= data) 
+            right->queries_of_ancestors(q, answer, traversal);
+    }
+    // hw2 p3
+    // https://www.geeksforgeeks.org/check-if-each-internal-node-of-a-bst-has-exactly-one-child/
+    bool is_degenerate(vector<int> &preorder) {
+        if (preorder.size() <=  2)
+            return true;
+
+        int mn = 1, mx = 1000;
+
+        for (int i = 1; i < (int) preorder.size(); i++)  {
+            if (preorder[i] < mn || preorder[i] > mx)
+                return false;
+            if (preorder[i] > preorder[i - 1])
+                mn = preorder[i - 1] + 1;
+            else 
+                mx = preorder[i - 1] - 1;
+        }
+        return true;
+    }
+    bool is_degenerate1(vector<int> &preorder)
     {
         vector<BinarySearchTree*> bst_vec;
 
         BinarySearchTree* parent = new BinarySearchTree(preorder[0]);
         BinarySearchTree* child = new BinarySearchTree(preorder[1]);
 
-        if(preorder[1] > preorder[0])
+        if (preorder[1] > preorder[0])
             parent->right = new BinarySearchTree(preorder[1]);
         else 
             parent->left = new BinarySearchTree(preorder[1]);
@@ -267,11 +310,10 @@ public:
         bst_vec.push_back(parent);
         bst_vec.push_back(child);
 
-
-        for(int i=2; i<preorder.size(); i++) { 
-            if (bst_vec[i-2]->left && preorder[i] > bst_vec[i-2]->data) 
+        for (int i = 2; i < preorder.size(); i++) { 
+            if (bst_vec[i - 2]->left && preorder[i] > bst_vec[i - 2]->data) 
                     return false;
-            if(bst_vec[i-2]->right && preorder[i] < bst_vec[i-2]->data) 
+            if (bst_vec[i - 2]->right && preorder[i] < bst_vec[i - 2]->data) 
                 return false;
     
             BinarySearchTree* child = new BinarySearchTree(preorder[i]);
@@ -281,7 +323,6 @@ public:
                 bst_vec[i-1]->left = child;
             bst_vec.push_back(child);
         }
-
         return true;
     }
  };
@@ -478,16 +519,25 @@ int main()
 	tree4.insert2(15);
 	tree4.insert2(60);
     tree4.print_inorder(); cout<<endl;
+    // hw2 p1
     pair<bool, int> suc_pair2 =  tree4.successor2(35);
     cout<<suc_pair2.second<<endl;
+
     // hw2 p3
+    cout << "hw2 p3--------------\n";
     vector<int> preorder = {25, 8, 11, 13, 12};
-    // preorder = {100, 70, 101};
-    // preorder = {100, 70, 60, 75};
-    // preorder = {100, 70, 60, 65};
-    // preorder = {9, 8, 7, 6, 5, 4, 3};
-    // preorder = {500, 400, 300, 200 , 250 , 275, 260};
-    // preorder = {500, 400, 300, 200 , 250 , 275, 260, 280};
+    cout<<tree.is_degenerate(preorder)<<endl;
+    preorder = {100, 70, 101};
+    cout<<tree.is_degenerate(preorder)<<endl;
+    preorder = {100, 70, 60, 75};
+    cout<<tree.is_degenerate(preorder)<<endl;
+    preorder = {100, 70, 60, 65};
+    cout<<tree.is_degenerate(preorder)<<endl;
+    preorder = {9, 8, 7, 6, 5, 4, 3};
+    cout<<tree.is_degenerate(preorder)<<endl;
+    preorder = {500, 400, 300, 200 , 250 , 275, 260};
+    cout<<tree.is_degenerate(preorder)<<endl;
+    preorder = {500, 400, 300, 200 , 250 , 275, 260, 280};
     cout<<tree.is_degenerate(preorder)<<endl;
     
     return 0;
