@@ -81,7 +81,7 @@ public:
         }
         else if (target > data) {
             if (!right)
-                right =  new BinarySearchTree(target);
+                right = new BinarySearchTree(target);
             else 
                 right->insert(target);
         }
@@ -417,13 +417,25 @@ public:
         
     }
 
-    BinarySearchTree* buildFromLevelOrder(deque<int> level_order) {
+    BinarySearchTree* buildFromLevelOrder(deque<int> &level_order) {
         if (level_order.empty())
             return nullptr;
         
-        BinarySearchTree* root = new BinarySearchTree(level_order.front());
-        
+        int value = level_order.front();
+        BinarySearchTree* cur = new BinarySearchTree(value);
+        level_order.pop_front();
+        queue<BinarySearchTree*> q;
+        q.push(cur);
         while (!level_order.empty()) {
+            value = level_order.front();
+            level_order.pop_front();
+            while (!q.empty()) {
+                auto parent = q.front();
+                q.pop();
+                if (value < parent->data) {
+
+                }
+            }
             
         }
     }
