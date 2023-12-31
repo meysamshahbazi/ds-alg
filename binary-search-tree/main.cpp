@@ -535,6 +535,110 @@ public:
         
         return node;
     }
+    /// -----------------------------------------------------------------------------
+    BinarySearchTree* min_node() {
+        BinarySearchTree* cur = this;
+        while (cur && cur->left)
+            cur = cur->left;
+        return cur;
+    }
+
+    BinarySearchTree* max_node() {
+        BinarySearchTree* cur = this;
+        while (cur && cur->right)
+            cur = cur->right;
+        return cur;
+    }
+
+    BinarySearchTree* delete_node(int target, BinarySearchTree* node) {
+        if (!node)
+            return nullptr;
+        
+        if (target < node->data)
+            node->left = delete_node(target, node->left);
+        else if (target > node->data)
+            node->right = delete_node(target, node->right);
+        else {
+            BinarySearchTree* tmp = node;
+            if (!node->left && !node->right)
+                node = nullptr;
+            else if (!node->right)
+                node = node->left;
+            else if (!node->left)
+                node = node->right;
+            else {
+                BinarySearchTree* mn = node->right->min_node();
+                node->data = mn->data;
+                node->right = delete_node(node->data, node->right);
+                tmp = nullptr;
+            }
+            if (tmp)
+                delete tmp;
+        }
+        return node;
+    }
+    // hw4 p1
+    BinarySearchTree* delete_node_p(int target, BinarySearchTree* node) {
+        if (!node)
+            return nullptr;
+        if (target < node->data)
+            node->left = delete_node_p(target, node->left);
+        else if (target > node->data)
+            node->right = delete_node_p(target, node->right);
+        else {
+            BinarySearchTree* tmp = node;
+            if (!node->left && !node->right)
+                node = nullptr;
+            else if (!node->right)
+                node = node->left;
+            else if (!node->left)
+                node = node->right;
+            else {
+                BinarySearchTree* mx = node->left->max_node();
+                node->data = mx->data;
+                node->left = delete_node_p(node->data, node->left);
+                tmp = nullptr;
+            }
+            if (tmp)
+                delete tmp;
+        }
+        return node;
+    }
+    // hw4 p3
+    void delete_node_it(int target) {
+        BinarySearchTree* node = find_Node(target);
+        BinarySearchTree* tmp = node;
+        if (!node->left && !node->right)
+            node = nullptr;
+        else if (!node->right)
+            node = node->left;
+        else if (!node->left)
+            node = node->right;
+        else {
+            BinarySearchTree* parent = node;
+            BinarySearchTree* child = node->right;
+            while (child->left)
+                parent = child, child = child->left;
+
+            node->data = child->data;
+
+            // child->left must be null, but child->right might not be
+            // we need to link parent to child->right
+                // But link with parent->left? or parent->right?
+            // Simply same as current parent-child relations
+                // In details: 2 cases: either successor was directly node's right
+                // Or it was deeper on chain of left nodes
+            if (parent->right == child) {
+                parent->right = child->right;
+            }
+            else
+                parent->left = child->right;
+            delete child;	// never be this in 2 children case
+
+        }
+        if (tmp)
+            delete tmp;
+    }
  };
 
 // Definition for a binary tree node.
