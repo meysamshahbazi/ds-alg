@@ -342,23 +342,23 @@ public:
         return true;
     }
     // hw3 p1
-    BinarySearchTree(deque<int> &preorder, int start = 0, int end = -1) {
-		if (end == -1)
-			end = (int) preorder.size() - 1;
+    // BinarySearchTree(deque<int> &preorder, int start = 0, int end = -1) { 
+	// 	if (end == -1)
+	// 		end = (int) preorder.size() - 1;
 
-		// next preorder is the current root
-		data = preorder[start];
+	// 	// next preorder is the current root
+	// 	data = preorder[start];
 
-		for (int split = start+1; split <= end+1; ++split) {
-			if (split == end+1 || preorder[split] > data) {
-				if (start+1 <= split-1)	// there is a left tree
-					left = new BinarySearchTree(preorder, start+1, split - 1);
-				if (split <= end)
-					right = new BinarySearchTree(preorder, split, end);
-				break;
-			}
-		}
-	}
+	// 	for (int split = start+1; split <= end+1; ++split) {
+	// 		if (split == end+1 || preorder[split] > data) {
+	// 			if (start+1 <= split-1)	// there is a left tree
+	// 				left = new BinarySearchTree(preorder, start + 1, split - 1);
+	// 			if (split <= end)
+	// 				right = new BinarySearchTree(preorder, split, end);
+	// 			break;
+	// 		}
+	// 	}
+	// }
     // hw3 p2
     vector<int> next_greater_idx(vector<int>& vec) {   
         stack<int> greaters_index;
@@ -413,32 +413,88 @@ public:
             right = new BinarySearchTree(preorder, data, max);
     }
     // hw3 p4
-    BinarySearchTree(deque<int> level_order) {
-        
-    }
+    BinarySearchTree(deque<int> level_order, bool flag) {	// O(n)
+		// (node, pair [min, max])
+		queue<pair<BinarySearchTree*, pair<int, int>>> nodes_queue;
 
-    BinarySearchTree* buildFromLevelOrder(deque<int> &level_order) {
-        if (level_order.empty())
-            return nullptr;
-        
-        int value = level_order.front();
-        BinarySearchTree* cur = new BinarySearchTree(value);
-        level_order.pop_front();
-        queue<BinarySearchTree*> q;
-        q.push(cur);
-        while (!level_order.empty()) {
-            value = level_order.front();
-            level_order.pop_front();
-            while (!q.empty()) {
-                auto parent = q.front();
-                q.pop();
-                if (value < parent->data) {
+		data = level_order[0];
+		level_order.pop_front();
+		nodes_queue.push({this, {0, 1001}});
 
-                }
-            }
+		// Build the tree level by level as if you are doing level order traversal
+		// Use min/max to trivially decide if this node is my left or right
+		while (!nodes_queue.empty()) {
+			int sz = nodes_queue.size();
+
+			while(sz--) {
+				BinarySearchTree* cur = nodes_queue.front().first;
+				int min = nodes_queue.front().second.first;
+				int max = nodes_queue.front().second.second;
+				int data = cur->data;
+				nodes_queue.pop();
+
+				// Compute the next range of left & right nodes
+				if (next_between(level_order, min, data)) {
+					int new_data = level_order[0];
+					level_order.pop_front();
+					cur->left = new BinarySearchTree(new_data);
+					nodes_queue.push({cur->left, {min, data}});
+				}
+
+				if (next_between(level_order, data, max)) {
+					int new_data = level_order[0];
+					level_order.pop_front();
+					cur->right = new BinarySearchTree(new_data);
+					nodes_queue.push({cur->right, {data, max}});
+				}
+			}
+		}
+		// assert(is_bst1());
+	}
+    // BinarySearchTree(deque<int> level_order, bool flag) {
+    //     auto thiz = buildFromLevelOrder(level_order);
+    //     this->data = thiz->data;
+    //     this->left = thiz->left;
+    //     this->right = thiz->right;
+    // }
+
+    // BinarySearchTree* buildFromLevelOrder(deque<int> &level_order) {
+    //     if (level_order.empty())
+    //         return nullptr;
+        
+    //     int value = level_order.front();
+    //     BinarySearchTree* root = new BinarySearchTree(value);
+    //     BinarySearchTree* cur = root;
+    //     level_order.pop_front();
+    //     queue<pair<BinarySearchTree*, pair<int,int>> > q;
+    //     q.push({cur, {0, 1001}});
+    //     while (!level_order.empty()) {
+    //         value = level_order.front();
+    //         level_order.pop_front();
             
-        }
-    }
+    //         while (!q.empty()) {
+    //             auto q_top = q.front();
+    //             q.pop();
+    //             BinarySearchTree* node = q_top.first;
+    //             int mn = q_top.second.first;
+    //             int mx = q_top.second.second;
+    //             if (value > mn && value < mx) { // is in range:
+    //                 if (value < node->data) {
+    //                     cur = new BinarySearchTree(value);
+    //                     node->left = cur;
+    //                     q.push({cur, {mn, value}});
+    //                 }
+    //                 else {
+    //                     cur = new BinarySearchTree(value);
+    //                     node->right = cur;
+    //                     q.push({cur, {value, mx}});
+    //                 }
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     return root;
+    // }
     void BinarySearchTree1(deque<int> &preorder) { // O(n^2) tree from preorder+inorder
         deque<int> inorder = preorder;
         sort(inorder.begin(), inorder.end());
@@ -845,7 +901,11 @@ int main()
     vector<int> v1008 = {4, 2};
     Solution1008 s1008;
     auto n1008 = s1008.bstFromPreorder(v1008);
-
+    cout << "--------------------\n";
+    deque<int> level_order = {50, 20, 60, 15, 45, 70, 35, 73};
+    BinarySearchTree *hw3p4 = new BinarySearchTree(level_order, true);
+    hw3p4->print_inorder();
+    cout << endl;
     return 0;
 }
 
