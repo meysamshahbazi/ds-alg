@@ -177,7 +177,6 @@ public:
     }
 };
 
-
 class MaxHeap
 {
 private:
@@ -215,6 +214,100 @@ public:
     }
 };
 
+// hw2 p2
+class PriorityQueue
+{
+private:
+    int *key { };
+    int *value { };
+    int size { };
+    int capacity { 1000 };
+
+    int left(int node) {
+        int p = 2 * node + 1;
+        if (p >= size)
+            return -1;
+        return p;
+    }
+    int right(int node) {
+        int p = 2 * node + 2;
+        return p >= size ? -1 : p;
+    }
+    int parent(int node) {
+        return node == 0 ? -1 : (node - 1) / 2;
+    }
+    void heapify_up(int child_pos) {
+        int par_pos = parent(child_pos);
+        if(child_pos == 0 || key[par_pos] < key[child_pos])
+            return;
+
+        swap(key[child_pos], key[par_pos]);
+        swap(value[child_pos], value[par_pos]);
+        heapify_up(par_pos);
+    }
+    void heapify_down(int parent_pos) 
+    {
+        int child_pos = left(parent_pos);
+        int right_child = right(parent_pos);
+
+        if (child_pos == -1)
+            return;
+        
+        if (right_child != -1 && key[right_child] < key[child_pos])
+            child_pos = right_child;
+
+        if (key[parent_pos] > key[child_pos]) {
+            swap(key[child_pos], key[parent_pos]);
+            swap(value[child_pos], value[parent_pos]);
+            heapify_down(child_pos);
+        }
+    }
+    void heapify()
+    {
+        for (int i = size / 2 - 1; i >= 0; --i)
+            heapify_down(i);
+    }
+
+public:
+    PriorityQueue() {
+        key = new int[capacity] {};
+        value = new int[capacity] {};
+        size = 0;
+    }
+    ~PriorityQueue(){
+        delete [] key;
+        delete [] value;
+    }
+    void enqueue(int data, int priority) {
+        assert(size+1 <= capacity);
+        value[size] = data;
+        key[size++] = priority;
+        heapify_up(size - 1);
+    }
+    int dequeue() {
+        assert(!empty());
+        int ret = value[0];
+        key[0] = key[--size];
+        value[0] = value[size];
+        heapify_down(0);
+        return ret;
+    }
+    bool empty()
+    {
+        return size==0;
+    }
+    void display()
+    {
+        for (int i = 0; i < size; i++)
+            cout<<value[i]<<" ";
+        cout<<endl;
+    }
+    int getSize() 
+    {
+        return size;
+    }
+};
+
 class KthNumberProcessor{
     int k;
     MaxHeap heap;
@@ -238,16 +331,78 @@ public:
     }
 };
 
-class PriorityQueue
-{
-private:
-    MaxHeap heap;
-    
-    
+// https://leetcode.com/problems/kth-largest-element-in-a-stream/
+class KthLargest {
+    priority_queue <int, vector<int>, greater<int>> mn_heap;
+    int k;
 public:
-    void enqueue (int task_id = 1131, int priority = 1)
-    {
-        heap.push(priority);
+    KthLargest(int k, vector<int>& nums) {
+        this->k = k;
+
+        std::sort(nums.begin(), nums.end(), std::greater<>());
+
+        for (int i = 0; i < (int) nums.size() && mn_heap.size() < k; i++)
+            mn_heap.push(nums[i]);
+    }
+    
+
+    int add(int val) {
+        if (mn_heap.size() < k)
+            mn_heap.push(val);
+        
+        else if (val > mn_heap.top()) {
+            mn_heap.pop();
+            mn_heap.push(val);
+        }
+        return mn_heap.top();
+    }
+};
+
+// https://leetcode.com/problems/last-stone-weight/
+class Solution1046 {
+public:
+    int lastStoneWeight(vector<int>& stones) {
+        priority_queue<int> mx_heap;
+
+        for (auto s : stones)
+            mx_heap.push(s);
+
+        while (mx_heap.size() > 0) {
+            int y = mx_heap.top();
+            mx_heap.pop();
+            
+            if (mx_heap.empty())
+                return y;
+            
+            int x = mx_heap.top();
+            mx_heap.pop();
+
+            if (y > x)
+                mx_heap.push(y - x);
+        }
+        return 0;
+    }
+};
+
+// https://leetcode.com/problems/k-closest-points-to-origin/
+class Solution973 {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        
+        priority_queue <pair<int, vector<int>>, vector<pair<int, vector<int>>>, greater<pair<int, vector<int>>>> mn_heap;
+        
+        for (auto p : points) {
+            int d = p[0]*p[0] + p[1]*p[1];
+            mn_heap.push({d, p});
+        }
+
+        vector<vector<int>> res;
+
+        for (int i = 0; i < k; i++) {
+            res.push_back(mn_heap.top().second);
+            mn_heap.pop();
+        }
+        return res;
     }
 };
 
@@ -309,6 +464,8 @@ int main()
     }
     */
 
+   vector<int> v703 = {4,5,8,2};
+   KthLargest kl(3, v703);
 
     
     return 0;

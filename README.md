@@ -24,7 +24,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] Binary Search Tree
 
-- [ ] Binary Heap
+- [x] Binary Heap
 
 - [ ] AVL Tree
 
@@ -39,8 +39,6 @@ This repo contains my practices for data structures and algorithms in God progra
 - [ ] Review Multidimensional Arrays Problem-Solving
 
 ## Reminder
-
-- [ ] heap hw1 p5, hw2 p2,3
 
 - [ ] hash hw2 p5
 
