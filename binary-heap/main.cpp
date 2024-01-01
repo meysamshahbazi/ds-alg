@@ -13,21 +13,21 @@ using namespace std;
 class MinHeap
 {
 private:
-    int *array;
-    int size{};
-    int capacity{1000};
+    int *array { };
+    int size { };
+    int capacity { 1000 };
 
     int left(int node)
     {
         int p = 2 * node + 1;
-        if(p>=size)
+        if (p >= size)
             return -1;
         return p;
     }
     int right(int node)
     {
         int p = 2 * node + 2;
-        return p>=size ? -1 : p;
+        return p >= size ? -1 : p;
     }
     int parent(int node)
     {
@@ -60,7 +60,7 @@ private:
     }
     void heapify()
     {
-        for( int i = size/2 -1; i>= 0;--i)
+        for (int i = size / 2 - 1; i >= 0; --i)
             heapify_down(i);
     }
 
@@ -106,36 +106,35 @@ public:
     {
         return size==0;
     }
+    // hw1 p3
     void print_less_than(int val, int parent_pos = 0)
     {
-        if (parent_pos >= size || parent_pos == -1)
+        if (parent_pos >= size || parent_pos == -1 || array[parent_pos] > val)
             return;
 
-        if(array[parent_pos] > val)
-            return;
-
-        cout<<array[parent_pos]<<" ";
+        cout << array[parent_pos] << " ";
 
         print_less_than(val, left(parent_pos));
         print_less_than(val, right(parent_pos));
     }
+    // hw1 p4
     bool is_heap_array(int *p, int n, int start_idx = 0)
     {
 
         int left_idx = 2 * start_idx + 1;
         int right_idx = 2 * start_idx + 2;
 
-        if(left_idx >= n || right_idx >= n)
+        if (left_idx >= n || right_idx >= n)
             return true;
 
-        if(p[left_idx] < p[start_idx] || p[right_idx] < p[start_idx])
+        if (p[left_idx] < p[start_idx] || p[right_idx] < p[start_idx])
             return false;
 
         return is_heap_array(p, n, left_idx) && is_heap_array(p, n, right_idx);
     }
     void display()
     {
-        for (int i=0; i<size; i++)
+        for (int i = 0; i < size; i++)
             cout<<array[i]<<" ";
         cout<<endl;
     }
@@ -159,17 +158,8 @@ public:
         array  = p;
         size = n;
 
-        // do sorting ...
-        heapify();
-        // this is not efficent!
-        for (int i=0; i <n; ++i) {
-            // heapify_down(0);
-            heapify();
-            array++;
-            size--;
-        }
         
-        // sort();
+
         array = old_arr;
         size = old_size;
     }
