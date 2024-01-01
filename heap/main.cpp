@@ -158,7 +158,15 @@ public:
         array  = p;
         size = n;
 
-        
+        heapify();
+
+        while (size--){
+            swap(array[0], array[size]);
+            heapify_down(0);
+        }
+
+        for (int i = 0; i < n / 2; ++i)
+            swap(array[i], array[n - i -1]);
 
         array = old_arr;
         size = old_size;
