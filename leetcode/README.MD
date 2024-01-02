@@ -241,4 +241,4 @@ LeetCode 1647 - Minimum Deletions to Make Character Frequencies Unique
 
 LeetCode 116 - Populating Next Right Pointers in Each Node
 
-LeetrCode 117 - Populating Next Right Pointers in Each Node II
+LeetCode 117 - Populating Next Right Pointers in Each Node II

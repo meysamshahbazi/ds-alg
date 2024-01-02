@@ -8,39 +8,32 @@
 #include <utility>
 using namespace std;
 
-class AVLTree
-{
+class AVLTree {
 private:
-    struct BinaryNode
-    {
+    struct BinaryNode {
         int data { };
         int height { };
         BinaryNode* left { };
         BinaryNode* right { };
 
         BinaryNode(int data) : data(data) 
-        {
-        }
-        int ch_height(BinaryNode* node)
-        {
-            if(!node)
+        { }
+        int ch_height(BinaryNode* node) {
+            if (!node)
                 return -1;
             return node->height;
         }
-        int update_height()
-        {
+        int update_height() {
             return height = 1 + max(ch_height(left), ch_height(right));
         }
-        int balance_factor()
-        {
+        int balance_factor() {
             return ch_height(left) - ch_height(right);
         }
     };
 
     BinaryNode* root {};
 
-    bool search(int target, BinaryNode* node)
-    {
+    bool search(int target, BinaryNode* node) {
         if (!node)
             return false;
         
@@ -167,9 +160,11 @@ private:
 		print_inorder(node->right);
 	}
 
-    pair<bool, int> lower_bound(int target) {
-
-    }
+    // pair<bool, int> lower_bound(BinaryNode* node, int target) {
+    //     if (node->data == target)
+    //         return {true, target};
+    //     if (node->data > target)
+    // }
 
 public:
     AVLTree()
@@ -255,9 +250,16 @@ struct TreeNode {
 
 // https://leetcode.com/problems/balance-a-binary-search-tree/
 class Solution1382 {
-    int height;
 public:
     TreeNode* balanceBST(TreeNode* root) {
+        
+    }
+};
+
+// https://leetcode.com/problems/balanced-binary-tree/
+class Solution110 {
+public:
+    bool isBalanced(TreeNode* root) {
         
     }
 };
@@ -267,10 +269,13 @@ int main()
     AVLTree avl;
     // avl.insert_value(3); avl.insert_value(5); avl.insert_value(9); 
 
-    for (int i = 0; i <= 32; i++) {
-        avl.insert_value(i);
-        avl.level_order_traversal();
-    }
+    // for (int i = 0; i <= 32; i++) {
+    //     avl.insert_value(i);
+    //     avl.level_order_traversal();
+    // }
+
+    vector<int> hw1p1 = {2, 5, 10, 13, 15, 20, 40, 50, 70};
+    avl.insert_value(hw1p1);
     avl.print_inorder(); 
     return 0;
 }

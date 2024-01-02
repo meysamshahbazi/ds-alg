@@ -37,9 +37,3 @@ This repo contains my practices for data structures and algorithms in God progra
 - [ ] Review Char Arrays Problem-Solving
 
 - [ ] Review Multidimensional Arrays Problem-Solving
-
-## Reminder
-
-- [ ] hash hw2 p5
-
-- [ ] sort hw2 p4

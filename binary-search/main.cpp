@@ -357,6 +357,26 @@ double largest_area(vector<double> &pie_radius, int people) {
 	return mid;
 }
 
+// https://leetcode.com/problems/binary-search/
+class Solution704 {
+public:
+    int search(vector<int>& nums, int target) {
+        int start = 0, end = (int) nums.size() - 1;
+
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+
+            if (nums[mid] == target) 
+                return mid;
+            if (nums[mid] < target)
+                start = mid + 1;
+            else if (nums[mid] > target)
+                end = mid - 1;
+        }
+        return -1;
+    }
+};
+
 int main()
 {
     vector<int> v { 2, 2, 2, 3, 4, 9, 17, 17, 17, 20 };

@@ -35,12 +35,12 @@ void print_postorder(Node<char> *current)
         return;
     print_postorder(current->left);
     print_postorder(current->right);
-    cout<<current->data<<" ";
+    cout << current->data << " ";
 }
 
 void clear(Node<char>* current)
 {
-    if(!current)
+    if (!current)
         return;
 
     clear(current->left);
@@ -49,6 +49,7 @@ void clear(Node<char>* current)
     current->right = nullptr;
     delete current;
 }
+
 template <class T>
 class BinaryTree
 {
@@ -1010,6 +1011,22 @@ public:
     vector<int> inorderTraversal(TreeNode* root) {
         traverse(root);
         return inorder;
+    }
+};
+
+// https://leetcode.com/problems/invert-binary-tree/
+class Solution226 {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (!root)
+            return root;
+        
+        TreeNode* left = root->left;
+        TreeNode* right = root->right;
+
+        root->left = invertTree(right);
+        root->right = invertTree(left);
+        return root;
     }
 };
 
