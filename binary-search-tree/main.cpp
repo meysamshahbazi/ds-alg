@@ -915,6 +915,38 @@ public:
 
 // https://leetcode.com/problems/balance-a-binary-search-tree/
 
+// https://leetcode.com/problems/trim-a-binary-search-tree/
+class Solution669 {
+public:
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        if (!root)
+            return nullptr;
+
+        if (root->val < low)
+            return trimBST(root->right, low, high);
+        if (root->val > high )
+            return trimBST(root->left, low, high);
+
+        bool left_is_done = false;
+        bool righ_is_done = false;
+        if (root->left && root->left->val < low ) {
+            root->left = trimBST(root->left->right, low, high);
+            left_is_done = true;
+        }
+
+        if (root->right && root->right->val > high) {
+            root->right = trimBST(root->right->left, low, high);
+            righ_is_done = true;
+        }
+        
+        if (!left_is_done)
+            root->left = trimBST(root->left, low, high);
+        if (!righ_is_done)
+            root->right = trimBST(root->right, low, high);
+            
+        return root;
+    }
+};
 
 
 int main()
@@ -1010,6 +1042,16 @@ int main()
     BinarySearchTree *hw3p4 = new BinarySearchTree(level_order, true);
     hw3p4->print_inorder();
     cout << endl;
+
+    cout << "--------------------\n";
+    Solution669 s669;
+    TreeNode* n669 = new TreeNode(1);
+    n669->left = new TreeNode(0);
+    n669->right = new TreeNode(2);
+    n669 = s669.trimBST(n669, 1, 2);
+    cout << n669->val << endl;
+    cout << n669->left << endl;
+    cout << n669->right->val << endl;
     return 0;
 }
 

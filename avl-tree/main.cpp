@@ -13,12 +13,12 @@ class AVLTree
 private:
     struct BinaryNode
     {
-        int data{};
-        int height{};
-        BinaryNode* left{};
-        BinaryNode* right{};
+        int data { };
+        int height { };
+        BinaryNode* left { };
+        BinaryNode* right { };
 
-        BinaryNode(int data) :data(data) 
+        BinaryNode(int data) : data(data) 
         {
         }
         int ch_height(BinaryNode* node)
@@ -27,13 +27,13 @@ private:
                 return -1;
             return node->height;
         }
-        int updata_height()
+        int update_height()
         {
             return height = 1 + max(ch_height(left), ch_height(right));
         }
         int balance_factor()
         {
-            return ch_height(right) - ch_height(left);
+            return ch_height(left) - ch_height(right);
         }
     };
 
@@ -58,8 +58,8 @@ private:
         BinaryNode* P = Q->left;
         Q->left = P->right;
         P->right = Q;
-        Q->updata_height();
-        P->updata_height();
+        Q->update_height();
+        P->update_height();
         return P;
     }
     BinaryNode* left_rotation(BinaryNode* P)
@@ -68,8 +68,8 @@ private:
         BinaryNode* Q = P->right;
         P->right = Q->left;
         Q->left = P;
-        P->updata_height();
-        Q->updata_height();
+        P->update_height();
+        Q->update_height();
         return Q;   
     }
     BinaryNode* balance(BinaryNode* node)
@@ -88,6 +88,7 @@ private:
         }
         return node;
     }
+
     BinaryNode* insert_node(int target, BinaryNode* node)
     {
         if(target < node->data) {
@@ -102,18 +103,77 @@ private:
             else 
                 node->right = insert_node(target, node->right);
         }
-        node->updata_height();
+        node->update_height();
+        
         return balance(node);
+    }
+
+    BinaryNode* min_node(BinaryNode* cur) {
+        while (cur && cur->left)
+            cur = cur->left;
+        return cur;
+    }
+    BinaryNode* delete_node(int target, BinaryNode* node) {
+        if (!node)
+            return nullptr;
+        if (target < node->data)
+            node->left = delete_node(target, node->left);
+        else if (target > node->data)
+            node->right = delete_node(target, node->right);
+        else {
+            BinaryNode* tmp = node;
+            if (!node->left && !node->right)
+                node = nullptr;
+            else if (!node->right)
+                node = node->left;
+            else if (!node->left)
+                node = node->right;
+            else {
+                BinaryNode* mn = min_node(node->right);
+                node->data = mn->data;
+                node->right = delete_node(node->data, node->right);
+                tmp = nullptr;
+            }
+            if (tmp)
+                delete tmp;
+        }
+        if (node) {
+            node->update_height();
+            node = balance(node);
+        }
+        return node;
+    }
+    bool is_bst(BinaryNode* node) {
+        bool left_bst = !node->left || node->data > node->left->data && is_bst(node->left);
+
+        if (!left_bst)
+            return false;
+        
+        bool right_bst = !node->right || node->data < node->right->data && is_bst(node->right);
+
+        return right_bst;
     }
     void verify()
     {
-        
+        assert(abs(root->balance_factor()) <= 1);
+        assert(is_bst(root)); 
+    }
+	void print_inorder(BinaryNode* node) {
+		if(!node)
+			return;
+
+		print_inorder(node->left);
+		cout << node->data << " ";
+		print_inorder(node->right);
+	}
+
+    pair<bool, int> lower_bound(int target) {
+
     }
 
 public:
     AVLTree()
     {
-
     }
     void insert_value(int target)
     {
@@ -125,12 +185,93 @@ public:
         verify();
     }
 
+    void insert_value(vector<int> &vec) {
+        for (auto v : vec)
+            insert_value(v);
+    }
 
+    void delete_value(int target) {
+		if (root) {
+			root = delete_node(target, root);
+			verify();
+		}
+	}
+
+	bool search(int target) {
+		return search(target, root);
+	}
+
+	void print_inorder() {
+		print_inorder(root);
+        cout << endl;
+	}
+
+	void level_order_traversal() {
+		if (!root)
+			return;
+
+		cout << "******************\n";
+		queue<BinaryNode*> nodes_queue;
+		nodes_queue.push(root);
+
+		int level = 0;
+		while (!nodes_queue.empty()) {
+			int sz = nodes_queue.size();
+
+			cout << "Level " << level << ": ";
+			while (sz--) {
+				BinaryNode*cur = nodes_queue.front();
+				nodes_queue.pop();
+
+				cout << cur->data << " ";
+				if (cur->left)
+					nodes_queue.push(cur->left);
+				if (cur->right)
+					nodes_queue.push(cur->right);
+			}
+			level++;
+			cout << "\n";
+		}
+	}
+    // hw1 p1
+    pair<bool, int> lower_bound(int target) {
+
+    }
+    // hw1 p2
+    pair<bool, int> upper_bound(int target) {
+
+    }
+};
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+// https://leetcode.com/problems/balance-a-binary-search-tree/
+class Solution1382 {
+    int height;
+public:
+    TreeNode* balanceBST(TreeNode* root) {
+        
+    }
 };
 
 int main()
 {
     AVLTree avl;
+    // avl.insert_value(3); avl.insert_value(5); avl.insert_value(9); 
+
+    for (int i = 0; i <= 32; i++) {
+        avl.insert_value(i);
+        avl.level_order_traversal();
+    }
+    avl.print_inorder(); 
     return 0;
 }
 
