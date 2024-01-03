@@ -13,6 +13,7 @@ private:
     struct BinaryNode {
         int data { };
         int height { };
+        int count { 1 };
         BinaryNode* left { };
         BinaryNode* right { };
 
@@ -23,8 +24,15 @@ private:
                 return -1;
             return node->height;
         }
+        int ch_count(BinaryNode* node) {
+            if (!node)
+                return 0;
+            return node->count;
+        }
         int update_height() {
+            count = 1 + ch_count(left) + ch_count(right);
             return height = 1 + max(ch_height(left), ch_height(right));
+            
         }
         int balance_factor() {
             return ch_height(left) - ch_height(right);
@@ -259,8 +267,27 @@ public:
             return {true, ans->data};
         return {false, -1};
     }    
-    int count_inversions(const vector<int> &arr) {
 
+    int upper_bound_count(int target, BinaryNode* node) {
+        if (!node)
+            return 0;
+        
+        if (target < node->data) {
+            int sum = 1;
+            if (node->right)
+                sum += node->right->count;
+            return sum + upper_bound_count(target, node->left);
+        }
+        return upper_bound_count(target, node->right);
+        
+    }
+    int count_inversions(const vector<int> &arr) {
+        int sum = 0;
+        for (int i = 0; i < arr.size(); i++) {
+            insert_value(arr[i]);
+            sum += upper_bound_count(arr[i], root);
+        }
+        return sum;
     }
 };
 
@@ -306,15 +333,23 @@ public:
     }
 };
 
+class PriorityQueue {
+
+public:
+    void enqueue(int id, int priority) {
+        
+    }
+};
+
 int main()
 {
     AVLTree avl;
-    // avl.insert_value(3); avl.insert_value(5); avl.insert_value(9); 
+    avl.insert_value(3); avl.insert_value(5); avl.insert_value(9); 
 
-    // for (int i = 0; i <= 32; i++) {
-    //     avl.insert_value(i);
-    //     avl.level_order_traversal();
-    // }
+    for (int i = 0; i <= 32; i++) {
+        avl.insert_value(i);
+        avl.level_order_traversal();
+    }
 
     vector<int> hw1p1 = {2, 5, 10, 13, 15, 20, 40, 50, 70};
     avl.insert_value(hw1p1);
@@ -326,7 +361,7 @@ int main()
 
     AVLTree hw1p3;
 
-    // cout << hw1p3.count_inversions({5,4,3,2,1}) << endl;
+    cout << hw1p3.count_inversions({5,4,3,2,1}) << endl;
     cout << hw1p3.count_inversions({10,5,8,2,12,6}) << endl;
     return 0;
 }
