@@ -258,8 +258,7 @@ public:
         if (ans) 
             return {true, ans->data};
         return {false, -1};
-    }
-    
+    }    
     int count_inversions(const vector<int> &arr) {
 
     }
@@ -327,7 +326,8 @@ int main()
 
     AVLTree hw1p3;
 
-    cout << hw1p3.count_inversions({5,4,3,2,1}) << endl;
+    // cout << hw1p3.count_inversions({5,4,3,2,1}) << endl;
+    cout << hw1p3.count_inversions({10,5,8,2,12,6}) << endl;
     return 0;
 }
 
