@@ -911,10 +911,6 @@ public:
     }
 };
 
-// https://leetcode.com/problems/recover-binary-search-tree/
-
-// https://leetcode.com/problems/balance-a-binary-search-tree/
-
 // https://leetcode.com/problems/trim-a-binary-search-tree/
 class Solution669 {
 public:
@@ -948,6 +944,44 @@ public:
     }
 };
 
+// https://leetcode.com/problems/delete-node-in-a-bst/
+class Solution450 {
+public:
+    TreeNode* min_node(TreeNode* node) {
+        TreeNode* cur = node;
+        while (cur && cur->left)
+            cur = cur->left;
+        return cur;
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+         if (!root)
+            return nullptr;
+        
+        if (key < root->val)
+            root->left = deleteNode(root->left, key);
+        else if (key > root->val)
+            root->right = deleteNode(root->right, key);
+        else {
+            TreeNode* tmp = root;
+            if (!root->left && !root->right)
+                root = nullptr;
+            else if (!root->right)
+                root = root->left;
+            else if (!root->left)
+                root = root->right;
+            else {
+                TreeNode* mn = min_node(root->right);
+                root->val = mn->val;
+                root->right = deleteNode(root->right, root->val);
+                tmp = nullptr;
+            }
+            if (tmp)
+                delete tmp;
+        }
+        return root;
+    }
+};
+
 // https://leetcode.com/problems/range-sum-of-bst/
 class Solution938 {
 public:
@@ -956,6 +990,9 @@ public:
     }
 };
 
+// https://leetcode.com/problems/recover-binary-search-tree/
+
+// https://leetcode.com/problems/balance-a-binary-search-tree/
 
 int main()
 {

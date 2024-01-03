@@ -159,13 +159,6 @@ private:
 		cout << node->data << " ";
 		print_inorder(node->right);
 	}
-
-    // pair<bool, int> lower_bound(BinaryNode* node, int target) {
-    //     if (node->data == target)
-    //         return {true, target};
-    //     if (node->data > target)
-    // }
-
 public:
     AVLTree()
     {
@@ -229,11 +222,45 @@ public:
 		}
 	}
     // hw1 p1
-    pair<bool, int> lower_bound(int target) {
+    BinaryNode* lower_bound(BinaryNode* node, int target) {
+        if (!node)
+            return nullptr;
 
+        if (target <= node->data) {
+            BinaryNode* ans = lower_bound(node->left, target);
+            if (ans)
+                return ans;
+            return node;
+        }
+        return lower_bound(node->right, target);
+    }
+    pair<bool, int> lower_bound(int target) {
+        BinaryNode* ans = lower_bound(root, target);
+        if (ans) 
+            return {true, ans->data};
+        return {false, -1};
     }
     // hw1 p2
+    BinaryNode* upper_bound(BinaryNode* node, int target) {
+        if (!node)
+            return nullptr;
+
+        if (target < node->data) {
+            BinaryNode* ans = upper_bound(node->left, target);
+            if (ans)
+                return ans;
+            return node;
+        }
+        return upper_bound(node->right, target);
+    }
     pair<bool, int> upper_bound(int target) {
+        BinaryNode* ans = upper_bound(root, target);
+        if (ans) 
+            return {true, ans->data};
+        return {false, -1};
+    }
+    
+    int count_inversions(const vector<int> &arr) {
 
     }
 };
@@ -252,15 +279,31 @@ struct TreeNode {
 class Solution1382 {
 public:
     TreeNode* balanceBST(TreeNode* root) {
-        
+
     }
 };
+
+
+
 
 // https://leetcode.com/problems/balanced-binary-tree/
 class Solution110 {
 public:
+    int get_height(TreeNode* node) {
+        if (!node)
+            return 0;
+        return 1 + max(get_height(node->left), get_height(node->right));
+    }
     bool isBalanced(TreeNode* root) {
+        if (!root)
+            return true;
+
+        int bf = get_height(root->left) - get_height(root->right);
         
+        if (abs(bf) > 1)
+            return false;
+
+        return isBalanced(root->left) && isBalanced(root->right);
     }
 };
 
@@ -277,6 +320,14 @@ int main()
     vector<int> hw1p1 = {2, 5, 10, 13, 15, 20, 40, 50, 70};
     avl.insert_value(hw1p1);
     avl.print_inorder(); 
+    // hw1 p1
+    cout << avl.lower_bound(50).second << endl;
+    // hw1 p2
+    cout << avl.upper_bound(50).second << endl;
+
+    AVLTree hw1p3;
+
+    cout << hw1p3.count_inversions({5,4,3,2,1}) << endl;
     return 0;
 }
 
