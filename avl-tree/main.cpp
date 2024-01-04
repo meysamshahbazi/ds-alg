@@ -289,6 +289,28 @@ public:
         }
         return sum;
     }
+    int min_nodes_rec(int height) {
+        if (height == 0)
+            return 1;
+        if (height == 1)
+            return 2;
+         
+        return 1 + min_nodes_rec(height - 1) + min_nodes_rec(height - 2);
+    }
+    int min_nodes_it(int height) {
+        if (height == 0)
+            return 1;
+        if (height == 1)
+            return 2;
+        
+        height--;
+        int a = 1;
+        int b = 2, c;
+        while (height--) 
+            c = a + b + 1, a = b, b = c;
+        
+        return c;
+    }
 };
 
 // Definition for a binary tree node.
@@ -334,10 +356,277 @@ public:
 };
 
 class PriorityQueue {
+    struct BinaryNode {
+        int priority { };
+        int height { };
+        vector<int> task_ids { };
+        BinaryNode* left { };
+        BinaryNode* right { };
+
+        BinaryNode(int task_id, int priority) :
+                priority(priority) {
+            task_ids.push_back(task_id);
+        }
+
+        int ch_height(BinaryNode* node) {
+            if (!node)
+                return -1;
+            return node->height;
+        }
+        int update_height() {
+            return height = 1 + max(ch_height(left), ch_height(right));
+        }
+        int balance_factor() {
+            return ch_height(left) - ch_height(right);
+        }
+    };
+
+    BinaryNode* root {};
+    bool search(int targrt, BinaryNode* node) {
+        if (!node)
+            return false;
+
+        if (targrt == node->priority)
+            return true;
+        
+        if (targrt < node->priority)
+            return search(targrt, node->left);
+        return search(targrt, node->right);
+    }
+
+    BinaryNode* right_rotation(BinaryNode* Q) {
+        BinaryNode* P = Q->left;
+        Q->left = P->right;
+        P->right = Q;
+        Q->update_height();
+        P->update_height();
+        return P;
+    }
+    BinaryNode* left_rotation(BinaryNode* P) {
+        BinaryNode* Q = P->right;
+        P->right = Q->left;
+        Q->left = P;
+        P->update_height();
+        Q->update_height();
+        return Q;
+    }
+    BinaryNode* balance(BinaryNode*node) {
+        if (node->balance_factor() == 2) {
+            if (node->left->balance_factor() == -1)
+                node->left = left_rotation(node->left);
+
+            node = right_rotation(node);
+        }
+        else if (node->balance_factor() == -2) {
+            if (node->right->balance_factor() == 1)
+                node->right = right_rotation(node->right);
+
+            node = left_rotation(node);
+        }
+        return node;
+    }
+    BinaryNode* insert_node(int task_id, int priority, BinaryNode* node) {
+        if (priority < node->priority) {
+            if (!node->left)
+                node->left = new BinaryNode(task_id, priority);
+            else 
+                node->left = insert_node(task_id, priority, node->left);
+        }
+        else if (priority > node->priority) {
+            if (!node->right)
+                node->right = new BinaryNode(task_id, priority);
+            else 
+                node->right = insert_node(task_id, priority, node->right);
+        }
+        else 
+            node->task_ids.push_back(task_id);
+        node->update_height();
+        return balance(node);
+    }
+    BinaryNode* min_node(BinaryNode* cur) {
+        while (cur && cur->left)
+            cur = cur->left;
+        return cur;
+    }
+    BinaryNode* max_node(BinaryNode* cur) {
+        while (cur && cur->right)
+            cur = cur->right;
+        return cur;
+    }
+
+    BinaryNode* delete_node(int priority, BinaryNode* node) {
+        if (!node) 
+            return nullptr;
+
+        if (priority < node->priority)
+            node->left = delete_node(priority, node->left);
+        else if (priority > node->priority)
+            node->right = delete_node(priority, node->right);
+        else {
+            BinaryNode* tmp = node;
+
+            if (!node->left && !node->right)
+                node = nullptr;
+            else if (!node->right)
+                node = node->left;
+            else if (!node->left)
+                node = node->right;
+            else {
+                BinaryNode* mn = min_node(node->right);
+                node->priority = mn->priority;
+                node->right = delete_node(node->priority, node->right);
+                tmp = nullptr;
+            }
+            if (tmp)
+                delete tmp;
+        }
+        if (node) {
+            node->update_height();
+            node = balance(node);
+        }
+        return node;
+    }
+public:
+    void enqueue(int task_id, int priority) {
+        if (!root)
+            root = new BinaryNode(task_id, priority);
+        else 
+            root = insert_node(task_id, priority, root);
+
+    }
+    int dequeue() {
+        assert(!isEmpty());
+        BinaryNode* mx = max_node(root);
+        assert(mx->task_ids.size() > 0);
+        int ret = mx->task_ids.back();
+        mx->task_ids.pop_back();
+        if (mx->task_ids.size() == 0)
+            root = delete_node(mx->priority, root);
+        
+        return ret;
+    }
+    bool isEmpty() {
+        return root == nullptr;
+    }
+};
+
+class AVLDictionary {
+    struct BinaryNode {
+        string data { };
+        bool is_full_word { };
+        int height;
+        BinaryNode* left;
+        BinaryNode* right;
+
+        BinaryNode(string data, bool is_full_word) :
+                data(data), is_full_word(is_full_word) {
+
+        }
+
+        int ch_height(BinaryNode* node) {	// child height
+			if (!node)
+				return -1;			// -1 for null
+			return node->height;	// 0 for leaf
+		}
+		int update_height() {	// call in end of insert function
+			return height = 1 + max(ch_height(left), ch_height(right));
+		}
+		int balance_factor() {
+			return ch_height(left) - ch_height(right);
+		}
+    };
+
+    BinaryNode *root { };
+
+	///////////////////////////
+	BinaryNode* right_rotation(BinaryNode* Q) {
+		BinaryNode* P = Q->left;
+		Q->left = P->right;
+		P->right = Q;
+		Q->update_height();
+		P->update_height();
+		return P;
+	}
+
+	BinaryNode* left_rotation(BinaryNode* P) {
+		BinaryNode* Q = P->right;
+		P->right = Q->left;
+		Q->left = P;
+		P->update_height();
+		Q->update_height();
+		return Q;
+	}
+
+	BinaryNode* balance(BinaryNode* node) {
+		if (node->balance_factor() == 2) { 			// Left
+			if (node->left->balance_factor() == -1)	// Left Right?
+				node->left = left_rotation(node->left);	// To Left Left
+
+			node = right_rotation(node);	// Balance Left Left
+		} else if (node->balance_factor() == -2) {
+			if (node->right->balance_factor() == 1)
+				node->right = right_rotation(node->right);
+
+			node = left_rotation(node);
+		}
+		return node;
+	}
+
+	// -1 (not exist), 0 exist as prefix, 1 exist as full word
+	int search(string target, BinaryNode* node) {
+		if(!node)
+			return -1;
+
+		if (target == node->data)
+			return node->is_full_word;
+
+		if (target < node->data)
+			return search(target, node->left);
+
+		return search(target, node->right);
+	}
+
+    BinaryNode* insert_node(string target, bool is_full_word, BinaryNode* node) {
+		if (target < node->data) {
+			if (!node->left)
+				node->left = new BinaryNode(target, is_full_word);
+			else	// change left. update left as it might be balanced
+				node->left = insert_node(target, is_full_word, node->left);
+		} else if (target > node->data) {
+			if (!node->right)
+				node->right = new BinaryNode(target, is_full_word);
+			else
+				node->right = insert_node(target, is_full_word, node->right);
+		}
+		else if (is_full_word)	// if existed before but this is full_word, mark it
+			node->is_full_word = 1;
+		node->update_height();
+		return balance(node);
+	}
+
+	void insert_value(string target, int is_full_word) {
+		if (!root)
+			root = new BinaryNode(target, is_full_word);
+		else
+			root = insert_node(target, is_full_word, root);
+	}
 
 public:
-    void enqueue(int id, int priority) {
+    void insert_string(string str) {
+        if (str == "")
+            return;
         
+        string cur = "";
+        for (int i = 0; i < str.size(); i++) {
+            cur += str[i];
+            insert_value(cur, i == (int) str.size() - 1);
+        }
+    }
+    bool word_exist(string str) {
+        return search(str, root) == 1;
+    }
+    bool prefix_exist(string str) {
+        return search(str, root) != -1;
     }
 };
 
@@ -358,11 +647,57 @@ int main()
     cout << avl.lower_bound(50).second << endl;
     // hw1 p2
     cout << avl.upper_bound(50).second << endl;
-
+    // hw1 p3
     AVLTree hw1p3;
 
     cout << hw1p3.count_inversions({5,4,3,2,1}) << endl;
     cout << hw1p3.count_inversions({10,5,8,2,12,6}) << endl;
+    cout << endl;
+    // hw1 p4
+    PriorityQueue tasks;
+
+	tasks.enqueue(1131, 1);
+	tasks.enqueue(3111, 3);
+	tasks.enqueue(2211, 2);
+	tasks.enqueue(3161, 3);
+	tasks.enqueue(7761, 7);
+
+	cout << tasks.dequeue() << "\n";	// 7761
+	cout << tasks.dequeue() << "\n";	// 3161
+
+	tasks.enqueue(1535, 1);
+	tasks.enqueue(2815, 2);
+	tasks.enqueue(3845, 3);
+	tasks.enqueue(3145, 3);
+
+	// 3145 3845 3111 2815 2211 1535 1131
+	while (!tasks.isEmpty())
+		cout << tasks.dequeue() << " "<<flush;
+    cout << endl<< endl;
+    // hw1 p5
+    for (int i = 0; i < 10; ++i)
+        cout << avl.min_nodes_rec(i) << " ";
+    
+    cout << endl<< endl;    
+
+    // hw1 p6
+    AVLDictionary avld;
+
+	avld.insert_string("abcd");
+	avld.insert_string("xyz");
+
+	cout<<avld.word_exist("abcd")<<"\n";	// 1
+	cout<<avld.word_exist("ab")<<"\n";		// 0
+	cout<<avld.prefix_exist("ab")<<"\n";	// 1
+
+	avld.insert_string("ab");
+
+	cout<<avld.word_exist("ab")<<"\n";		// 1
+	cout<<avld.word_exist("cd")<<"\n";		// 0
+	cout<<avld.word_exist("abcde")<<"\n";	// 0
+
+    cout << endl<< endl;    
+
     return 0;
 }
 

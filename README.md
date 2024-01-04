@@ -26,7 +26,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] Binary Heap
 
-- [ ] AVL Tree
+- [x] AVL Tree
 
 - [ ] Letter Tree (Trie)
 
