@@ -45,7 +45,7 @@ public:
     }
     void insert(const vector<string> &vec)
     {
-        for (auto &v:vec)
+        for (auto &v : vec)
             insert(v);
     }
     bool word_exist_recur(string str, int idx = 0)
@@ -59,7 +59,7 @@ public:
         
         return child[cur]->word_exist_recur(str, idx +1);
     }
-    // hw1 p1
+    // hw2 p1
     bool word_exist(string str)
     {
         trie* root = this;
@@ -91,7 +91,7 @@ public:
         
         return str;
     }
-
+    // hw1 p2
     string replaceWords(vector<string>& dictionary, string sentence) 
     {
         insert(dictionary);
@@ -105,6 +105,7 @@ public:
 
         return res;
     }
+    // hw1 p1
     void get_all_strings(vector<string> &res, string sub="")
     {
         if(isLeaf){
@@ -116,6 +117,7 @@ public:
             }
         }
     }
+    // hw2 p2
     void auto_complete(const string &str, vector<string>& res)
     {
         trie* root = this;
@@ -127,6 +129,7 @@ public:
         }
         root->get_all_strings(res,str);
     }
+    // hw2 p3
     // https://leetcode.com/problems/implement-magic-dictionary
     bool word_exist_with_1_change2(string searchWord)
     {
@@ -162,7 +165,7 @@ public:
         return false;
     }
 };
-
+// hw1 p3
 class trieHw1p3
 {
 private:
@@ -181,7 +184,7 @@ public:
     }
 };
 
-
+// hw1 p4
 class TrieMap
 {
 private:
@@ -227,7 +230,7 @@ public:
     }
 };
 
-
+// hwq p5
 class TriePath
 {
 private:

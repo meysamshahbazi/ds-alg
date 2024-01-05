@@ -30,6 +30,8 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [ ] Letter Tree (Trie)
 
+    - [ ] HW3
+
 - [ ] Hash Table
 
 - [ ] Review 1D Arrays Problem-Solving
