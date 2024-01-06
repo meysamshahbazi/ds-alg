@@ -28,13 +28,11 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] AVL Tree
 
-- [ ] Letter Tree (Trie)
+- [x] Letter Tree (Trie)
 
   - [ ] HW3 p2
 
-- [ ] Hash Table
-
-  - [ ] HW2 p5
+- [x] Hash Table
 
 - [ ] Review 1D Arrays Problem-Solving
 

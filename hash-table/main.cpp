@@ -1,16 +1,17 @@
-#include<iostream>
+#include <iostream>
 #include <vector>
-#include<cassert>
-#include<unordered_map>
-#include<unordered_set>
+#include <cassert>
+#include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
+
 
 using namespace std;
 
-int hash_string(string str, int n)
-{
+int hash_string(string str, int n) {
     long long nn = n;
     long long sum = 0;
-    for (int i = 0; i< (int) str.size(); ++i)
+    for (int i = 0; i < (int) str.size(); ++i)
         sum = (sum * 26 + str[i] - 'a') % nn;
 
     return sum % nn;
@@ -68,72 +69,64 @@ struct PhoneEntry
     string name; // key 
     string phone_number; // data
 
-    int hash()
-    {
+    int hash() {
         return hash_string(name, INTERNAL_LIMIT);
     }
+    
     PhoneEntry(string name, string phone_number)
-        :name(name), phone_number(phone_number)
-    {
+            :name(name), phone_number(phone_number) {
     }
     
-    void print()
-    {
+    void print() {
         cout << "(" << name << ", " << phone_number << ")  ";
     }
 };
 
-class PhoneHashTable
-{
+class PhoneHashTable {
 private:
     int table_size;
     double limit_load_factor;
     vector<vector<PhoneEntry>> table;
 public:
     PhoneHashTable(int table_size = 10, double limit_load_factor = 0.75)
-    :table_size(table_size), limit_load_factor(limit_load_factor)
-    {
+            :table_size(table_size), limit_load_factor(limit_load_factor) {
         table.resize(table_size);
     }
-    bool get(PhoneEntry &phone)
-    {
+    bool get(PhoneEntry &phone) {
         int idx = phone.hash() % table_size;
 
         for (int i = 0; i < (int) table[idx].size(); i++) {
-            if(table[idx][i].name ==phone.name) {
+            if (table[idx][i].name == phone.name) {
                 phone = table[idx][i];
                 return true;
             }
         }
         return false;
     }
-    void put(PhoneEntry phone) 
-    {
+    void put(PhoneEntry phone) {
         int idx = phone.hash() % table_size;
 
         for (int i = 0; i < (int) table[idx].size(); i++) {
-            if(table[idx][i].name == phone.name){
-                table[idx][i] = phone;// update
+            if (table[idx][i].name == phone.name) {
+                table[idx][i] = phone; // update
                 return;
             }
         }
         table[idx].push_back(phone);
     }
-    double getLeadFactor() 
-    {
+    double getLeadFactor() {
         int num_of_used = 0;
-        for(auto v:table){
+        for (auto v : table) {
             if (!v.empty())
                 num_of_used++;
         }
         return static_cast<double>(num_of_used)/table_size;
     }
-    bool remove(PhoneEntry phone)
-    {
+    bool remove(PhoneEntry phone) {
         int idx = phone.hash() % table_size;
         for (int i = 0; i < (int) table[idx].size(); i++) {
-            if(table[idx][i].name ==phone.name) {
-                swap(table[idx][i],table[idx].back());
+            if (table[idx][i].name == phone.name) {
+                swap(table[idx][i], table[idx].back());
                 table[idx].pop_back();
                 return true;
             }
@@ -145,11 +138,11 @@ public:
     {
         vector<vector<PhoneEntry>> table_old = table;
         table.clear();
-        table_size = 2*table_size;
+        table_size = 2 * table_size;
         table.resize(table_size);
     
-        for(auto v: table_old){
-            for (auto e:v)
+        for (auto v : table_old){
+            for (auto e : v)
                 put(e);
         }
 
@@ -226,16 +219,15 @@ private:
     vector<PhoneEntry*> table;
     PhoneEntry* deleted{};
 public:
-    PhoneHashTableProbe(int table_size) :table_size(table_size)
-    {
+    PhoneHashTableProbe(int table_size) 
+            : table_size(table_size) {
         table.resize(table_size);
         deleted = new PhoneEntry("","");
     }
-    bool put(PhoneEntry phone)
-    {
+    bool put(PhoneEntry phone) {
         int idx = phone.hash() % table_size;
-        for(int step = 0; step<table_size; ++step) {
-            if(table[idx] == deleted || !table[idx]) {
+        for (int step = 0; step < table_size; ++step) {
+            if (table[idx] == deleted || !table[idx]) {
                 table[idx] = new PhoneEntry(phone.name, phone.phone_number);
                 return true;
             }
@@ -243,18 +235,17 @@ public:
                 table[idx]->phone_number = phone.phone_number;
                 return true;
             }
-            idx = (idx +1) % table_size;
+            idx = (idx + 1) % table_size;
         }
         return false;
     }
-    bool remove(PhoneEntry phone)
-    {
+    bool remove(PhoneEntry phone) {
         int idx = phone.hash() % table_size;
 
         for (int step = 0; step < table_size; ++step) {
             if (!table[idx])
                 break;
-            if(table[idx] != deleted && table[idx]->name == phone.name) {
+            if (table[idx] != deleted && table[idx]->name == phone.name) {
                 delete table[idx];
                 table[idx] = deleted;
                 return true;
@@ -264,18 +255,17 @@ public:
         return false;
     }
 
-    bool get(PhoneEntry &phone)
-    {
+    bool get(PhoneEntry &phone) {
         int idx = phone.hash() % table_size;
 
         for (int step = 0; step < table_size; ++step) {
             if (!table[idx])
                 break;
-            if(table[idx] != deleted && table[idx]->name == phone.name) {
+            if (table[idx] != deleted && table[idx]->name == phone.name) {
                 phone.phone_number = table[idx]->phone_number;
                 return true;
             }
-            idx = (idx +1) % table_size;
+            idx = (idx + 1) % table_size;
         }
         return false;
     }
@@ -416,6 +406,169 @@ public:
             cur = cur->next;
         }
          
+    }
+};
+
+
+class PhoneHashTable {
+private:
+	int table_size;
+	vector<PhoneEntry*> table;
+	// to mark a cell as deleted
+	PhoneEntry *deleted { };
+public:
+	PhoneHashTable(int table_size) :
+			table_size(table_size) {
+		table.resize(table_size);
+		deleted = new PhoneEntry("", "");
+	} //  needs a destructor
+
+	void put(PhoneEntry phone) {
+		/*
+		 * When to stop?
+		 * One might stop when he performs table_size steps
+		 * my impression: we better stop when we cycle back to same index
+		 *
+		 * Computionally, we can see that we can fail to add in both cases
+		 * ALTHOUGHT there are still free elements!
+		 * This never happens in linear probing
+		 *
+		 * If we failed to add: then do rehashing and try again
+		 * 	which will typically works well (or do rehashing again)		 *
+		 */
+
+		int idx = phone.hash() % table_size;
+		int step = 0, original_idx = idx;
+
+		do {
+			if (table[idx] == deleted || !table[idx]) {
+				table[idx] = new PhoneEntry(phone.name, phone.phone_number);
+				return;
+			} else if (table[idx]->name == phone.name) {
+				table[idx]->phone_number == phone.phone_number;
+				return;	// update
+			}
+			++step;
+			idx = (original_idx + step * step) % table_size;
+		} while (idx != original_idx);	// catch that we repeated
+
+		// If we failed: rehash to increase size, then add this element
+		rehashing();
+		put(phone);
+	}
+
+	bool remove(PhoneEntry phone) {
+		int idx = phone.hash() % table_size;
+		int step = 0, original_idx = idx;
+
+		do {
+			if (!table[idx])
+				break;
+			if (table[idx] != deleted && table[idx]->name == phone.name) {
+				delete table[idx];
+				table[idx] = deleted;
+				return true;
+			}
+			++step;
+			idx = (original_idx + step * step) % table_size;
+		} while (idx != original_idx);	// catch that we repeated
+		return false;
+	}
+
+	bool get(PhoneEntry &phone) {
+		int idx = phone.hash() % table_size;
+		int step = 0, original_idx = idx;
+
+		do {
+			if (!table[idx])
+				break;
+			if (table[idx] != deleted && table[idx]->name == phone.name) {
+				phone.phone_number = table[idx]->phone_number;
+				return true;
+			}
+			++step;
+			idx = (original_idx + step * step) % table_size;
+		} while (idx != original_idx);	// catch that we repeated
+		return false;
+	}
+
+	void rehashing() {
+		cout<<"Rehashing\n";
+		PhoneHashTable new_table(2 * table_size);
+
+		for (int hash = 0; hash < table_size; ++hash) {
+			if (table[hash] == deleted || !table[hash])
+				continue;
+
+			new_table.put(*table[hash]);
+		}
+		// Copy & delete
+		table_size *= 2;
+		table = new_table.table;
+	}
+
+	void print_all() {
+		for (int hash = 0; hash < table_size; ++hash) {
+			cout << hash << " ";
+			if (table[hash] == deleted)
+				cout << " X ";
+			else if (!table[hash])
+				cout << " E ";
+			else
+				table[hash]->print();
+			cout << "\n";
+		}
+		cout << "******************\n";
+	}
+};
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
+// https://leetcode.com/problems/linked-list-cycle/
+class Solution141 {
+public:
+    bool hasCycle(ListNode *head) {
+        unordered_set<ListNode*> set;
+        
+        ListNode* cur = head;
+        while (cur) {
+            set.insert(cur);
+            if (set.count(cur->next))
+                return true;
+            
+            cur = cur->next;
+        }
+        return false;
+    }
+};
+
+// https://leetcode.com/problems/linked-list-cycle-ii/
+class Solution142 {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        unordered_set<ListNode*> set;
+        
+        ListNode* cur = head;
+        while (cur) {
+            set.insert(cur);
+            if (set.count(cur->next))
+                return cur->next;
+            
+            cur = cur->next;
+        }
+        return nullptr;
+    }
+};
+
+// https://leetcode.com/problems/find-all-anagrams-in-a-string/
+class Solution438 {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        
     }
 };
 
