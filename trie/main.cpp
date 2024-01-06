@@ -32,10 +32,10 @@ public:
         }
     }
     // hw1 p1
-    void insert(string str)
+    void insert(string str, int start_pos = 0)
     {
         trie* root = this;
-        for (int idx = 0; idx < (int) str.size(); idx++) {
+        for (int idx = start_pos; idx < (int) str.size(); idx++) {
             int cur = str[idx] - 'a';
             if (root->child[cur] == 0)
                 root->child[cur] = new trie();
@@ -106,14 +106,14 @@ public:
         return res;
     }
     // hw1 p1
-    void get_all_strings(vector<string> &res, string sub="")
+    void get_all_strings(vector<string> &res, string sub = "")
     {
-        if(isLeaf){
+        if (isLeaf)
             res.push_back(sub);            
-        }
-        for(int i = 0; i < MAX_CHAR; i++) {
-            if(child[i]){
-                child[i]->get_all_strings(res, sub + (char)(i+'a'));
+
+        for (int i = 0; i < MAX_CHAR; i++) {
+            if (child[i]){
+                child[i]->get_all_strings(res, sub + (char)(i + 'a'));
             }
         }
     }
@@ -123,7 +123,7 @@ public:
         trie* root = this;
         for (int idx = 0; idx < (int)str.size(); idx++) {
             int cur = str[idx] - 'a';
-            if(!root->child[cur])
+            if (!root->child[cur])
                 return;
             root = root->child[cur];
         }
@@ -164,6 +164,20 @@ public:
 
         return false;
     }
+    void print_all_matches(const string &str, int starting_pos = 0) {
+        trie* cur = this;
+        for (int idx = starting_pos; idx < str.size(); ++idx) {
+            int ch = str[idx] - 'a';
+            if (!cur->child[ch])
+                return;
+            
+            cur = cur->child[ch];
+
+            if(cur->isLeaf)
+                cout << str.substr(starting_pos, idx - starting_pos + 1) << endl;
+        }
+    }
+
 };
 // hw1 p3
 class trieHw1p3
@@ -226,7 +240,7 @@ public:
         if (!child.count(cur))
             return false;
         
-        return child[cur]->prefix_exist(str, idx +1);
+        return child[cur]->prefix_exist(str, idx + 1);
     }
 };
 
@@ -268,6 +282,116 @@ public:
     }
 };
 
+// hw3 p1
+void list_substrs_v1(const string& str, vector<string> &queries)
+{
+    trie t;
+    for(int i = 0; i < (int) str.size(); i++) {
+        t.insert(str, i);
+    }
+
+    for (auto q : queries)
+        if (t.prefix_exist(q))
+            cout << q << endl;
+
+    // for(int i = 0; i < (int) str.size(); i++) {
+    //     for (int n = 0; n + i <= (int) str.size(); n++) {
+    //         t.insert(str.substr(i, n));
+    //     }
+    // }
+    // for (auto q : queries)
+    //     if (t.word_exist(q))
+    //         cout << q << endl;
+
+
+}
+
+void list_substrs_v2(const string& str, vector<string> &queries)
+{
+    trie t;
+    for (auto q : queries)
+        t.insert(q);
+    
+    for (int i = 0; i < (int) str.size() - 1; ++i) {
+        t.print_all_matches(str, i);
+    }
+
+    // for(int i = 0; i < (int) str.size(); i++) {
+    //     for (int n = 0; n + i <= (int) str.size(); n++) {
+    //         if (t.word_exist(str.substr(i, n)))
+    //             cout << str.substr(i, n) << endl;
+    //     }
+    // }
+
+}
+// hw3 p2
+// https://leetcode.com/problems/prefix-and-suffix-search/
+class WordFilter {
+    struct Trie {
+        static const int MAX_CHAR = 26;
+        unordered_map<char, Trie*> childs;
+        unordered_map<char, Trie*> childs_r;
+        
+        Trie() {
+        }
+
+        void insert(string &str) {
+            Trie* cur = this;
+            Trie* rcur = this;
+            for (int idx = 0; idx < (int) str.size(); idx++) {
+                char ch = str[idx];
+                if (!cur->childs.count(ch))
+                    cur->childs[ch] = new Trie();
+            
+                char rch = str[str.size() - 1 - idx];
+                if (!rcur->childs_r.count(rch))
+                    rcur->childs_r[rch] = new Trie();
+                
+                cur = cur->childs[ch];
+                rcur = rcur->childs_r[rch];
+            }
+        }
+        bool prefix_exist(string &str, int idx = 0) {
+            if (idx == (int) str.size())
+                return true;
+            char ch = str[idx];
+            if (!childs.count(ch))
+                return false;
+            
+            return childs[ch]->prefix_exist(str, idx + 1);
+        }
+        bool suffix_exist(string &str, int idx) {
+            if (idx == -1)
+                return true;
+
+            char ch = str[idx];
+
+            if (!childs_r.count(ch))
+                return false;
+            
+            return childs_r[ch]->suffix_exist(str, idx - 1);
+        }
+    };
+    
+    vector<Trie*> dict;
+public:
+    WordFilter(vector<string>& words) {
+        for (int i = 0; i < words.size(); i++) {
+            Trie * t = new Trie();
+            t->insert(words[i]);
+            dict.push_back(t);
+        }
+    }
+    
+    int f(string pref, string suff) {
+        for (int i = dict.size() - 1; i >=0; i--) {
+            if (dict[i]->prefix_exist(pref))
+                if (dict[i]->suffix_exist(suff, (int)suff.size() - 1))
+                    return i;
+        }
+        return -1;
+    }
+};
 
 // https://leetcode.com/problems/design-add-and-search-words-data-structure/
 
@@ -403,6 +527,11 @@ int main()
     // cout<<hw2p3.word_exist_with_1_change("hexlo")<<endl;
     // cout<<hw2p3.word_exist_with_1_change("xello")<<endl;
     // cout<<hw2p3.word_exist_with_1_change("xyllo")<<endl;
-
+    cout<<"--------------\n";
+    string hw3p1 = "heyabcdtwxyw";
+    vector<string> hw3p1q = {"xy", "ab", "t", "yz"};
+    list_substrs_v1(hw3p1, hw3p1q);
+    cout << endl;
+    list_substrs_v2(hw3p1, hw3p1q);
     return 0;
 }

@@ -30,7 +30,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [ ] Letter Tree (Trie)
 
-    - [ ] HW3
+  - [ ] HW3 p2
 
 - [ ] Hash Table
 
@@ -97,5 +97,3 @@ This repo contains my practices for data structures and algorithms in God progra
 - [ ] Graph MST - Prim
 
 - [ ] Graph MST - Kruskal
-
-Data Structures and Algorithms in C++ 2e By Michael Goodrich, Roberto Tamassia and David Mount
