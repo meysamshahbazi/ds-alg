@@ -42,13 +42,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 ## Algorithm part 1
 
-- [ ] Getting Started
-
-- [ ] Online Judges
-
-- [ ] Recursion Basics Review
-
-- [ ] Complexity Analysis 1
+- [x] Recursion Basics Review
 
 - [ ] Sorting Insertion, Selection and Count
 

@@ -31,7 +31,7 @@ void insertion_sort(vector<int> &nums)
 void insertion_sort_v2(vector<int> &nums)
 {
     for (int i = 1; i < (int) nums.size(); i++) {
-        for ( int j = i - 1; j >=0 && nums[j] < nums[j + 1]; j--)
+        for (int j = i - 1; j >=0 && nums[j] < nums[j + 1]; j--)
             swap(nums[j + 1], nums[j]);
     }
 }
