@@ -75,7 +75,7 @@ int binary_search_right(vector<int> &nums, int val)
     }
     return -1;
 }
-
+// hw1 p1
 // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
 vector<int> searchRange(vector<int>& nums, int target) 
 {
@@ -85,6 +85,7 @@ vector<int> searchRange(vector<int>& nums, int target)
     return {left, right};
 }
 
+// hw1 p2
 // https://leetcode.com/problems/find-right-interval/
 vector<int> findRightInterval(vector<vector<int>>& intervals) 
 {
@@ -115,6 +116,7 @@ vector<int> findRightInterval(vector<vector<int>>& intervals)
     return right_intervals;
 }
 
+// hw1 p3
 // https://leetcode.com/problems/valid-triangle-number/
 int triangleNumber(vector<int>& nums)
 {
@@ -142,6 +144,7 @@ bool possible(int n, long long rows)
     long sum = (rows * (rows + 1)) / 2;
     return n >= sum;
 }
+// hw1 p4
 // https://leetcode.com/problems/arranging-coins/
 int arrangeCoins(int n) 
 {
@@ -180,6 +183,7 @@ bool divide_less_than(vector<int> &nums, double divisor, int threshold)
 
     return sum <= threshold;
 }
+// hw2 p1
 int smallestDivisor(vector<int>& nums, int threshold) 
 {
     
@@ -239,6 +243,7 @@ bool PossibleToMakeBouquet(vector<int>& bloomDay, int m, int k, int day)
  * @param k 
  * @return int 
  */
+// hw2 p2
 int minDays(vector<int>& bloomDay, int m, int k)
 {
     if (m * k > (int) bloomDay.size())
@@ -258,7 +263,7 @@ int minDays(vector<int>& bloomDay, int m, int k)
     
     return answer;
 }
-
+// hw2 p3
 bool canWarm(vector<int>& houses, vector<int>& heaters, int radius)
 {
     int idx = 0;
@@ -298,12 +303,22 @@ int findRadius(vector<int>& houses, vector<int>& heaters)
     return answer;  
 }
 
-// https://leetcode.com/problems/missing-element-in-sorted-array/
+// hw3 p1
+// https://leetcode.com/problems/missing-element-in-sorted-array/ [premium]
 int missingElement(vector<int> &nums, int k)
 {
 
 }
+// hw3 p2
+// https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/
+class Solution668 {
+public:
+    int findKthNumber(int m, int n, int k) {
+        
+    }
+};
 
+// hw4 p1
 // https://leetcode.com/problems/sqrtx/
 int mySqrt(int x)
 {
@@ -377,8 +392,39 @@ public:
     }
 };
 
+// https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+class Solution153 {
+public:
+    inline int get_perv(int idx, int sz) {
+        if (idx == 0)
+            return sz - 1;
+        return idx - 1;
+    }
+    int findMin(vector<int>& nums) {
+        int start = 0, end = (int) nums.size() - 1;
+        int sz = (int) nums.size();
+        int mid;
+        while (start <= end) {
+            mid = start + (end - start)/2;
+            int prv = get_perv(mid, sz);;
+            if (nums[mid] < nums[prv])
+                break;
+
+            if (nums[end] > nums[mid])
+                end = mid - 1;
+            else 
+                start = mid + 1;
+        }
+        return nums[mid];
+    }
+};
+
 int main()
 {
+    Solution153 s153;
+    vector<int> v153 = {4,5,6,7,0,1,2};
+    cout << s153.findMin(v153) << endl;
+
     vector<int> v { 2, 2, 2, 3, 4, 9, 17, 17, 17, 20 };
     cout << binary_search(v, 9) << endl;
 
@@ -433,5 +479,6 @@ int main()
     // hw4 p2
     vector<double> hw4p2 = {4, 3, 3};   
     cout<<largest_area(hw4p2,4)<<endl;
+    
     return 0;
 }
