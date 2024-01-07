@@ -14,7 +14,7 @@ void print(vector<T> &v)
     for (int i = 0; i < (int) v.size(); ++i) {
 		cout << v[i] << " ";
 	}
-    cout<<endl;
+    cout << endl;
 }
 
 int binary_search(vector<int> &nums, int val)
@@ -162,18 +162,6 @@ int arrangeCoins(int n)
 }
 
 // https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/
-/**
- * @brief Given an array of integers nums and an integer threshold,
- *  we will choose a positive integer divisor, divide all the array by it, and sum the division's result.
- *  Find the smallest divisor such that the result mentioned above is less than or equal to threshold.
- * Each result of the division is rounded to the nearest integer greater than or equal to that element. (For example: 7/3 = 3 and 10/2 = 5).
-
-The test cases are generated so that there will be an answer.
- * 
- * @param nums 
- * @param threshold 
- * @return int 
- */
 bool divide_less_than(vector<int> &nums, double divisor, int threshold)
 {
     int sum = 0;
@@ -232,18 +220,8 @@ bool PossibleToMakeBouquet(vector<int>& bloomDay, int m, int k, int day)
     return false;
 }
 
-/**
- * @brief You are given an integer array bloomDay, an integer m and an integer k.
- * You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
- * The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
- * Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
- * https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/
- * @param bloomDay 
- * @param m 
- * @param k 
- * @return int 
- */
 // hw2 p2
+// https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/
 int minDays(vector<int>& bloomDay, int m, int k)
 {
     if (m * k > (int) bloomDay.size())
@@ -479,6 +457,6 @@ int main()
     // hw4 p2
     vector<double> hw4p2 = {4, 3, 3};   
     cout<<largest_area(hw4p2,4)<<endl;
-    
+
     return 0;
 }
