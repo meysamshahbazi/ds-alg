@@ -44,7 +44,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] Recursion Basics Review
 
-- [ ] Sorting Insertion, Selection and Count
+- [x] Sorting Insertion, Selection and Count
 
 - [ ] Searching Binary Search
 
