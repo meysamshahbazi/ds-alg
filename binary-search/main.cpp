@@ -283,9 +283,28 @@ int findRadius(vector<int>& houses, vector<int>& heaters)
 
 // hw3 p1
 // https://leetcode.com/problems/missing-element-in-sorted-array/ [premium]
+
+int numOfMissing(vector<int> &nums, int left, int right) {
+    return nums[right] - nums[left] - right + left;
+}
+
 int missingElement(vector<int> &nums, int k)
 {
+    int left = 0, right = (int) nums.size() - 1;
+    int answer;
 
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (numOfMissing(nums, left, mid) > k) {
+            k -= numOfMissing(nums, left, mid);
+            left = mid + 1;   
+        }
+        else {
+            right = mid;
+        }
+        cout << "mid " << mid << endl;
+    }
+    // cout << left << " " << right << endl;
 }
 // hw3 p2
 // https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/
@@ -447,16 +466,21 @@ int main()
     vector<int> hw2p2 = {1,10,3,10,2};
     cout<<minDays(hw2p2, 3,1)<<endl;
     // hw2 p3
-
     vector<int> houses = {1,5};
     vector<int> heaters = {10};
     // cout<<canWarm(houses,heaters, 1)<<endl;
     cout<<findRadius(houses, heaters)<<endl;
+
+    // hw3 p1 
+    vector<int> hw3p1 = {4,7,9,10};
+    missingElement(hw3p1, 3);
+
+    /*
     // hw4 p1
     cout<<mySqrt(36)<<endl;
     // hw4 p2
     vector<double> hw4p2 = {4, 3, 3};   
     cout<<largest_area(hw4p2,4)<<endl;
-
+    */
     return 0;
 }
