@@ -468,23 +468,34 @@ int numOfMissing(vector<int> &nums, int left, int right) {
     return nums[right] - nums[left] - right + left;
 }
 
+
+// int missingElement(vector<int> &nums, int k){
+//     int left = 0, right = (int) nums.size() - 1, pos = -1;
+
+//     while (left <= right) {
+//         int mid = 
+//     }
+
+// }
+
 int missingElement(vector<int> &nums, int k)
 {
     int left = 0, right = (int) nums.size() - 1;
     int answer;
 
+    k--;
     while (left <= right) {
         int mid = left + (right - left) / 2;
         if (numOfMissing(nums, left, mid) > k) {
             k -= numOfMissing(nums, left, mid);
             left = mid + 1;   
         }
-        else {
+        else
             right = mid;
-        }
-        cout << "mid " << mid << endl;
     }
-    // cout << left << " " << right << endl;
+
+    cout << "right " << left << endl;
+    return answer;
 }
 // hw3 p2
 // https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/
@@ -661,7 +672,7 @@ int main()
     // hw3 p1 
     vector<int> hw3p1 = {4,7,9,10};
     missingElement(hw3p1, 3);
-
+    
     /*
     // hw4 p1
     cout<<mySqrt(36)<<endl;

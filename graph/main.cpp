@@ -270,7 +270,51 @@ void print_adjaceny_matrixxx(GRAPH &graph) {
 	}
 }
 
-// https://leetcode.com/problems/find-the-town-judge/description/
+// int find_universal_sink_fast(GRAPH &graph) {
+
+// }
+
+// https://leetcode.com/problems/find-the-town-judge/
+class Solution997 {
+public:
+	void add_directed_edge(GRAPH &graph, int from, int to) {
+		graph[from][to] += 1;
+	}
+
+	int find_universal_sink_fast(GRAPH &graph) {
+		int nodes = (int) graph.size();
+
+		int from = 0, to = 0;
+
+		while (to < nodes) {
+			if (graph[from][to] == 0)
+				to++;
+			else 
+				from++;
+			if (from == nodes)
+				return -1;
+		}
+
+		for (int i = 0; i < nodes; i++) {
+			if (from != i) {
+				if (graph[from][i] !=0 || graph[i][from]  == 0)
+					return -1;
+			}
+		}
+		
+		return from;
+	}
+    int findJudge(int n, vector<vector<int>>& trust) {
+		GRAPH graph(n,vector<int>(n));
+        for (auto t : trust) 
+			add_directed_edge(graph, t[0] - 1, t[1] - 1);
+
+		int tr = find_universal_sink_fast(graph);
+		return tr + 1;
+    }
+};
+
+
 int main()
 {
 	GRAPH3 hw1p1;
@@ -336,22 +380,22 @@ int main()
 	print_paths_len_2(hw2p5);
 	cout<<"\n";
 	// hw3 p1
-	GRAPH hw3p1(1,vector<int>(1));
+	GRAPH hw3p1(6,vector<int>(9));
 	// add_directed_edge(hw3p1, 0, 3);
 	// add_directed_edge(hw3p1, 1, 3);
 	// add_directed_edge(hw3p1, 2, 3);
 	// add_directed_edge(hw3p1, 4, 3);
 	// add_directed_edge(hw3p1, 5, 3);
 	
-	// add_directed_edge(hw3p1, 0, 3);
-	// add_directed_edge(hw3p1, 1, 3);
-	// add_directed_edge(hw3p1, 2, 3);
-	// add_directed_edge(hw3p1, 4, 3);
-	// add_directed_edge(hw3p1, 3, 5);
-	// add_directed_edge(hw3p1, 0, 5);
-	// add_directed_edge(hw3p1, 1, 5);
-	// add_directed_edge(hw3p1, 2, 5);
-	// add_directed_edge(hw3p1, 4, 5);
+	add_directed_edge(hw3p1, 0, 3);
+	add_directed_edge(hw3p1, 1, 3);
+	add_directed_edge(hw3p1, 2, 3);
+	add_directed_edge(hw3p1, 4, 3);
+	add_directed_edge(hw3p1, 3, 5);
+	add_directed_edge(hw3p1, 0, 5);
+	add_directed_edge(hw3p1, 1, 5);
+	add_directed_edge(hw3p1, 2, 5);
+	add_directed_edge(hw3p1, 4, 5);
 
 	// add_directed_edge(hw3p1, 0, 1);
 	// add_directed_edge(hw3p1, 1, 2);

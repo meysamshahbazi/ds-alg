@@ -52,9 +52,7 @@ This repo contains my practices for data structures and algorithms in God progra
   
   - [ ] HW4 p3
 
-- [ ] Graph Representation
-
-  - [ ] HW3 P1 P2
+- [x] Graph Representation
 
 - [ ] Graph Depth First Search
 
