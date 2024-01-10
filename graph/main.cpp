@@ -270,10 +270,6 @@ void print_adjaceny_matrixxx(GRAPH &graph) {
 	}
 }
 
-// int find_universal_sink_fast(GRAPH &graph) {
-
-// }
-
 // https://leetcode.com/problems/find-the-town-judge/
 class Solution997 {
 public:
