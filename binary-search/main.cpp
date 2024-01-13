@@ -463,46 +463,63 @@ public:
 
 // hw3 p1
 // https://leetcode.com/problems/missing-element-in-sorted-array/ [premium]
-
 int numOfMissing(vector<int> &nums, int left, int right) {
     return nums[right] - nums[left] - right + left;
 }
 
+int missingElement(vector<int> &nums, int k){
 
-// int missingElement(vector<int> &nums, int k){
-//     int left = 0, right = (int) nums.size() - 1, pos = -1;
+}
 
+// int missingElement(vector<int> &nums, int k)
+// {
+//     int left = 0, right = (int) nums.size() - 1;
+//     int answer;
+
+//     k--;
 //     while (left <= right) {
-//         int mid = 
+//         int mid = left + (right - left) / 2;
+//         if (numOfMissing(nums, left, mid) > k) {
+//             k -= numOfMissing(nums, left, mid);
+//             left = mid + 1;   
+//         }
+//         else
+//             right = mid;
 //     }
 
+//     cout << "right " << left << endl;
+//     return answer;
 // }
 
-int missingElement(vector<int> &nums, int k)
-{
-    int left = 0, right = (int) nums.size() - 1;
-    int answer;
-
-    k--;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (numOfMissing(nums, left, mid) > k) {
-            k -= numOfMissing(nums, left, mid);
-            left = mid + 1;   
-        }
-        else
-            right = mid;
-    }
-
-    cout << "right " << left << endl;
-    return answer;
-}
 // hw3 p2
 // https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/
 class Solution668 {
 public:
     int findKthNumber(int m, int n, int k) {
-        
+        int left = 1, right = m*n;
+
+        int ans = 0;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            int nb_of_less_than = 0;
+            for (int i = 1; i <= mid && i <= n; i++){
+                if (mid / i <= m)
+                    nb_of_less_than += mid / i;
+                else 
+                    nb_of_less_than += m /i;
+                // nb_of_less_than += min(mid, m); 
+            }
+
+            if (nb_of_less_than > k)
+                left = mid + 1;
+            else if (nb_of_less_than < k)
+                right = mid - 1;
+            else
+                return mid;    
+        }
+        return -1;
     }
 };
 
@@ -520,7 +537,7 @@ int mySqrt(int x)
         else 
             end = mid;
     }
-    return  end; 
+    return end; 
 }
 
 // https://www.spoj.com/problems/PIE/
@@ -678,9 +695,14 @@ int main()
     cout << s475.findRadius(houses, heaters)<<endl;
 
     // hw3 p1 
-    vector<int> hw3p1 = {4,7,9,10};
-    missingElement(hw3p1, 3);
+    // vector<int> hw3p1 = {4,7,9,10};
+    // missingElement(hw3p1, 3);
     
+    // hw3 p2
+    Solution668 s668;
+    cout << s668.findKthNumber(3, 3, 5) << endl;
+
+
     /*
     // hw4 p1
     cout<<mySqrt(36)<<endl;
