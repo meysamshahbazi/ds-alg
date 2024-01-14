@@ -634,12 +634,6 @@ public:
 // https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/
 class Solution1466 {
 public:
-	void dfs(vector<vector<int>> &graph, int node, vector<bool> visited) {
-		visited[node] = true;
-		for (int adj : graph[node]) {
-			
-		}
-	}
     int minReorder(int n, vector<vector<int>>& connections) {
         
     }
@@ -648,11 +642,46 @@ public:
 // hw4 p3
 // https://leetcode.com/problems/path-with-minimum-effort/
 class Solution1631 {
+	int dr[4] {0, -1, +1 , 0};
+	int dc[4] {-1, 0, 0 , +1};
+
+
+	bool isValid(int r, int c, vector<vector<int>> &heights){
+		if (r < 0 || c < 0 || r >= heights.size() || c >= heights[0].size())
+			return false;
+
+		return true;
+	}
+	// int dfs(vector<vector<int>> &heights, int r, int c, vector<vector<bool>> &visited) {
+	// 	visited[r][c] = true;
+		
+	// 	if (r == (int) heights.size() - 1 && c == (int) heights[0].size() - 1)
+	// 		return 0;
+		
+	// 	int minEffort = (int) 1e6;
+	// 	for (int d = 0; d < 4; d++) {
+	// 		int nr = r + dr[d], nc = c + dc[d];
+	// 		if (isValid(nr, nc, heights) && !visited[nr][nc]) {
+	// 			int effort = dfs(heights, nr, nc, visited);
+
+	// 			effort = max(abs(heights[r][c] - heights[nr][nc]), effort);
+
+	// 			cout << r << ", " << c << " : "<< effort << endl;
+	// 			minEffort = min(effort, minEffort);
+	// 		}	
+	// 	}
+	// 	return minEffort;
+	// }
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
-        
+		// vector<vector<bool>> visited(heights.size(), vector<bool>(heights[0].size()));
+		// return dfs(heights, 0, 0, visited);
     }
 };
+
+// https://leetcode.com/problems/graph-valid-tree/ [premium]
+
+
 
 // https://leetcode.com/problems/redundant-connection/
 class Solution684 {
@@ -738,6 +767,12 @@ int main()
 	Solution128 s128;
 	vector<int> hw3p3 = {100,4,200,1,3,2};
 	cout << s128.longestConsecutive(hw3p3) << endl;
+
+	vector<vector<int>> hw4p3 = {{1,2,2},{3,8,2},{5,3,5}};
+	Solution1631 s1631;
+
+	cout << s1631.minimumEffortPath(hw4p3) << endl;
+
     return 0;
 }
 
