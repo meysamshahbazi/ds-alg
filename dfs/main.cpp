@@ -477,11 +477,190 @@ public:
 // https://leetcode.com/problems/restore-the-array-from-adjacent-pairs/
 class Solution1743 {
 public:
+	void dfs(GRAPHMP &graph, unordered_set<int> &visited, int node, vector<int> &arr) {
+		visited.insert(node);
+		arr.push_back(node);
+		for (auto adj : graph[node]) {
+			if (!visited.count(adj))
+				dfs(graph, visited, adj, arr);
+		}
+	}
     vector<int> restoreArray(vector<vector<int>>& adjacentPairs) {
+        GRAPHMP graph;
+
+		for (auto p : adjacentPairs) {
+			graph[p[0]].push_back(p[1]);
+			graph[p[1]].push_back(p[0]);
+		}
+
+		int start_node;
+		for (auto it : graph) {
+			if (it.second.size() == 1){
+				start_node = it.first;
+				break;
+			}
+		}
+		cout << endl;
+		unordered_set<int> visited;
+		vector<int> arr;
+		dfs(graph, visited, start_node, arr);
+
+		return arr;
+    }
+};
+
+// https://leetcode.com/problems/smallest-string-with-swaps/ TLE!
+class Solution1202 {
+	GRAPH graph;
+	vector<vector<int>> reachability;
+
+	void dfs(int node, vector<bool> &visited, vector<int> &reachable) {
+		visited[node] = true;
+		for (int adj : graph[node]) {
+			if (!visited[adj]) {
+				reachable.push_back(adj);
+				dfs(adj, visited, reachable);
+			}
+		}
+	}
+
+	void getReachability() {
+		
+		for (int i = 0; i <(int) graph.size(); i++) {
+			vector<bool> visited(graph.size());
+			vector<int> vec;
+			dfs(i, visited, vec);
+			reachability[i] = vec;
+		}
+	}
+public:
+    string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
+		graph = vector<vector<int>>(s.size(), vector<int>());
+		reachability = vector<vector<int>>(s.size(), vector<int>());
+
+		for (auto p : pairs) {
+			graph[p[0]].push_back(p[1]);
+			graph[p[1]].push_back(p[0]);
+		}
+
+		getReachability();
+		
+		for (int i = 0; i < (int) graph.size(); i++) {
+			for (auto r : reachability[i]) {
+				if (r < i && s[i] < s[r])
+					swap(s[r], s[i]);
+				if (r > i && s[r] < s[i])
+					swap(s[r], s[i]);
+			}
+		}
+		
+		return s;
+    }
+};
+
+// https://leetcode.com/problems/longest-consecutive-sequence/
+class Solution128 {
+public:
+	void dfs(GRAPHMP &graph, int node, unordered_set<int> &visited, int &len) {
+		visited.insert(node);
+		len++;
+		for (int adj : graph[node]) {
+			if (!visited.count(adj))
+				dfs(graph, adj, visited, len);
+		}
+	}
+    int longestConsecutive(vector<int>& nums) {
+		GRAPHMP graph;
+		for (auto n : nums) {
+			graph[n] = {};
+		}
+
+		for (auto n : nums) {
+			if (graph.count(n - 1)) {
+				graph[n - 1].push_back(n);
+			}
+			if (graph.count(n + 1)) {
+				graph[n + 1].push_back(n);
+			}
+		}
+		unordered_set<int> visited;
+		int longest = 0;
+		for (auto n : nums) {
+			if (!visited.count(n)) {
+				int len = 0; 
+				dfs(graph, n, visited, len);
+				if (len > longest)
+					longest = len;
+			}
+		}
+		return longest;
+    }
+};
+
+// hw4 p1
+// https://leetcode.com/problems/is-graph-bipartite/
+class Solution785 {
+public:
+	bool dfs(vector<vector<int>>& graph, int node, vector<bool> &visited, vector<bool> &group, bool isSetA) {
+		visited[node] = true;
+		group[node] = isSetA;
+		for (int adj : graph[node]) {
+			if (!visited[adj]) {
+					if (!dfs(graph, adj, visited, group,!isSetA) )
+						return false;
+			}
+			else {
+				if (group[adj] == isSetA)
+					return false;
+			}
+		}
+		return true;
+	}
+    bool isBipartite(vector<vector<int>>& graph) {
+        vector<bool> visited(graph.size());
+		vector<bool> group(graph.size());
+
+		for (int i = 0; i < (int) graph.size(); i++) {
+			if (!visited[i]) {
+				if (!dfs(graph, i, visited, group, true))			
+					return false;
+			}
+		}
+		return true;
+    }
+};
+
+// hw4 p2
+// https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/
+class Solution1466 {
+public:
+	void dfs(vector<vector<int>> &graph, int node, vector<bool> visited) {
+		visited[node] = true;
+		for (int adj : graph[node]) {
+			
+		}
+	}
+    int minReorder(int n, vector<vector<int>>& connections) {
         
     }
 };
 
+// hw4 p3
+// https://leetcode.com/problems/path-with-minimum-effort/
+class Solution1631 {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        
+    }
+};
+
+// https://leetcode.com/problems/redundant-connection/
+class Solution684 {
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        
+    }
+};
 
 int main()
 {
@@ -543,6 +722,22 @@ int main()
 	print(hw2p4);
 	Solution1559 s1559;
 	cout << s1559.containsCycle(hw2p4) << endl;
+
+	// hw3 p1
+	Solution1743 s1743;
+	vector<vector<int>> hw3p1 = {{-3,-9},{-5,3},{2,-9},{6,-3},{6,1},{5,3},{8,5},{-5,1},{7,2}};
+	auto v1743 = s1743.restoreArray(hw3p1);
+	print(v1743);
+	// hw3 p2
+	Solution1202 s1202;
+	string s = "dcab" ;
+	vector<vector<int>> pairs = {{0,3},{1,2}} ;
+	cout << s1202.smallestStringWithSwaps(s, pairs) << endl;
+
+	// hw3 p3
+	Solution128 s128;
+	vector<int> hw3p3 = {100,4,200,1,3,2};
+	cout << s128.longestConsecutive(hw3p3) << endl;
     return 0;
 }
 
