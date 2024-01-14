@@ -77,8 +77,8 @@ void dfs(GRAPHMP &graph, int node, unordered_set<int> &visited, vector<int> &chi
 		}
 	}
 }
-
-// https://leetcode.com/problems/kill-process/
+// hw1 p1
+// https://leetcode.com/problems/kill-process/ [premium]
 vector<int> killProcess(vector<int> &pid, vector<int> &ppid, int kill) {
 	int nodes = (int) pid.size();
 	GRAPHMP graph;
@@ -93,6 +93,7 @@ vector<int> killProcess(vector<int> &pid, vector<int> &ppid, int kill) {
 	return childs;
 }
 
+// hw1 p2
 // https://leetcode.com/problems/employee-importance/
 class Employee {
 public:
@@ -132,7 +133,8 @@ void dfs2(GRAPH &graph, int node, vector<bool> &visited) {
 	}
 }
 
-// https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/
+// hw1 p3
+// https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/ [premium]
 int countComponents(int n, vector<vector<int>>& edges) {
 	GRAPH graph(n);
 	add_directed_edge(graph, edges);
@@ -215,7 +217,7 @@ void dfs(vector<vector<int>> &grid1, vector<vector<int>> &grid2, int r, int c, i
 		}
 	}
 }
-
+// hw2 p1
 // https://leetcode.com/problems/count-sub-islands/
 int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
 	int R = (int) grid1.size();
@@ -295,7 +297,7 @@ void dfs1(vector<vector<int>> &grid, int r, int c, int R, int C, int old_color, 
 		dfs1(grid, r + dr[i], c + dc[i], R, C, old_color, color, visited);
 	}
 }
-
+// hw2 p2
 // https://leetcode.com/problems/coloring-a-border/
 vector<vector<int>> colorBorder1(vector<vector<int>>& grid, int row, int col, int color) {
 	// TODO solve it correctly!
@@ -384,7 +386,7 @@ void dfs(vector<vector<int>> &grid, int r, int c, int R, int C, vector<vector<bo
 		dfs(grid,r + dr[i],c + dc[i], R, C, visited, islands);
 	
 }
-
+// hw1 p3
 // https://leetcode.com/problems/number-of-closed-islands/
 int closedIsland(vector<vector<int>> &grid)
 {
@@ -417,55 +419,69 @@ int closedIsland(vector<vector<int>> &grid)
 	return count;
 }
 
-
-
-// }
-
-// void dfs(vector<vector<char>> &grid, int r, int c, int R, int C, vector<vector<bool>> &visited, vector<pair<int,int>> &path)
-// {
-
-// 	path.push_back(make_pair(r,c));
-// 	visited[r][c] = true;
-
-// 	int dr[4] {0, -1, +1, 0};
-// 	int dc[4] {-1, 0, 0, +1};
-
-// 	for (int i = 0; i < 4; i++) {
-// 		if (isValidPixel(r, c, R, C) && !visited[r][c] || grid[r][c] == grid[r + dr[i]][c + dc[i]] )
-// 			dfs(grid,r + dr[i],c + dc[i], R, C, visited, path);
-// 	}
-	
-void dfs(vector<vector<char>>& grid, vector<pair<int,int>> &path, vector<vector<bool>> &visited, int R, int C)
-{
-	int dr[4] {0, -1, +1, 0};
-	int dc[4] {-1, 0, 0, +1};
-
-	int r = path.back().first;
-	int c = path.back().second;
-	visited[r][c] = true;
-	
-	for (int i = 0; i < 4; i++){
-		int nr = r + dr[i];
-		int nc = c + dc[i];
-		if (isValidPixel(nr , nc, R, C) && !visited[nr][nc] ) {}
-	}
-}
-
+// hw2 p4
 // https://leetcode.com/problems/detect-cycles-in-2d-grid/
-bool containsCycle(vector<vector<char>>& grid)
-{
-	int R = (int) grid.size();
-	if (R == 0)
-		return false;
-	int C = grid[0].size();
+class Solution1559 {
+	int dr[4] { -1, 0, 1, 0 };
+	int dc[4] { 0, 1, 0, -1 };
+public:
+	bool isValid(int r, int c, int R, int C) {
+		if (r < 0 || c < 0 || r >= R || c >= C)
+			return false;
+		return true;
+	}
+	bool dfs(vector<vector<char>>& grid,int r, int c, char val, vector<vector<bool>> &visited, int  r0 = -1, int c0 = -1) {
 
-	vector<vector<bool>> visited(R, vector<bool>(C));
-	for (int r = 0; r < R; r++)
-		for (int c = 0; c < C; c++) {
-			
+		
+		visited[r][c] = true;
+
+		for (int d = 0; d < 4; d++) {
+			if (isValid(r + dr[d] ,c + dc[d] ,grid.size(), grid[0].size()) && grid[r + dr[d]][c + dc[d]] == val) {
+				if (!visited[r + dr[d]][c + dc[d]]) {
+					bool res = dfs(grid, r + dr[d], c + dc[d], val, visited, r, c);
+					if (res)
+						return true;
+				}
+				else { // this neighbor has already been visited
+					if (r0 != r + dr[d] && c0 != c + dc[d]){
+						return true;
+					}
+				}
+			} 
 		}
+		return false;
+	}
+    bool containsCycle(vector<vector<char>>& grid) {
+        int R = grid.size();
+		
+		if (R == 0)
+			return false;
 
-}
+		int C = grid[0].size();
+
+		vector<vector<bool>> visited(R, vector<bool>(C));
+
+		for (int r = 0; r < R; r++){
+			for (int c = 0; c < C; c++) {
+				if (!visited[r][c]) {
+					bool res = dfs(grid, r, c, grid[r][c], visited);
+					if (res)
+						return true;
+				}
+			}
+		}
+		return false;
+    }
+};
+
+// https://leetcode.com/problems/restore-the-array-from-adjacent-pairs/
+class Solution1743 {
+public:
+    vector<int> restoreArray(vector<vector<int>>& adjacentPairs) {
+        
+    }
+};
+
 
 int main()
 {
@@ -519,6 +535,14 @@ int main()
 								{1,1,1,1,1,1,1}};
 	print(hw2p3);
 	cout << closedIsland(hw2p3) << endl;
+	
+	vector<vector<char>> hw2p4 = {	{'a','b','b'},
+									{'b','z','b'},
+									{'b','b','a'}};
+	
+	print(hw2p4);
+	Solution1559 s1559;
+	cout << s1559.containsCycle(hw2p4) << endl;
     return 0;
 }
 
