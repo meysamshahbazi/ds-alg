@@ -404,8 +404,8 @@ int closedIsland(vector<vector<int>> &grid)
 				vector<pair<int,int>> islands;
 				dfs(grid,r,c,R,C,visited,islands);
 				bool isclosed = true;
-				for(auto &p:islands)
-					if(p.first == 0 || p.second ==0 || p.first == R-1 || p.second == C - 1){
+				for (auto &p:islands)
+					if (p.first == 0 || p.second ==0 || p.first == R-1 || p.second == C - 1){
 						isclosed = false;
 						break;
 					}
@@ -645,8 +645,7 @@ class Solution1631 {
 	int dr[4] {0, -1, +1 , 0};
 	int dc[4] {-1, 0, 0 , +1};
 
-
-	bool isValid(int r, int c, vector<vector<int>> &heights){
+	bool isValid(int r, int c, vector<vector<int>> &heights) {
 		if (r < 0 || c < 0 || r >= heights.size() || c >= heights[0].size())
 			return false;
 
