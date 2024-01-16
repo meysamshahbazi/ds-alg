@@ -93,7 +93,7 @@ vector<int> BFS_v2(GRAPH &adjlist, int start)
 	len[start] = 0;
 
 	for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size() ) {
-		while (sz--){
+		while (sz--) {
 			int cur = q.front();
 			q.pop();
 			for (int neighbour : adjlist[cur]) 
@@ -106,7 +106,7 @@ vector<int> BFS_v2(GRAPH &adjlist, int start)
 
 	return len;
 }
-
+// hw1 p1
 void print_path(GRAPH &graph)
 {
 	vector<int> len(graph.size(), OO);
@@ -152,7 +152,7 @@ void print_path(GRAPH &graph)
 	}
 
 }
-
+// hw1 p2
 // https://leetcode.com/problems/graph-valid-tree/   premium
 bool validTree(int nodes, vector<vector<int>> &edges)
 {
@@ -191,8 +191,8 @@ bool isValid(pair<int,int> &loc, int R, int C){
 	int c = loc.second;
 	return isValid(r, c, R, C);
 }
-
-// https://leetcode.com/problems/shortest-path-to-get-food/
+// hw1 p3
+// https://leetcode.com/problems/shortest-path-to-get-food/ [premium]
 int getFood(vector<vector<char>> &matrix)
 {
 	int m = matrix.size();
@@ -202,10 +202,9 @@ int getFood(vector<vector<char>> &matrix)
 		for (int j = 0; j < n; j++)
 			if (matrix[i][j] == '*') {
 				loc = make_pair(i,j);
-				break;;
+				break;
 			}
 	
-
 	int dr[4] {0, -1, +1, 0};
 	int dc[4] {-1, 0, 0, +1};
 
@@ -229,15 +228,13 @@ int getFood(vector<vector<char>> &matrix)
 					if (matrix[neighbour.first][neighbour.second] == '#')
 						return level + 1;
 				}
-
 			}
 		}
 	}
 
 	return -1;
-
 }
-
+// hw2 p1
 // https://leetcode.com/problems/jump-game-iii/
 bool canReach(vector<int>& arr, int start) 
 {
@@ -274,6 +271,7 @@ bool isInRange(int num)
 	return num <= 1000 && num >= 0;
 }
 
+// hw2 p2
 // https://leetcode.com/problems/minimum-operations-to-convert-number/
 int minimumOperations(vector<int>& nums, int start, int goal)
 {
@@ -347,7 +345,7 @@ vector<string> lockAdj(string str)
 	return res;
 }
 
-
+// hw2 p3
 // https://leetcode.com/problems/open-the-lock/
 int openLock(vector<string>& deadends, string target)
 {
@@ -381,6 +379,8 @@ int openLock(vector<string>& deadends, string target)
 
 	return -1;
 }
+
+// hw3 p1
 #define INF INT32_MAX
 // https://leetcode.com/problems/walls-and-gates/ premium
 void wallsAndGates(vector<vector<int>>& rooms)
@@ -394,15 +394,15 @@ void wallsAndGates(vector<vector<int>>& rooms)
 	int dc[4] {-1, 0, 0, +1};
 
 	for (int i = 0; i < m; i++) {
-		for (int j = 0; j <n; j++) {
+		for (int j = 0; j < n; j++) {
 			if (rooms[i][j] == 0) {
 				queue<pair<int,int>> q;
 				q.push({i, j});
 				for (int level = 0, sz = 1; !q.empty(); level++, sz = q.size()){
-					while (sz--){
+					while (sz--) {
 						auto cur = q.front();
 						q.pop();
-						for (int d = 0; d < 4; d++){
+						for (int d = 0; d < 4; d++) {
 							int nr = dr[d] + cur.first;
 							int nc = dc[d] + cur.second; 
 							if (isValid(nr, nc, m, n) && rooms[nr][nc] != -1  && rooms[nr][nc] > (level + 1)) {
@@ -410,13 +410,11 @@ void wallsAndGates(vector<vector<int>>& rooms)
 								q.push({nr,nc});
 							} 
 						}
-
 					}
 				}
 			}
 		}
 	}
-
 }
 
 void bfs(vector<vector<int>>& heights, vector<vector<bool>> &visited, int r, int c, int R, int C)
@@ -446,7 +444,7 @@ void bfs(vector<vector<int>>& heights, vector<vector<bool>> &visited, int r, int
 	}
 	
 }
-
+// hw3 p2
 // https://leetcode.com/problems/pacific-atlantic-water-flow/
 vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) 
 {
@@ -501,11 +499,10 @@ int prevDigit(int d)
 	return d - 1;
 }
 
-
+// hw3 p3
 // https://leetcode.com/problems/stepping-numbers/ premium
 vector<int> countSteppingNumbers(long long low, long long high)
 {
-
 	vector<int> result;
 
 	queue<int> q;
@@ -544,6 +541,13 @@ vector<int> countSteppingNumbers(long long low, long long high)
 }
 
 // https://leetcode.com/problems/shortest-path-with-alternating-colors/
+class Solution1129 {
+public:
+    vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
+        
+    }
+};
+
 vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges)
 {
 	vector<pair<vector<int>,vector<int>>> graph(n); // first for red, second for blue
@@ -615,6 +619,7 @@ int main()
 	add_directed_edge(hw1p1, 2, 2);
 	print_path(hw1p1);
 	// hw1 p2
+	cout << "hw1 p2 \n";
 	vector<vector<int>> hw1p2 = {{0,1},{0,2},{0,3},{1,4}};
 	cout<<validTree(5, hw1p2)<<endl;
 	hw1p2 = {{0,1},{1,2},{2,3},{1,3},{1,4}};
@@ -654,14 +659,13 @@ int main()
 	print(hw3p1);
 	cout<< endl;
 	// hw3 p2: 
-	
 	vector<vector<int>> hw3p2 = {{1,2,2,3,5},{3,2,3,4,4},{2,4,5,3,1},{6,7,1,4,5},{5,1,1,2,4}};
 	print(hw3p2);
 	cout<< endl;
 	auto hw3p22 = pacificAtlantic(hw3p2);
 	print(hw3p22);
 	// hw3 p3 
-	auto hw3p3 = countSteppingNumbers(0,21);
+	auto hw3p3 = countSteppingNumbers(0, 21);
 	print(hw3p3);
     return 0;
 }
