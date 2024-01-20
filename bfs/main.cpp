@@ -153,7 +153,7 @@ void print_path(GRAPH &graph)
 
 }
 // hw1 p2
-// https://leetcode.com/problems/graph-valid-tree/   premium
+// https://leetcode.com/problems/graph-valid-tree/   [premium]
 bool validTree(int nodes, vector<vector<int>> &edges)
 {
 	GRAPH graph(nodes);
@@ -540,50 +540,185 @@ vector<int> countSteppingNumbers(long long low, long long high)
 	return result;
 }
 
+// hw 4 p1
 // https://leetcode.com/problems/shortest-path-with-alternating-colors/
 class Solution1129 {
 public:
     vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
+		vector<pair<vector<int>,vector<int>>> graph(n); // first for red, second for blue
+
+		for (auto &item : redEdges ) {
+			int from = item[0];
+			int to = item[1];
+			graph[from].first.push_back(to);
+		}
+		
+		for (auto &item : blueEdges ) {
+			int from = item[0];
+			int to = item[1];
+			graph[from].second.push_back(to);
+		}
+
+		queue<pair<int, int> > qred; // last edge is red!
+		queue<pair<int, int> > qblue; // last edge is blue!
+
+		vector<int> len_red(n, INT32_MAX);
+		vector<int> len_blue(n, INT32_MAX);
+
+		qred.push({0, 0});
+		qblue.push({0, 0});
+
+		len_red[0] = 0;
+		len_blue[0] = 0;
+
+		while (!qred.empty() || !qblue.empty() ) {
+			if (!qred.empty()) {
+				auto p = qred.front();
+				qred.pop();
+				int cur = p.first, level = p.second;
+
+				for (int neighbour : graph[cur].second) { // we need blue edge!
+					if (len_blue[neighbour] == INT32_MAX) {
+						qblue.push({neighbour, level + 1});
+						len_blue[neighbour] = level + 1;
+					}
+				}
+			}
+
+			if (!qblue.empty()) {
+				auto p = qblue.front();
+				qblue.pop();
+				int cur = p.first, level = p.second;
+
+				for (int neighbour : graph[cur].first) { // we need red edge!
+					if (len_red[neighbour] == INT32_MAX) {
+						qred.push({neighbour, level + 1});
+						len_red[neighbour] = level + 1;
+					}
+				}
+			}
+		}
+
+		vector<int> ans(n);
+
+		for (int i = 0; i < n; i++) {
+			ans[i] = min(len_blue[i], len_red[i]);
+			if (ans[i] == INT32_MAX)
+				ans[i] = -1;
+		}
+
+		return ans;
+    }
+};
+
+// hw4 p2
+// https://leetcode.com/problems/water-and-jug-problem/ TLE
+class Solution365 {
+	// Hash function 
+	struct hashFunction { 
+  		size_t operator()(const vector<int>  &myVector) const { 
+			std::hash<int> hasher; 
+			size_t answer = 0; 
+		
+			for (int i : myVector) { 
+				answer ^= hasher(i) + 0x9e3779b9 +  
+					(answer << 6) + (answer >> 2); 
+			} 
+			return answer; 
+  		} 
+	}; 
+public:
+    bool canMeasureWater(int jug1Capacity, int jug2Capacity, int targetCapacity) {
+		unordered_set< vector<int>, hashFunction> visited;
+        queue<pair<int, int> > q; // water contained in {jug 1, jug 2}
+		q.push({0, 0});
+		visited.insert({0, 0});
+		int tc = targetCapacity;
+		while (!q.empty()){
+			pair<int, int> p = q.front();
+			int volume1 = p.first, volume2 = p.second;
+			q.pop();
+
+			if (volume1 == tc || volume2 == tc || volume1 + volume2 == tc)
+				return true;
+			
+			int remainCap1 = jug1Capacity - volume1;
+			int remainCap2 = jug2Capacity - volume2;
+			// jug 1 to jug 2
+			if (remainCap2 >= volume1 && !visited.count({0, volume1 + volume2})) {
+				q.push({0, volume1 + volume2});
+				visited.insert({0, volume1 + volume2});
+			}
+			// jug 2 to jug 1
+			if (remainCap1 >= volume2 && !visited.count({volume1 + volume2, 0}) ) {
+				q.push({volume1 + volume2, 0});
+				visited.insert({volume1 + volume2, 0});
+			}
+			if (remainCap2 < volume1 && !visited.count({volume1 - remainCap2, jug2Capacity}) ) {
+				q.push({volume1 - remainCap2, jug2Capacity});
+				visited.insert({volume1 - remainCap2, jug2Capacity});
+			}
+			if (remainCap1 < volume2 && !visited.count({jug1Capacity,  volume2 - remainCap1}) ) {
+				q.push({jug1Capacity,  volume2 - remainCap1});
+				visited.insert({jug1Capacity,  volume2 - remainCap1});
+			}
+			// make jug 1 empty 
+			if (!visited.count({0,  volume2}) ) {
+				q.push({jug1Capacity,  volume2});
+				visited.insert({jug1Capacity,  volume2});
+			}
+			// make jug 2 empty
+			if (!visited.count({volume1,  0}) ) {
+				q.push({volume1,  0});
+				visited.insert({volume1,  0});
+			}
+			// make jug 1 full
+			if (!visited.count({volume1, jug2Capacity})) {
+				q.push({volume1, jug2Capacity});
+				visited.insert({volume1, jug2Capacity});
+			}
+			// make jug 2 full
+			if (!visited.count({jug1Capacity, volume2})) {
+				q.push({jug1Capacity, volume2});
+				visited.insert({jug1Capacity, volume2});
+			}
+		}
+		return false;
+    }
+};
+
+// hw4 p3
+// https://leetcode.com/problems/sliding-puzzle/
+class Solution773 {
+public:
+    int slidingPuzzle(vector<vector<int>>& board) {
         
     }
 };
 
-vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges)
-{
-	vector<pair<vector<int>,vector<int>>> graph(n); // first for red, second for blue
+// hw4 p4
+// https://leetcode.com/problems/maximum-candies-you-can-get-from-boxes/
+class Solution1298 {
+public:
+    int maxCandies(vector<int>& status, vector<int>& candies, vector<vector<int>>& keys, vector<vector<int>>& containedBoxes, vector<int>& initialBoxes) {
+        
+    }
+};
 
-	for (auto &item : redEdges ) {
-		int from = item[0];
-		int to = item[1];
-		graph[from].first.push_back(to);
-	}
-	
-	for (auto &item : blueEdges ) {
-		int from = item[0];
-		int to = item[1];
-		graph[from].second.push_back(to);
-	}
+// hw5 p1
+// https://leetcode.com/problems/shortest-bridge/
+class Solution934 {
+public:
+    int shortestBridge(vector<vector<int>>& grid) {
+        
+    }
+};
 
-	queue<int> q;
-	vector<int> len(n, INT32_MAX);
-	q.push(0);
-	len[0] = 0;
-	vector<int> answer(n);
+// hw5 p2
+// https://www.spoj.com/problems/PT07Z/
 
-	for (int level = 0, sz = 1; !q.empty(); level++, sz = q.size() ) {
-		while (sz--) {
-			int cur = q.front();
-			q.pop();
-			
-			for (int ngnbr : graph[cur].first) {
-				
-			}
-			
-		}
-		
-	}
 
-}
+
 
 int main()
 {
@@ -667,5 +802,36 @@ int main()
 	// hw3 p3 
 	auto hw3p3 = countSteppingNumbers(0, 21);
 	print(hw3p3);
+
+	// hw 4 p1 is submited!
+	// hw4 p2
+
+	Solution365 s365;
+	freopen("02_LeetCode_365_Jug-input.txt", "rt", stdin);
+	int cases;
+	cin >> cases;
+	cases = 100;
+	vector<int> res365;
+	while (cases--) {
+		int j1, j2, tc;
+		cin >> j1 >> j2 >> tc; 
+		res365.push_back(s365.canMeasureWater(j1, j2, tc));
+		// cout << s365.canMeasureWater(3,5,4) << endl;
+		// cout << s365.canMeasureWater(2,6,5) << endl;
+
+	}
+	freopen("02_LeetCode_365_Jug-output.txt", "rt", stdin);
+	cout << res365.size() << endl;
+	for (auto  r : res365) {
+		int a;
+		cin >> a;
+		cout << a << ", " << r << endl;
+		if (a != r)
+			cout << "test failed \n";
+	}
+
+
     return 0;
 }
+
+
