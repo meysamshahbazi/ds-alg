@@ -60,6 +60,8 @@ This repo contains my practices for data structures and algorithms in God progra
   
 - [ ] Graph Breadth First Search
 
+  - [ ] HW4 P1, HW5
+
 - [ ] Topological Sorting
 
 ## Algorithm part 2

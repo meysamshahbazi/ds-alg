@@ -8,6 +8,13 @@
 #include <queue>
 #include <stack>
 
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <climits>
+#include <bits/stdc++.h> 
+#include <unordered_map>
+
 using namespace std;
 
 template<class T>
@@ -690,9 +697,110 @@ public:
 // hw4 p3
 // https://leetcode.com/problems/sliding-puzzle/
 class Solution773 {
+	typedef vector<vector<int>> Board;
+	const Board correct {{1,2,3},{4,5,0}};
+	bool isSolved(vector<vector<int>>& board) {
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 3; j++)
+				if (board[i][j] != correct[i][j])
+					return false;
+		
+		return true;
+	}
+	struct hashFunction { 
+  		size_t operator()(const Board  &board) const { 
+			std::hash<int> hasher; 
+			size_t answer = 0; 
+		
+			for (int i = 0; i < 2; i++)
+				for (int j = 0; j < 3; j++) { // try simpler one! 
+				answer ^= hasher(board[i][j]) + 0x9e3779b9 +  
+					(answer << 6) + (answer >> 2); 
+			} 
+			return answer; 
+  		} 
+	}; 
+	vector<pair<int,int>> getNeighbIdx(pair<int,int> cur) {
+		if (cur == make_pair(0,0))
+			return {{0,1}, {1,0}};
+		
+		if (cur == make_pair(0,1))
+			return {{0,0}, {1,1}, {0,2}};
+
+		if (cur == make_pair(0,2))
+			return {{0,1}, {1,2}};
+
+
+		if (cur == make_pair(1,0))
+			return {{0,0}, {1,1}};
+		
+		if (cur == make_pair(1,1))
+			return {{1,0}, {0,1}, {1,2}};
+
+		if (cur == make_pair(1,2))
+			return {{1,1}, {0,2}};
+
+		return {};
+	}
+
+	pair<int, int> getZeroIdx(Board &board) {
+		if (0 ==  board[0][0])
+			return {0,0};
+		
+		if (0 ==  board[0][1])
+			return {0,1};
+
+		if (0 ==  board[0][2])
+			return {0,2};
+
+
+		if (0 ==  board[1][0])
+			return {1,0};
+		
+		if (0 ==  board[1][1])
+			return {1,1};
+
+		if (0 ==  board[1][2])
+			return {1,2};
+
+		return {-1,-1};
+	}
+
 public:
+
     int slidingPuzzle(vector<vector<int>>& board) {
-        
+		if (isSolved(board))
+			return 0;
+
+		unordered_map<Board, int, hashFunction> visited;
+
+		queue<Board> q;
+		q.push(board);
+		visited[board] = 0;
+
+		for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size()) {
+			while (sz--) {
+				Board cur = q.front();
+				q.pop();
+
+				auto zero_pos = getZeroIdx(cur);
+
+				auto adjlist = getNeighbIdx(zero_pos);
+				for (auto adj : adjlist) {
+					Board neigh(cur);
+					swap(neigh[zero_pos.first][zero_pos.second],neigh[adj.first][adj.second]);
+					if (!visited.count(neigh)) {
+						q.push(neigh);
+						visited[neigh] = level + 1;
+
+						if (isSolved(neigh))
+							return level + 1;
+					}
+				}
+			}
+		}
+
+		return -1;
     }
 };
 
