@@ -816,9 +816,64 @@ public:
 // hw5 p1
 // https://leetcode.com/problems/shortest-bridge/
 class Solution934 {
+	int dr[4] { -1, 0, 1, 0 };
+	int dc[4] { 0, 1, 0, -1 };
+	bool isValid(int r, int c, vector<vector<int>> &grid) {
+		if (r < 0 || c < 0 || r >= grid.size() || c >= grid[0].size())
+			return false;
+		return true;
+	}
 public:
+	pair<int,int> findStart(vector<vector<int>> &grid) {
+		for (int i = 0; i < (int)grid.size(); i++)  
+			for (int j = 0; j < grid[0].size(); j++)
+				if (grid[i][j] == 1) 
+					return make_pair(i, j);
+				
+		return make_pair(-1, -1);
+	}
+	void dfs(vector<vector<int>> &grid, pair<int, int> start, vector<vector<int>> &visited, queue<pair<int,int>> &islands) {
+		visited[start.first][start.second] = 0;
+		islands.push(start);
+
+		for (int d = 0; d < 4; d++) {
+			int nr = start.first + dr[d];
+			int nc = start.second + dc[d];
+
+			if (isValid(nr, nc, grid) && visited[nr][nc] == INT32_MAX && grid[nr][nc] == 1)
+				dfs(grid, make_pair(nr, nc), visited, islands);
+		}
+	}
+
     int shortestBridge(vector<vector<int>>& grid) {
-        
+        vector<vector<int>> visited(grid.size(), vector<int>(grid[0].size(), INT32_MAX));
+		
+		queue<pair<int,int>> q;
+		pair<int, int> start = findStart(grid);
+		dfs(grid, start, visited, q);
+		// cout << endl;
+		// print(visited);
+		
+		for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size()) {
+			while (sz--) {
+				auto cur = q.front();
+				q.pop();
+				for (int d = 0; d < 4; d++) {
+					int nr = cur.first + dr[d];
+					int nc = cur.second + dc[d];
+
+					if (isValid(nr, nc, grid) && visited[nr][nc] == INT32_MAX) {
+						q.push(make_pair(nr, nc));
+						visited[nr][nc] = level + 1;
+
+						if (grid[nr][nc] == 1)
+							return level;
+					}
+				}
+			}
+		}
+
+		return -1;
     }
 };
 
@@ -918,7 +973,7 @@ int main()
 	freopen("02_LeetCode_365_Jug-input.txt", "rt", stdin);
 	int cases;
 	cin >> cases;
-	cases = 100;
+	cases = 10;
 	vector<int> res365;
 	while (cases--) {
 		int j1, j2, tc;
@@ -938,6 +993,15 @@ int main()
 			cout << "test failed \n";
 	}
 
+	// hw4 p3 is submited!
+	
+	// hw5 p1
+	vector<vector<int>> hw5p1 = {{1,1,1,1,1},{1,0,0,0,1},{1,0,1,0,1},{1,0,0,0,1},{1,1,1,1,1}};
+	// hw5p1 = {{0,1,0},{0,0,0},{0,0,1}};
+	hw5p1 = {{1,0}, {0,1}};
+	print(hw5p1);
+	Solution934 s934;
+	s934.shortestBridge(hw5p1);
 
     return 0;
 }
