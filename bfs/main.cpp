@@ -851,8 +851,6 @@ public:
 		queue<pair<int,int>> q;
 		pair<int, int> start = findStart(grid);
 		dfs(grid, start, visited, q);
-		// cout << endl;
-		// print(visited);
 		
 		for (int level = 0, sz = 1; !q.empty(); ++level, sz = q.size()) {
 			while (sz--) {
