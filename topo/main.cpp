@@ -19,8 +19,8 @@ void print(vector<vector<T>> &vec){
 	for(auto &v : vec)
 		print(v);
 }
-typedef vector<vector<int>> GRAPH;
 
+typedef vector<vector<int>> GRAPH;
 
 void add_directed_edge(GRAPH &graph, int from, int to) {
 	graph[from].push_back(to);
@@ -42,6 +42,28 @@ void print_adjaceny_matrix(GRAPH &graph) {
 			cout << graph[from][to] << " ";
 		cout << "\n";
 	}
+}
+
+vector<GRAPH> getGraphs(const string &path)
+{
+	freopen(path.c_str(), "rt", stdin);
+	int cases;
+	cin >> cases;
+	vector<GRAPH> graphs;
+	while (cases--) {
+		int nodes, edges;
+		cin >> nodes >> edges;
+
+		GRAPH graph(nodes);
+
+		for (int e = 0; e < edges; ++e) {
+			int from, to;
+			cin >> from >> to;
+			add_directed_edge(graph, from, to);
+		}
+		graphs.push_back(graph);
+	}
+	return graphs;
 }
 
 vector<int> toposort(const GRAPH &adjlist)
@@ -70,11 +92,48 @@ vector<int> toposort(const GRAPH &adjlist)
     }
 
     if (ordering.size() != adjlist.size() )
-        ordering.clear();
+        ordering.clear(); //There are cycles
 
     return ordering;
 }
 
+// https://leetcode.com/problems/course-schedule/
+class Solution207 {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        GRAPH adjlist(numCourses);
+
+		for (auto item : prerequisites) 
+			adjlist[item[1]].push_back(item[0]);
+		
+		
+		vector<int> indegree(numCourses, 0);
+		for (int i = 0; i < numCourses; i++)
+			for (int j : adjlist[i])
+				indegree[j]++;
+
+		queue<int> ready;
+
+		for (int i = 0; i < numCourses; i++)
+			if (!indegree[i])
+				ready.push(i);
+
+		vector<int> ordering;
+		while (!ready.empty()) {
+			int i = ready.front();
+			ready.pop();
+			ordering.push_back(i);
+
+			for (int j : adjlist[i])
+				if(--indegree[j] == 0)
+					ready.push(j);
+		}
+
+		return ordering.size() == numCourses;
+    }
+};
+
+// hw1 p1
 vector<int> lexicographic(const GRAPH &adjlist)
 {
 	int sz = adjlist.size();
@@ -83,7 +142,6 @@ vector<int> lexicographic(const GRAPH &adjlist)
 		for(int j : adjlist[i])
 			indegree[j]++;
 
-	// map<int, int> ready;
 	priority_queue<int, std::vector<int>, std::greater<int> > ready;
 
 	for (int i = 0; i < sz; i++)
@@ -108,6 +166,7 @@ vector<int> lexicographic(const GRAPH &adjlist)
 	return ordering;
 }
 
+// hw1 p2
 // https://leetcode.com/problems/parallel-courses/ premium
 int minimumSemesters(int n, vector<vector<int>>& relations)
 {
@@ -145,7 +204,7 @@ int minimumSemesters(int n, vector<vector<int>>& relations)
 				if(--indegree[j] == 0)
 					ready.push(j);
 		}
-		level ++;
+		level++;
     }
 
     if (found_nodes != sz)
@@ -154,30 +213,7 @@ int minimumSemesters(int n, vector<vector<int>>& relations)
 	return level;
 }
 
-vector<GRAPH> getGraphs(const string &path)
-{
-	freopen(path.c_str(), "rt", stdin);
-	int cases;
-	cin >> cases;
-	vector<GRAPH> graphs;
-	while (cases--) {
-		int nodes, edges;
-		cin >> nodes >> edges;
-
-		GRAPH graph(nodes);
-
-		for (int e = 0; e < edges; ++e) {
-			int from, to;
-			cin >> from >> to;
-			add_directed_edge(graph, from, to);
-		}
-		graphs.push_back(graph);
-	}
-	return graphs;
-}
-
 // https://leetcode.com/problems/sequence-reconstruction/ premium
-
 bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs) 
 {
 	GRAPH graph(org.size() );
@@ -204,7 +240,7 @@ bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs)
 
 // https://leetcode.com/problems/minimum-height-trees/
 
-
+// https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
 
 int main() {
 	freopen("../data.txt", "rt", stdin);
