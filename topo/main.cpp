@@ -195,7 +195,7 @@ int minimumSemesters(int n, vector<vector<int>>& relations)
     while (!ready.empty()) {
 		int level_sz = ready.size();
 		
-		while ( level_sz--){
+		while (level_sz--){
 			int i = ready.front();
 			ready.pop();
 			found_nodes++;
@@ -212,11 +212,11 @@ int minimumSemesters(int n, vector<vector<int>>& relations)
 	
 	return level;
 }
-
+// hw2 p1
 // https://leetcode.com/problems/sequence-reconstruction/ premium
 bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs) 
 {
-	GRAPH graph(org.size() );
+	GRAPH graph(org.size());
 
 	for (auto seq : seqs) {
 		for (int i = 0; i < (int) seq.size() - 1; i++) {
@@ -237,9 +237,14 @@ bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs)
 
 	return true;
 }
-
+// hw2 p2
 // https://leetcode.com/problems/minimum-height-trees/
-
+class Solution310 {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        
+    }
+};
 // https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
 
 int main() {
@@ -283,6 +288,7 @@ int main() {
 		else 
 			print(ordering);
 	}
+	cout << endl;
 	// hw2 p1
 	vector<int> org = {1,2,3};
 	vector<vector<int>> seqs = {{1,2},{1,3}};
