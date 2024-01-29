@@ -66,7 +66,6 @@ This repo contains my practices for data structures and algorithms in God progra
 
   - [ ] HW2 P3 HW3
 
-
 ## Algorithm part 2
 
 - [ ] Dynamic Programming (DP) - Intro
