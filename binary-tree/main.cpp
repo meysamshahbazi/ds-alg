@@ -413,7 +413,7 @@ public:
     {
         if(!node)
             return 0;
-        return 1 + total_nodes1(node->left) + total_nodes(node->right);
+        return 1 + total_nodes1(node->left) + total_nodes1(node->right);
     }
     // hw1 p3
     int total_nodes(Node<T> *node) {
