@@ -68,7 +68,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 ## Algorithm part 2
 
-- [ ] Dynamic Programming (DP) - Intro
+- [x] Dynamic Programming (DP) - Intro
 
 - [ ] DP Pick or Leave Pattern
 
