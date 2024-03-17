@@ -237,13 +237,86 @@ bool sequenceReconstruction(vector<int> &org, vector<vector<int>> &seqs)
 
 	return true;
 }
+
+int longest_path(GRAPH &adjList) {	// O(E+V)
+	int sz = adjList.size();
+
+	vector<int> indegree(sz, 0);
+	for (int i = 0; i < sz; ++i)
+		for (int j : adjList[i])
+			indegree[j]++;
+
+	queue<int> ready;
+	for (int i = 0; i < sz; ++i)
+		if (indegree[i] == 0)
+			ready.push(i);
+
+	// keep shrinking level by level
+	int levels = 0, found_nodes = 0;
+	while (!ready.empty()) {
+		// level by level like BFS
+		int level_sz = ready.size();
+		while (level_sz--) {
+			int i = ready.front();
+			ready.pop();
+			++found_nodes;
+
+			for (int j : adjList[i])
+				if (--indegree[j] == 0)
+					ready.push(j);
+		}
+		++levels;
+	}
+	if (found_nodes != sz)
+		return -1;
+	return levels;
+}
+
 // hw2 p2
 // https://leetcode.com/problems/minimum-height-trees/
 class Solution310 {
+	typedef vector<vector<int>> GRAPH;
 public:
+	int LongestPath(GRAPH &graph, int start, vector<int> indegree) {
+		queue<int> ready;
+		ready.push(start);
+
+		int level = 0;
+
+		while (!ready.empty()) {
+			int level_sz = ready.size();
+			while (level_sz--) {
+				// cout << level_sz << endl;
+				int cur = ready.front();
+				indegree[cur] = 0;
+				ready.pop();
+				for (int j : graph[cur]) 
+					if (--indegree[j] == 0)
+						ready.push(j);
+			}
+			level++;
+		}
+		return level;
+	}
     vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
-        
-    }
+        GRAPH graph(n);
+		for (auto e : edges) {
+			graph[e[0]].push_back(e[1]);
+			graph[e[1]].push_back(e[0]);
+		}
+
+		vector<int> indegree(n, 0);
+		for (int i = 0; i < n; i++)
+			for(int j : graph[i])
+				indegree[j]++;
+
+		queue<int> ready;
+
+		for (int i = 0; i < n; i++) {
+			cout << i << ":" << LongestPath(graph, i, indegree) << endl;
+		}
+
+    }		
 };
 // https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
 
@@ -300,6 +373,12 @@ int main() {
 	org = {4, 1, 5, 2, 6, 3};
 	seqs = {{5,2,6,3}, {4,1,5,2}};
 	cout<<sequenceReconstruction(org, seqs)<<endl; 
+
+	cout << endl;
+	// hw2 p2
+	Solution310 s310;
+	vector<vector<int>> hw2p2 = {{1,0},{1,2},{1,3}};
+	s310.findMinHeightTrees(4, hw2p2);
 	return 0;
 }
 
