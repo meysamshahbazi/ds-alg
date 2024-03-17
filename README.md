@@ -46,7 +46,7 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] Sorting Insertion, Selection and Count
 
-- [ ] Searching Binary Search
+- [x] Searching Binary Search
 
   - [ ] HW3 P1 P2
   
@@ -54,19 +54,21 @@ This repo contains my practices for data structures and algorithms in God progra
 
 - [x] Graph Representation
 
-- [ ] Graph Depth First Search
+- [x] Graph Depth First Search
 
   - [ ] HW4
   
-- [ ] Graph Breadth First Search
+- [x] Graph Breadth First Search
 
   - [ ] HW4 P4, HW5 P2
 
-- [ ] Topological Sorting
+- [x] Topological Sorting
+
+  - [ ] HW2 P3 HW3
 
 ## Algorithm part 2
 
-- [ ] Dynamic Programming (DP) - Intro
+- [x] Dynamic Programming (DP) - Intro
 
 - [ ] DP Pick or Leave Pattern
 
